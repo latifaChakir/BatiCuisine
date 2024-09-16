@@ -13,22 +13,21 @@ public class ClientDaoImpl implements ClientDao {
 
     @Override
     public Client save(Client client) {
-        String query = "INSERT INTO clients (nom, adresse, telephone, estProfessionnel) VALUES (?, ?, ?, ?)";
-
+        String sql = "INSERT INTO Clients (nom, adresse, telephone, estProfessionnel) VALUES (?, ?, ?, ?) RETURNING id;";
         try (Connection conn = ConnectionConfig.getInstance().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+                PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setString(1, client.getNom());
+            preparedStatement.setString(2, client.getAdresse());
+            preparedStatement.setString(3, client.getTelephone());
+            preparedStatement.setBoolean(4, client.isEstProfessionnel());
 
-            pstmt.setString(1, client.getNom());
-            pstmt.setString(2, client.getAdresse());
-            pstmt.setString(3, client.getTelephone());
-            pstmt.setBoolean(4, client.isEstProfessionnel());
-            pstmt.executeUpdate();
-
-            System.out.println("Client enregistré avec succes!");
-        } catch (SQLException sqlException) {
-            System.out.println("Error dans l'enregistrement du client: " + sqlException.getMessage());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                client.setId(resultSet.getInt("id"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de l'insertion du client : " + e.getMessage());
         }
-
         return client;
     }
 
@@ -93,8 +92,6 @@ public class ClientDaoImpl implements ClientDao {
             pstmt.setBoolean(4, client.isEstProfessionnel());
             pstmt.setInt(5, client.getId());
             pstmt.executeUpdate();
-
-            System.out.println("Client updated successfully!");
         } catch (SQLException sqlException) {
             System.out.println("Error updating client: " + sqlException.getMessage());
         }

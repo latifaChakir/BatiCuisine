@@ -5,7 +5,7 @@ CREATE TABLE clients (
                          telephone VARCHAR(20),
                          estProfessionnel BOOLEAN NOT NULL
 );
-CREATE TYPE etatProjet AS ENUM ('ENCours', 'TERMINE', 'ANNULE');
+CREATE TYPE etatProjet AS ENUM ('ENCOURS', 'TERMINE', 'ANNULE');
 CREATE TABLE projets (
                          id SERIAL PRIMARY KEY,
                          nomProjet VARCHAR(255) NOT NULL,
@@ -20,7 +20,9 @@ CREATE TABLE composants (
                             id SERIAL PRIMARY KEY,
                             nom VARCHAR(255) NOT NULL,
                             typeComposant typeComposant,
-                            tauxTVA DOUBLE PRECISION
+                            tauxTVA DOUBLE PRECISION,
+                            projet_id INT,
+                            FOREIGN KEY (projet_id) REFERENCES projets(id) ON DELETE CASCADE
 );
 CREATE TABLE materiaux (
                            id SERIAL PRIMARY KEY,

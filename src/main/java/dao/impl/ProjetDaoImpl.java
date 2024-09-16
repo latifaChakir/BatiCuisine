@@ -25,7 +25,7 @@ public class ProjetDaoImpl implements ProjetDao {
 
     @Override
     public Projet save(Projet projet) {
-        String sql = "INSERT INTO Projets (nomprojet, margebeneficiaire, couttotal, etat, client_id) VALUES (?, ?, ?, ?::ProjetStatus, ?);";
+        String sql = "INSERT INTO Projets (nomprojet, margebeneficiaire, couttotal, etat, client_id) VALUES (?, ?, ?, ?::EtatProjet, ?);";
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, projet.getNomProjet());
             preparedStatement.setDouble(2, projet.getMargeBeneficiaire());
@@ -34,7 +34,7 @@ public class ProjetDaoImpl implements ProjetDao {
             preparedStatement.setInt(5, projet.getClient().getId());
 
             int affectedRows = preparedStatement.executeUpdate();
-
+            System.out.println("projet enregistré avec succes");
             if (affectedRows == 0) {
                 throw new SQLException("Échec de la création du projet, aucune ligne affectée.");
             }
@@ -96,7 +96,7 @@ public class ProjetDaoImpl implements ProjetDao {
 
     @Override
     public Projet update(Projet projet) {
-        String sql = "UPDATE Projets SET nomprojet = ?, margebeneficiaire = ?, couttotal = ?, etat = ?::ProjetStatus, client_id = ? WHERE id = ?";
+        String sql = "UPDATE Projets SET nomprojet = ?, margebeneficiaire = ?, couttotal = ?, etat = ?::EtatProjet, client_id = ? WHERE id = ?";
 
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, projet.getNomProjet());
@@ -107,6 +107,7 @@ public class ProjetDaoImpl implements ProjetDao {
             preparedStatement.setInt(6, projet.getId());
 
             int affectedRows = preparedStatement.executeUpdate();
+            System.out.println("projet est mis à jour avec succes");
 
             if (affectedRows == 0) {
                 throw new SQLException("La mise à jour du projet a échoué, aucune ligne affectée.");

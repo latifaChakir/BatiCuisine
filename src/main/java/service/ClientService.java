@@ -5,72 +5,36 @@ import dao.impl.ClientDaoImpl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
 public class ClientService {
     private ClientDaoImpl clientDaoImpl;
-    private Scanner scanner;
 
     public ClientService() {
         clientDaoImpl = new ClientDaoImpl();
-        scanner = new Scanner(System.in);
     }
 
-    public void save() {
-        System.out.println("Entrer le nom du client: ");
-        String nom = scanner.nextLine();
-        System.out.println("Entrer l'adresse du Client: ");
-        String adresse = scanner.nextLine();
-        System.out.println("Entrer le telephone du Client: ");
-        String telephone = scanner.nextLine();
-        System.out.println("Le client est professionnel(true/false)?");
-        boolean estProfessionnel = scanner.nextBoolean();
-        Client client = new Client(nom, adresse, telephone, estProfessionnel);
+    public void save(Client client) {
         clientDaoImpl.save(client);
     }
 
-    public void update() {
-        System.out.println("Enter Client id: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("Entrer le nom du client: ");
-        String nom = scanner.nextLine();
-        System.out.println("Entrer l'adresse du Client: ");
-        String adresse = scanner.nextLine();
-        System.out.println("Entrer le telephone du Client: ");
-        String telephone = scanner.nextLine();
-        System.out.println("Le client est professionnel(true/false)?");
-        boolean estProfessionnel = scanner.nextBoolean();
-        Client client = new Client(nom, adresse, telephone, estProfessionnel);
+    public void update(Client client) {
         clientDaoImpl.update(client);
     }
 
-    public void delete() {
-        System.out.println("Entrer Client id: ");
-        int id = scanner.nextInt();
+    public void delete(int id) {
         clientDaoImpl.delete(id);
     }
 
-    public Client findById() {
-        System.out.println("Enter Client id: ");
-        int id = scanner.nextInt();
+    public Client findById(int id) {
         Optional<Client> optionalClient = clientDaoImpl.findById(id);
-        if (optionalClient.isPresent()) {
-            return optionalClient.get();
-        } else {
-            System.out.println("Client non trouvé.");
-            return null;
-        }
+        return optionalClient.orElse(null);
     }
 
     public List<Client> findAll() {
         return clientDaoImpl.findAll();
     }
 
-    public List<Client> findByNom() {
-        System.out.println("Entrer le nom du client: ");
-        String nomClient = scanner.nextLine();
+    public List<Client> findByNom(String nomClient) {
         return clientDaoImpl.findByName(nomClient);
     }
-
 }

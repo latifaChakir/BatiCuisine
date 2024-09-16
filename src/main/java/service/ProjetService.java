@@ -20,37 +20,40 @@ public class ProjetService {
     public Projet save(Projet projet) {
         return this.projectDaoImpl.save(projet);
     }
-    public Projet findById() {
-        System.out.println("enter the id of the projet");
-        int projectId = scanner.nextInt();
-        Optional<Projet> projet = this.projectDaoImpl.findById(projectId);
-        if (projet.isPresent()) {
-            return projet.get();
-        }else{
-            return null;
-        }
+    public Optional<Projet> findById(int projectId) {
+        return this.projectDaoImpl.findById(projectId);
     }
     public List<Projet> findAll() {
         return this.projectDaoImpl.findAll();
     }
-    public void delete() {
-        System.out.println("enter the id of the projet");
-        int projectId = scanner.nextInt();
+    public void delete(int projectId) {
         this.projectDaoImpl.delete(projectId);
     }
     public Projet update(Projet projet) {
         return this.projectDaoImpl.update(projet);
     }
-    public List<Projet> findByName() {
-        System.out.println("enter the name of the projet");
-        String projetName = scanner.next();
+    public List<Projet> findByName(String projetName) {
         return this.projectDaoImpl.findByName(projetName);
     }
     public void saveProjetClient(Projet projet, Client client) {
         ClientDaoImpl clientDaoImpl = new ClientDaoImpl();
-        clientDaoImpl.save(client);
-        projet.setClient(client);
+        Client savedClient=clientDaoImpl.save(client);
+        projet.setClient(savedClient);
+        ProjetDaoImpl projectDaoImpl = new ProjetDaoImpl();
         projectDaoImpl.save(projet);
     }
+    public void updateProjetClient(Projet projet, Client client) {
+        ClientDaoImpl clientDaoImpl = new ClientDaoImpl();
+        if (client.getId() == 0) {
+            Client savedClient = clientDaoImpl.save(client);
+            projet.setClient(savedClient);
+        } else {
+            Client updatedClient = clientDaoImpl.update(client);
+            projet.setClient(updatedClient);
+        }
+        ProjetDaoImpl projectDaoImpl = new ProjetDaoImpl();
+        projectDaoImpl.update(projet);
+    }
+
 
 }

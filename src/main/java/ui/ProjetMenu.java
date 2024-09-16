@@ -6,16 +6,19 @@ import bean.enums.EtatProjet;
 import service.ProjetService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class ProjetMenu {
     private ProjetService projetService;
     private static Scanner scanner;
-    public ProjetMenu() {
-        projetService = new ProjetService();
+
+    public ProjetMenu(ProjetService projetService) {
+        this.projetService = projetService;
         scanner = new Scanner(System.in);
     }
-    public void projetMenu()  {
+
+    public void projetMenu() {
         while (true) {
             System.out.println("1. Ajouter Projet");
             System.out.println("2. Modifier Projet");
@@ -34,36 +37,38 @@ public class ProjetMenu {
 
             switch (choice) {
                 case 1:
-                    Projet projet=inputsProjet();
-                    projetService.saveProjetClient(projet,projet.getClient());
+                    Projet projet = inputsProjet();
+                    projetService.saveProjetClient(projet, projet.getClient());
                     break;
                 case 2:
-                    Projet projet2=inputsProjet();
-                    projetService.update(projet2);
+                    int projetIdToUpdate=getProjetIdInput();
+                    Projet projetToUpdate = inputsProjet();
+                    projetToUpdate.setId(projetIdToUpdate);
+                    projetService.updateProjetClient(projetToUpdate,projetToUpdate.getClient());
                     break;
                 case 3:
-                    projetService.delete();
+                    deleteProjetById();
                     break;
                 case 4:
+                    findProjetById();
                     break;
                 case 5:
-                    List<Projet> Projets1=projetService.findByName();
-                    for(Projet Projet2:Projets1){
-                        System.out.println(Projet2);
-                    }
+                    findProjetByName();
                     break;
                 case 6:
-                    List<Projet> Projets = projetService.findAll();
-                    System.out.println(Projets);
+                    List<Projet> projets = projetService.findAll();
+                    projets.forEach(System.out::println);
                     break;
-
                 case 7:
                     System.out.println("Bye!");
-                    break;
+                    return; // Exit the loop
+                default:
+                    System.out.println("Option non valide");
             }
         }
     }
-    private static Client clientInput(){
+
+    private static Client clientInput() {
         System.out.println("Entrer le nom du client: ");
         String nom = scanner.nextLine();
         System.out.println("Entrer l'adresse du Client: ");
@@ -71,23 +76,54 @@ public class ProjetMenu {
         System.out.println("Entrer le telephone du Client: ");
         String telephone = scanner.nextLine();
         System.out.println("Le client est professionnel(true/false)?");
-        boolean estProfessionnel = scanner.nextBoolean();
-       return new Client(nom, adresse, telephone, estProfessionnel);
+        boolean estProfessionnel = Boolean.parseBoolean(scanner.nextLine());
+        return new Client(0, nom, adresse, telephone, estProfessionnel);
     }
+
     private static Projet inputsProjet() {
         Client client = clientInput();
         System.out.print("Nom du projet : ");
         String nomProjet = scanner.nextLine();
         System.out.print("Marge beneficiaire: ");
         double margeBenif = Double.parseDouble(scanner.nextLine());
-        System.out.print("cout total : ");
+
+        System.out.print("Cout total : ");
         double coutTotal = Double.parseDouble(scanner.nextLine());
-        System.out.print("Etat du projet : ");
+
+        System.out.print("Etat du projet (par ex: ENCOURS, TERMINE, ANNULE) : ");
         String etatInput = scanner.nextLine().toUpperCase();
-        EtatProjet etat =EtatProjet.valueOf(etatInput);
-        return new Projet(nomProjet,margeBenif,coutTotal,etat,client);
+        EtatProjet etat = EtatProjet.valueOf(etatInput);
+        return new Projet(nomProjet, margeBenif, coutTotal, etat, client);
     }
 
+    private void deleteProjetById() {
+        System.out.println("Enter the ID of the project to delete: ");
+        int projectId = Integer.parseInt(scanner.nextLine());
+        projetService.delete(projectId);
+        System.out.println("Projet supprimé.");
+    }
 
+    private void findProjetById() {
+        System.out.println("Enter the ID of the project: ");
+        int projectId = Integer.parseInt(scanner.nextLine());
+        Optional<Projet> projet = projetService.findById(projectId);
+        if (projet.isPresent()) {
+            System.out.println(projet.get());
+        } else {
+            System.out.println("Projet non trouvé.");
+        }
+    }
+
+    private void findProjetByName() {
+        System.out.println("Enter the name of the project: ");
+        String projetName = scanner.nextLine();
+        List<Projet> projets = projetService.findByName(projetName);
+        projets.forEach(System.out::println);
+    }
+
+    private int getProjetIdInput() {
+        System.out.println("Entrer l'ID du projet: ");
+        return Integer.parseInt(scanner.nextLine());
+    }
 
 }

@@ -2,6 +2,8 @@ package bean;
 
 import bean.enums.EtatProjet;
 
+import java.util.List;
+
 public class Projet {
     private int id;
     private String nomProjet;
@@ -9,6 +11,7 @@ public class Projet {
     private double coutTotal;
     private EtatProjet etat;
     private Client client;
+    List<Composant> composants;
 
     public Projet(int id, String nomProjet, double margeBeneficiaire, double coutTotal, EtatProjet etat, Client client) {
         this.id = id;
@@ -75,6 +78,14 @@ public class Projet {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public List<Composant> getComposants() {
+        return composants;
+    }
+
+    public void setComposants(List<Composant> composants) {
+        this.composants = composants;
     }
 
     @Override

@@ -23,7 +23,6 @@ public class MainOeuvre extends Composant {
 
     public MainOeuvre() {}
 
-    // Getters and Setters
     public double getTauxHoraire() {
         return tauxHoraire;
     }
@@ -48,10 +47,9 @@ public class MainOeuvre extends Composant {
         this.productiviteOuvrier = productiviteOuvrier;
     }
 
-    // Calcul du coût total en tenant compte de la productivité des ouvriers
     public double calculerCoutTotal() {
         double coutTotal = (tauxHoraire * heuresTravail) * productiviteOuvrier;
-        return coutTotal * (1 + getTauxTVA() / 100);  // Using getter if tauxTVA is private
+        return coutTotal * (1 + getTauxTVA() / 100);
     }
 
     @Override
