@@ -67,7 +67,7 @@ public class ClientService {
         return clientDaoImpl.findAll();
     }
 
-    public List<Client> findByNom(String nom) {
+    public List<Client> findByNom() {
         System.out.println("Entrer le nom du client: ");
         String nomClient = scanner.nextLine();
         return clientDaoImpl.findByName(nomClient);
