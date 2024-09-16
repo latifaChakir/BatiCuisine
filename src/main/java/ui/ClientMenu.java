@@ -15,12 +15,12 @@ public class ClientMenu {
     }
     public void clientMenu()  {
         while (true) {
-            System.out.println("1. Create Client");
-            System.out.println("2. Update Client");
-            System.out.println("3. Delete Client by id");
-            System.out.println("4. Show Client by id");
-            System.out.println("5. show all clients ");
-            System.out.print("Enter your choice: ");
+            System.out.println("1. Ajouter Client");
+            System.out.println("2. Modifier Client");
+            System.out.println("3. Supprimer Client par id");
+            System.out.println("4. Chercher Client by id");
+            System.out.println("5. Afficher les clients ");
+            System.out.print("choisis une option: ");
             int choice;
             try {
                 choice = Integer.parseInt(scanner.nextLine());
