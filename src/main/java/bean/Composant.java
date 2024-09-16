@@ -9,9 +9,10 @@ public class Composant {
     protected double tauxTVA;
     protected Projet projet;
 
-    public Composant(int id, String nom, TypeComposant typeComposant, double tauxTVA) {
+    public Composant(int id, String nom, TypeComposant typeComposant, double tauxTVA, Projet projet) {
         this.id = id;
         this.nom = nom;
+        this.projet = projet;
         this.typeComposant = typeComposant;
         this.tauxTVA = tauxTVA;
     }

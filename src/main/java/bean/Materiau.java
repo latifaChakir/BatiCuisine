@@ -8,8 +8,8 @@ public class Materiau extends Composant {
     private double coutTransport;
     private double coefficientQualite;
 
-    public Materiau(int id, String nom, TypeComposant typeComposant, double tauxTVA, double coutUnitaire, double quantite, double coutTransport, double coefficientQualite) {
-        super(id, nom, typeComposant, tauxTVA);
+    public Materiau(int id, String nom, TypeComposant typeComposant, double tauxTVA, double coutUnitaire, double quantite, double coutTransport, double coefficientQualite,Projet projet) {
+        super(id, nom, typeComposant, tauxTVA,projet);
         this.coutUnitaire = coutUnitaire;
         this.quantite = quantite;
         this.coutTransport = coutTransport;

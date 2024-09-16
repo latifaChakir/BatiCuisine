@@ -1,6 +1,8 @@
 package dao.impl;
 
 import bean.Composant;
+import bean.MainOeuvre;
+import bean.Materiau;
 import bean.Projet;
 import bean.enums.TypeComposant;
 import config.ConnectionConfig;
@@ -26,19 +28,54 @@ public class ComposantDaoImpl implements ComposantDao {
 
     @Override
     public Composant save(Composant composant) {
-        String sql = "insert into composants(nom,typecomposant,tauxtva,projet_id) values(?,?::TupeComposant,?,?)";
+        String sql = "insert into composants(nom, typecomposant, tauxtva, projet_id) values(?, ?::TypeComposant, ?, ?)";
+
         try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, composant.getNom());
-            ps.setString(2,composant.getTypeComposant().name());
-            ps.setDouble(3,composant.getTauxTVA());
+            ps.setString(2, composant.getTypeComposant().name());
+            ps.setDouble(3, composant.getTauxTVA());
             ps.setInt(4, composant.getProjet().getId());
-            ps.executeUpdate();
+
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Échec de la création du composant, aucune ligne ajoutée.");
+            }
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int composantId = generatedKeys.getInt(1);
+                    if (composant instanceof Materiau) {
+                        Materiau materiau = (Materiau) composant;
+                        String sqlMateriau = "INSERT INTO materiaux (composant_id, coutunitaire, quantite, couttransport, coefficientqualite) VALUES (?, ?, ?, ?, ?)";
+                        try (PreparedStatement psMateriau = conn.prepareStatement(sqlMateriau)) {
+                            psMateriau.setInt(1, composantId);
+                            psMateriau.setDouble(2, materiau.getCoutUnitaire());
+                            psMateriau.setDouble(3, materiau.getQuantite());
+                            psMateriau.setDouble(4, materiau.getCoutTransport());
+                            psMateriau.setDouble(5, materiau.getCoefficientQualite());
+                            psMateriau.executeUpdate();
+                        }
+                    } else if (composant instanceof MainOeuvre) {
+                        MainOeuvre mainOeuvre = (MainOeuvre) composant;
+                        String sqlMainOeuvre = "INSERT INTO main_oeuvre (composant_id, tauxHoraire, heuresTravail, productiviteOuvrier) VALUES (?, ?, ?, ?)";
+                        try (PreparedStatement psMainOeuvre = conn.prepareStatement(sqlMainOeuvre)) {
+                            psMainOeuvre.setInt(1, composantId);
+                            psMainOeuvre.setDouble(2, mainOeuvre.getTauxHoraire());
+                            psMainOeuvre.setDouble(3, mainOeuvre.getHeuresTravail());
+                            psMainOeuvre.setDouble(4, mainOeuvre.getProductiviteOuvrier());
+                            psMainOeuvre.executeUpdate();
+                        }
+                    }
+                } else {
+                    throw new SQLException("Échec de la création du composant, aucun ID obtenu.");
+                }
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return composant;
 
+        return composant;
     }
 
     @Override
