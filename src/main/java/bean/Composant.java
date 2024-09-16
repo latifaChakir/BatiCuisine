@@ -4,9 +4,10 @@ import bean.enums.TypeComposant;
 
 public class Composant {
     private int id;
-    private String nom;
-    private TypeComposant typeComposant;
+    protected String nom;
+    protected TypeComposant typeComposant;
     protected double tauxTVA;
+    protected Projet projet;
 
     public Composant(int id, String nom, TypeComposant typeComposant, double tauxTVA) {
         this.id = id;
@@ -54,6 +55,14 @@ public class Composant {
 
     public void setTauxTVA(double tauxTVA) {
         this.tauxTVA = tauxTVA;
+    }
+
+    public Projet getProjet() {
+        return projet;
+    }
+
+    public void setProjet(Projet projet) {
+        this.projet = projet;
     }
 
     @Override

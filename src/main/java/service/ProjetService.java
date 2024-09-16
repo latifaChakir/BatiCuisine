@@ -4,17 +4,12 @@ import bean.Client;
 import bean.Projet;
 import dao.impl.ClientDaoImpl;
 import dao.impl.ProjetDaoImpl;
-
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
 public class ProjetService {
     private ProjetDaoImpl projectDaoImpl;
-    private Scanner scanner;
     public ProjetService() {
-        this.scanner = new Scanner(System.in);
         this.projectDaoImpl=new ProjetDaoImpl();
     }
     public Projet save(Projet projet) {

@@ -100,7 +100,7 @@ public class ClientMenu {
         String telephone = scanner.nextLine();
         System.out.println("Le client est professionnel (true/false) ?");
         boolean estProfessionnel = scanner.nextBoolean();
-        scanner.nextLine();  // Pour consommer la nouvelle ligne restante
+        scanner.nextLine();
         return new Client(nom, adresse, telephone, estProfessionnel);
     }
 
