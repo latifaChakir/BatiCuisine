@@ -18,8 +18,9 @@ public class ClientMenu {
             System.out.println("1. Ajouter Client");
             System.out.println("2. Modifier Client");
             System.out.println("3. Supprimer Client par id");
-            System.out.println("4. Chercher Client by id");
-            System.out.println("5. Afficher les clients ");
+            System.out.println("4. Chercher Client par id");
+            System.out.println("5. Chercher Client by nom");
+            System.out.println("6. Afficher les clients ");
             System.out.print("choisis une option: ");
             int choice;
             try {
@@ -44,12 +45,16 @@ public class ClientMenu {
                     System.out.println("client :"+client.getNom()+ ", adresse :"+client.getAdresse()+", tel :"+client.getTelephone());
                     break;
                 case 5:
+                    List<Client> clients1=clientService.findByNom();
+                    for(Client client2:clients1){
+                        System.out.println(client2);
+                    }
+                    break;
+                case 6:
                     List<Client> clients = clientService.findAll();
+                    System.out.println(clients);
                      break;
 
-                case 6:
-                    List<Client> clients1=clientService.findByNom();
-                    break;
                 case 7:
                     System.out.println("Bye!");
                     break;
