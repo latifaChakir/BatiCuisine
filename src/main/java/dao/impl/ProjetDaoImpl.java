@@ -4,7 +4,6 @@ import bean.Client;
 import bean.Projet;
 import bean.enums.EtatProjet;
 import config.ConnectionConfig;
-import dao.dao.ClientDao;
 import dao.dao.ProjetDao;
 
 import java.sql.*;

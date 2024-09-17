@@ -1,7 +1,9 @@
 package ui;
 
 import bean.Client;
+import exceptions.ClientValidationException;
 import service.ClientService;
+import utils.Validations;
 
 import java.util.List;
 import java.util.Scanner;
@@ -37,8 +39,11 @@ public class ClientMenu {
             switch (choice) {
                 case 1:
                     Client client = getClientInput();
-                    clientService.save(client);
-                    System.out.println("Client ajouté avec succès.");
+                    if (client != null) {
+                        clientService.save(client);
+                    } else {
+                        System.err.println("Le client n'a pas été ajouté en raison d'erreurs de validation.");
+                    }
                     break;
                 case 2:
                     int clientIdToUpdate = getClientIdInput();
@@ -101,8 +106,16 @@ public class ClientMenu {
         System.out.println("Le client est professionnel (true/false) ?");
         boolean estProfessionnel = scanner.nextBoolean();
         scanner.nextLine();
-        return new Client(nom, adresse, telephone, estProfessionnel);
+        Client client = new Client(nom, adresse, telephone, estProfessionnel);
+        try {
+            Validations.clientValidation(client);
+        } catch (ClientValidationException e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
+        return client;
     }
+
 
     private int getClientIdInput() {
         System.out.println("Entrer l'ID du client: ");
