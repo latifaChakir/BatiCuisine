@@ -82,13 +82,13 @@ public class ProjetMenu {
         boolean valid = false;
 
         while (!valid) {
-            System.out.println("Entrer le nom du client: ");
+            System.out.print("Entrer le nom du client: ");
             String nom = scanner.nextLine();
-            System.out.println("Entrer l'adresse du Client: ");
+            System.out.print("Entrer l'adresse du Client: ");
             String adresse = scanner.nextLine();
-            System.out.println("Entrer le telephone du Client: ");
+            System.out.print("Entrer le telephone du Client: ");
             String telephone = scanner.nextLine();
-            System.out.println("Le client est professionnel(true/false)?");
+            System.out.print("Le client est professionnel(true/false)?");
             boolean estProfessionnel = Boolean.parseBoolean(scanner.nextLine());
 
             client = new Client(0, nom, adresse, telephone, estProfessionnel);
@@ -107,6 +107,9 @@ public class ProjetMenu {
         Client client = clientInput();
         System.out.print("Nom du projet : ");
         String nomProjet = scanner.nextLine();
+        System.out.print("Surface :");
+        double surface = Double.parseDouble(scanner.nextLine());
+
         System.out.print("Marge bénéficiaire: ");
         double margeBenif = Double.parseDouble(scanner.nextLine());
 
@@ -116,7 +119,7 @@ public class ProjetMenu {
         System.out.print("État du projet (par ex: ENCOURS, TERMINE, ANNULE) : ");
         String etatInput = scanner.nextLine().toUpperCase();
         EtatProjet etat = EtatProjet.valueOf(etatInput);
-        return new Projet(nomProjet, margeBenif, coutTotal, etat, client);
+        return new Projet(nomProjet, margeBenif, coutTotal, etat, client,surface);
     }
 
 

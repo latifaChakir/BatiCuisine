@@ -10,20 +10,23 @@ public class Projet {
     private double margeBeneficiaire;
     private double coutTotal;
     private EtatProjet etat;
+    private double surface;
     private Client client;
     List<Composant> composants;
 
-    public Projet(int id, String nomProjet, double margeBeneficiaire, double coutTotal, EtatProjet etat, Client client) {
+    public Projet(int id, String nomProjet, double margeBeneficiaire, double coutTotal, EtatProjet etat, Client client, double surface) {
         this.id = id;
         this.nomProjet = nomProjet;
+        this.surface = surface;
         this.margeBeneficiaire = margeBeneficiaire;
         this.coutTotal = coutTotal;
         this.etat = etat;
         this.client = client;
     }
 
-    public Projet(String nomProjet, double margeBeneficiaire, double coutTotal, EtatProjet etat, Client client) {
+    public Projet(String nomProjet, double margeBeneficiaire, double coutTotal, EtatProjet etat, Client client,double surface) {
         this.nomProjet = nomProjet;
+        this.surface = surface;
         this.margeBeneficiaire = margeBeneficiaire;
         this.coutTotal = coutTotal;
         this.etat = etat;
@@ -84,6 +87,14 @@ public class Projet {
         return composants;
     }
 
+    public double getSurface() {
+        return surface;
+    }
+
+    public void setSurface(double surface) {
+        this.surface = surface;
+    }
+
     public void setComposants(List<Composant> composants) {
         this.composants = composants;
     }
@@ -95,6 +106,7 @@ public class Projet {
                 ", nomProjet='" + nomProjet + '\'' +
                 ", margeBeneficiaire=" + margeBeneficiaire +
                 ", coutTotal=" + coutTotal +
+                ", surface=" + surface +
                 ", etat=" + etat +
                 ", client=" + client +
                 '}';

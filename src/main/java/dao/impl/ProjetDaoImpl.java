@@ -24,13 +24,14 @@ public class ProjetDaoImpl implements ProjetDao {
 
     @Override
     public Projet save(Projet projet) {
-        String sql = "INSERT INTO Projets (nomprojet, margebeneficiaire, couttotal, etat, client_id) VALUES (?, ?, ?, ?::EtatProjet, ?) RETURNING id;";
+        String sql = "INSERT INTO Projets (nomprojet, margebeneficiaire, couttotal, etat, client_id,surface) VALUES (?, ?, ?, ?::EtatProjet, ?,?) RETURNING id;";
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, projet.getNomProjet());
             preparedStatement.setDouble(2, projet.getMargeBeneficiaire());
             preparedStatement.setDouble(3, projet.getCoutTotal());
             preparedStatement.setString(4, projet.getEtat().name());
             preparedStatement.setInt(5, projet.getClient().getId());
+            preparedStatement.setDouble(6, projet.getSurface());
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -101,15 +102,16 @@ public class ProjetDaoImpl implements ProjetDao {
 
     @Override
     public Projet update(Projet projet) {
-        String sql = "UPDATE Projets SET nomprojet = ?, margebeneficiaire = ?, couttotal = ?, etat = ?::EtatProjet, client_id = ? WHERE id = ?";
+        String sql = "UPDATE Projets SET nomprojet = ?, margebeneficiaire = ?, couttotal = ?, etat = ?::EtatProjet, surface = ? , client_id = ? WHERE id = ?";
 
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, projet.getNomProjet());
             preparedStatement.setDouble(2, projet.getMargeBeneficiaire());
             preparedStatement.setDouble(3, projet.getCoutTotal());
             preparedStatement.setString(4, projet.getEtat().name());
-            preparedStatement.setInt(5, projet.getClient().getId());
-            preparedStatement.setInt(6, projet.getId());
+            preparedStatement.setDouble(5, projet.getSurface());
+            preparedStatement.setInt(6, projet.getClient().getId());
+            preparedStatement.setInt(7, projet.getId());
 
             int affectedRows = preparedStatement.executeUpdate();
             System.out.println("projet est mis à jour avec succes");

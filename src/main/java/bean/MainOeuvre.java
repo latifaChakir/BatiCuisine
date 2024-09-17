@@ -6,6 +6,7 @@ public class MainOeuvre extends Composant {
     private double tauxHoraire;
     private double heuresTravail;
     private double productiviteOuvrier;
+    private Composant composant;
 
     public MainOeuvre(int id, String nom, TypeComposant typeComposant,Projet projet, double tauxTVA, double tauxHoraire, double heuresTravail, double productiviteOuvrier) {
         super(id, nom, typeComposant, tauxTVA,projet);
@@ -50,6 +51,14 @@ public class MainOeuvre extends Composant {
     public double calculerCoutTotal() {
         double coutTotal = (tauxHoraire * heuresTravail) * productiviteOuvrier;
         return coutTotal * (1 + getTauxTVA() / 100);
+    }
+
+    public Composant getComposant() {
+        return composant;
+    }
+
+    public void setComposant(Composant composant) {
+        this.composant = composant;
     }
 
     @Override

@@ -7,6 +7,7 @@ public class Materiau extends Composant {
     private double quantite;
     private double coutTransport;
     private double coefficientQualite;
+    private Composant composant;
 
     public Materiau(int id, String nom, TypeComposant typeComposant, double tauxTVA, double coutUnitaire, double quantite, double coutTransport, double coefficientQualite,Projet projet) {
         super(id, nom, typeComposant, tauxTVA,projet);
@@ -62,6 +63,14 @@ public class Materiau extends Composant {
     public double calculerCoutTotal() {
         double coutTotal = (coutUnitaire * quantite) + coutTransport;
         return coutTotal * (1 + tauxTVA / 100);
+    }
+
+    public Composant getComposant() {
+        return composant;
+    }
+
+    public void setComposant(Composant composant) {
+        this.composant = composant;
     }
 
     @Override
