@@ -3,6 +3,7 @@ package ui;
 import bean.Client;
 import bean.Projet;
 import bean.enums.EtatProjet;
+import service.ComposantService;
 import service.ProjetService;
 
 import java.util.List;
@@ -39,6 +40,12 @@ public class ProjetMenu {
                 case 1:
                     Projet projet = inputsProjet();
                     projetService.saveProjetClient(projet, projet.getClient());
+                    System.out.println("Voulez-vous ajouter des composants à ce projet ? (oui/non)");
+                    String reponse = scanner.nextLine();
+                    if (reponse.equalsIgnoreCase("oui")) {
+                        ComposantMenu composantMenu = new ComposantMenu(new ComposantService());
+                        composantMenu.ajouterComposantAuProjet(projet);
+                    }
                     break;
                 case 2:
                     int projetIdToUpdate=getProjetIdInput();

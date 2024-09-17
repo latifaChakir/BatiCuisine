@@ -25,7 +25,7 @@ public class ProjetDaoImpl implements ProjetDao {
 
     @Override
     public Projet save(Projet projet) {
-        String sql = "INSERT INTO Projets (nomprojet, margebeneficiaire, couttotal, etat, client_id) VALUES (?, ?, ?, ?::EtatProjet, ?);";
+        String sql = "INSERT INTO Projets (nomprojet, margebeneficiaire, couttotal, etat, client_id) VALUES (?, ?, ?, ?::EtatProjet, ?) RETURNING id;";
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, projet.getNomProjet());
             preparedStatement.setDouble(2, projet.getMargeBeneficiaire());
@@ -33,11 +33,17 @@ public class ProjetDaoImpl implements ProjetDao {
             preparedStatement.setString(4, projet.getEtat().name());
             preparedStatement.setInt(5, projet.getClient().getId());
 
-            int affectedRows = preparedStatement.executeUpdate();
-            System.out.println("projet enregistré avec succes");
-            if (affectedRows == 0) {
-                throw new SQLException("Échec de la création du projet, aucune ligne affectée.");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int generatedId = resultSet.getInt(1);
+                System.out.println("ID généré : " + generatedId);
+                projet.setId(generatedId);
+            } else {
+                throw new SQLException("Échec de la création du projet, aucun ID généré.");
             }
+
+            System.out.println("Projet enregistré avec succès : " + projet);
+
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'insertion du projet : " + e.getMessage());
         }

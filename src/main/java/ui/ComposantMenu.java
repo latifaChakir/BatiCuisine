@@ -39,10 +39,10 @@ public class ComposantMenu {
 
             switch (choice) {
                 case 1:
-                    ajouterComposant();
+//                    ajouterComposantAuProjet();
                     break;
                 case 2:
-                    modifierComposant();
+//                    modifierComposant();
                     break;
                 case 3:
                     supprimerComposant();
@@ -62,21 +62,21 @@ public class ComposantMenu {
         }
     }
 
-    private void ajouterComposant() {
-        System.out.println("Ajouter un composant");
-        Composant composant = getComposantInput();
+    public void ajouterComposantAuProjet(Projet projet) {
+        System.out.println("Ajouter un composant au projet: " +projet.getId()+ projet.getNomProjet());
+        Composant composant = getComposantInput(projet);
         composantService.save(composant);
-        System.out.println("Composant ajouté avec succès.");
+        System.out.println("Composant ajouté avec succès au projet " + projet.getNomProjet());
     }
 
-    private void modifierComposant() {
-        System.out.println("Modifier un composant");
-        int composantIdToUpdate = getComposantIdInput();
-        Composant composantToUpdate = getComposantInput();
-        composantToUpdate.setId(composantIdToUpdate);
-        composantService.update(composantToUpdate);
-        System.out.println("Composant modifié avec succès.");
-    }
+//    private void modifierComposant() {
+//        System.out.println("Modifier un composant");
+//        int composantIdToUpdate = getComposantIdInput();
+//        Composant composantToUpdate = getComposantInput();
+//        composantToUpdate.setId(composantIdToUpdate);
+//        composantService.update(composantToUpdate);
+//        System.out.println("Composant modifié avec succès.");
+//    }
 
     private void supprimerComposant() {
         int composantIdToDelete = getComposantIdInput();
@@ -105,7 +105,7 @@ public class ComposantMenu {
         }
     }
 
-    private Composant getComposantInput() {
+    private Composant getComposantInput(Projet projet) {
         System.out.println("Type de composant (1: Materiel, 2: MainDOeuvre): ");
         int type = Integer.parseInt(scanner.nextLine());
 
@@ -113,10 +113,6 @@ public class ComposantMenu {
         String nom = scanner.nextLine();
         System.out.println("Entrer le taux de TVA: ");
         double tauxTVA = Double.parseDouble(scanner.nextLine());
-        System.out.println("Entrer l'ID du projet: ");
-        int projetId = Integer.parseInt(scanner.nextLine());
-        Projet projet=new Projet();
-        projet.setId(projetId);
 
         if (type == 1) {
             System.out.println("Entrer le coût unitaire: ");
@@ -130,7 +126,7 @@ public class ComposantMenu {
 
             TypeComposant typeComposant = TypeComposant.Materiel;
 
-            return new Materiau(0, nom, typeComposant, tauxTVA, coutUnitaire, quantite, coutTransport, coefficientQualite,projet);
+            return new Materiau(0, nom, typeComposant, tauxTVA, coutUnitaire, quantite, coutTransport, coefficientQualite, projet);
 
         } else {
             System.out.println("Entrer le taux horaire: ");
@@ -149,4 +145,6 @@ public class ComposantMenu {
         System.out.println("Entrer l'ID du composant: ");
         return Integer.parseInt(scanner.nextLine());
     }
+
+
 }
