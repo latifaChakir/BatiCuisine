@@ -41,7 +41,7 @@ public class ProjetDaoImpl implements ProjetDao {
                 throw new SQLException("Échec de la création du projet, aucun ID généré.");
             }
 
-            System.out.println("Projet enregistré avec succès : " + projet);
+            System.out.println("Projet enregistré avec succès : ");
 
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'insertion du projet : " + e.getMessage());

@@ -3,8 +3,10 @@ package ui;
 import bean.Client;
 import bean.Projet;
 import bean.enums.EtatProjet;
+import exceptions.ClientValidationException;
 import service.ComposantService;
 import service.ProjetService;
+import utils.Validations;
 
 import java.util.List;
 import java.util.Optional;
@@ -76,32 +78,47 @@ public class ProjetMenu {
     }
 
     private static Client clientInput() {
-        System.out.println("Entrer le nom du client: ");
-        String nom = scanner.nextLine();
-        System.out.println("Entrer l'adresse du Client: ");
-        String adresse = scanner.nextLine();
-        System.out.println("Entrer le telephone du Client: ");
-        String telephone = scanner.nextLine();
-        System.out.println("Le client est professionnel(true/false)?");
-        boolean estProfessionnel = Boolean.parseBoolean(scanner.nextLine());
-        return new Client(0, nom, adresse, telephone, estProfessionnel);
+        Client client = null;
+        boolean valid = false;
+
+        while (!valid) {
+            System.out.println("Entrer le nom du client: ");
+            String nom = scanner.nextLine();
+            System.out.println("Entrer l'adresse du Client: ");
+            String adresse = scanner.nextLine();
+            System.out.println("Entrer le telephone du Client: ");
+            String telephone = scanner.nextLine();
+            System.out.println("Le client est professionnel(true/false)?");
+            boolean estProfessionnel = Boolean.parseBoolean(scanner.nextLine());
+
+            client = new Client(0, nom, adresse, telephone, estProfessionnel);
+            try {
+                Validations.clientValidation(client);
+                valid = true;
+            } catch (ClientValidationException e) {
+                System.err.println(e.getMessage());
+                System.out.println("Veuillez entrer les informations du client à nouveau.");
+            }
+        }
+        return client;
     }
 
     private static Projet inputsProjet() {
         Client client = clientInput();
         System.out.print("Nom du projet : ");
         String nomProjet = scanner.nextLine();
-        System.out.print("Marge beneficiaire: ");
+        System.out.print("Marge bénéficiaire: ");
         double margeBenif = Double.parseDouble(scanner.nextLine());
 
-        System.out.print("Cout total : ");
+        System.out.print("Coût total : ");
         double coutTotal = Double.parseDouble(scanner.nextLine());
 
-        System.out.print("Etat du projet (par ex: ENCOURS, TERMINE, ANNULE) : ");
+        System.out.print("État du projet (par ex: ENCOURS, TERMINE, ANNULE) : ");
         String etatInput = scanner.nextLine().toUpperCase();
         EtatProjet etat = EtatProjet.valueOf(etatInput);
         return new Projet(nomProjet, margeBenif, coutTotal, etat, client);
     }
+
 
     private void deleteProjetById() {
         System.out.println("Enter the ID of the project to delete: ");
