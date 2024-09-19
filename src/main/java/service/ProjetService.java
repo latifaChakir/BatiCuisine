@@ -18,6 +18,7 @@ public class ProjetService {
     public Optional<Projet> findById(int projectId) {
         return this.projectDaoImpl.findById(projectId);
     }
+
     public List<Projet> findAll() {
         return this.projectDaoImpl.findAll();
     }

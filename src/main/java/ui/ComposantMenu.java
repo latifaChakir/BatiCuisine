@@ -1,10 +1,7 @@
 package ui;
 
 import bean.Composant;
-import bean.Materiau;
-import bean.MainOeuvre;
 import bean.Projet;
-import bean.enums.TypeComposant;
 import service.ComposantService;
 
 import java.util.List;
@@ -78,15 +75,6 @@ public class ComposantMenu {
         }
     }
 
-//    private void modifierComposant() {
-//        System.out.println("Modifier un composant");
-//        int composantIdToUpdate = getComposantIdInput();
-//        Composant composantToUpdate = getComposantInput();
-//        composantToUpdate.setId(composantIdToUpdate);
-//        composantService.update(composantToUpdate);
-//        System.out.println("Composant modifié avec succès.");
-//    }
-
     private void supprimerComposant() {
         int composantIdToDelete = getComposantIdInput();
         composantService.delete(composantIdToDelete);
@@ -122,7 +110,8 @@ public class ComposantMenu {
             boolean ajouterAutreMateriau = true;
 
             while (ajouterAutreMateriau) {
-                Composant materiau = getMateriauInput(projet);
+                MateriauMenu materiauMenu=new MateriauMenu(composantService);
+                Composant materiau = materiauMenu.getMateriauInput(projet);
 
                 composantService.save(materiau);
                 System.out.println("Matériau ajouté avec succès !");
@@ -139,8 +128,8 @@ public class ComposantMenu {
             boolean ajouterAutreMainOeuvre = true;
 
             while (ajouterAutreMainOeuvre) {
-                Composant mainOeuvre = getMainOeuvreInput(projet);
-
+                MainOeuvreMenu mainOeuvreMenu = new MainOeuvreMenu(composantService);
+                Composant mainOeuvre =mainOeuvreMenu.getMainOeuvreInput(projet);
                 composantService.save(mainOeuvre);
                 System.out.println("Main d'œuvre ajoutée avec succès !");
 
@@ -154,38 +143,6 @@ public class ComposantMenu {
         }
     }
 
-    private Composant getMateriauInput(Projet projet) {
-        System.out.print("Entrer le nom du matériau: ");
-        String nom = scanner.nextLine();
-        System.out.print("Entrer le taux de TVA: ");
-        double tauxTVA = Double.parseDouble(scanner.nextLine());
-        System.out.print("Entrer le coût unitaire: ");
-        double coutUnitaire = Double.parseDouble(scanner.nextLine());
-        System.out.print("Entrer la quantité: ");
-        double quantite = Double.parseDouble(scanner.nextLine());
-        System.out.print("Entrer le coût de transport: ");
-        double coutTransport = Double.parseDouble(scanner.nextLine());
-        System.out.print("Entrer le coefficient de qualité: ");
-        double coefficientQualite = Double.parseDouble(scanner.nextLine());
-
-        // Ne sauvegardez pas ici, laissez `ajouterComposantAuProjet` gérer la sauvegarde
-        return new Materiau(0, nom, TypeComposant.Materiel, tauxTVA, coutUnitaire, quantite, coutTransport, coefficientQualite, projet);
-    }
-
-    private Composant getMainOeuvreInput(Projet projet) {
-        System.out.print("Entrer le nom de l'ouvrier: ");
-        String nom = scanner.nextLine();
-        System.out.print("Entrer le taux de TVA: ");
-        double tauxTVA = Double.parseDouble(scanner.nextLine());
-        System.out.print("Entrer le taux horaire: ");
-        double tauxHoraire = Double.parseDouble(scanner.nextLine());
-        System.out.print("Entrer le nombre d'heures travaillées: ");
-        double heuresTravail = Double.parseDouble(scanner.nextLine());
-        System.out.print("Entrer la productivité de l'ouvrier: ");
-        double productiviteOuvrier = Double.parseDouble(scanner.nextLine());
-
-        return new MainOeuvre(0, nom, TypeComposant.MainDOeuvre, projet, tauxTVA, tauxHoraire, heuresTravail, productiviteOuvrier);
-    }
 
     private int getComposantIdInput() {
         System.out.print("Entrer l'ID du composant: ");
