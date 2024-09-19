@@ -106,13 +106,14 @@ public class ProjetDaoImpl implements ProjetDao {
 
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, projet.getNomProjet());
-            preparedStatement.setString(4, projet.getEtat().name());
-            preparedStatement.setDouble(5, projet.getSurface());
-            preparedStatement.setInt(6, projet.getClient().getId());
-            preparedStatement.setInt(7, projet.getId());
+            preparedStatement.setString(2, projet.getEtat().name());
+            preparedStatement.setDouble(3, projet.getSurface());
+            preparedStatement.setInt(4, projet.getClient().getId());
+            preparedStatement.setInt(5, projet.getId());
 
             int affectedRows = preparedStatement.executeUpdate();
             System.out.println("projet est mis à jour avec succes");
+
 
             if (affectedRows == 0) {
                 throw new SQLException("La mise à jour du projet a échoué, aucune ligne affectée.");

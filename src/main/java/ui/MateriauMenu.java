@@ -1,10 +1,12 @@
 package ui;
 
+import bean.Composant;
 import bean.Materiau;
 import bean.Projet;
 import bean.enums.TypeComposant;
 import service.ComposantService;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class MateriauMenu {
@@ -32,4 +34,5 @@ public class MateriauMenu {
 
         return new Materiau(0, nom, TypeComposant.Materiel, tauxTVA, coutUnitaire, quantite, coutTransport, coefficientQualite, projet);
     }
+
 }

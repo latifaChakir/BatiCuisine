@@ -74,6 +74,20 @@ public class ComposantMenu {
             }
         }
     }
+    public void updateComposantduProjet(Projet projet) {
+        boolean ajouterAutreComposant = true;
+        while (ajouterAutreComposant) {
+            System.out.println("Modifier un composant du projet: " + projet.getNomProjet());
+            getComposantInputToUpdate(projet);
+
+            System.out.print("Voulez-vous modifier un autre composant ? (oui/non): ");
+            String reponse = scanner.nextLine();
+
+            if (!reponse.equalsIgnoreCase("oui")) {
+                ajouterAutreComposant = false;
+            }
+        }
+    }
 
     private void supprimerComposant() {
         int composantIdToDelete = getComposantIdInput();
@@ -142,7 +156,59 @@ public class ComposantMenu {
             }
         }
     }
+    private List<Composant> findByProject(Projet projet){
+        List<Composant> composants = composantService.findByProject(projet);
+        if (!composants.isEmpty()) {
+            for (Composant c : composants) {
+                System.out.println(c);
+            }
+        } else {
+            System.out.println("Aucun composant trouvé.");
+        }
+        return composants;
+    }
+    private void getComposantInputToUpdate(Projet projet) {
+        System.out.print("Type de composant (1: Materiel, 2: MainDOeuvre): ");
+        int type = Integer.parseInt(scanner.nextLine());
 
+        if (type == 1) {
+            boolean ajouterAutreMateriau = true;
+
+            while (ajouterAutreMateriau) {
+                MateriauMenu materiauMenu = new MateriauMenu(composantService);
+                Composant materiau = materiauMenu.getMateriauInput(projet);
+                composantService.save(materiau);
+                System.out.println("Matériau ajouté avec succès !");
+
+                System.out.print("Voulez-vous ajouter un autre matériau ? (y/n): ");
+                String reponse = scanner.nextLine();
+
+                if (!reponse.equalsIgnoreCase("y")) {
+                    ajouterAutreMateriau = false;
+                }
+            }
+
+        } else if (type == 2) {
+            boolean ajouterAutreMainOeuvre = true;
+
+            while (ajouterAutreMainOeuvre) {
+                MainOeuvreMenu mainOeuvreMenu = new MainOeuvreMenu(composantService);
+                Composant mainOeuvre = mainOeuvreMenu.getMainOeuvreInput(projet);
+
+                composantService.save(mainOeuvre);
+                System.out.println("Main d'œuvre ajoutée avec succès !");
+
+                System.out.print("Voulez-vous ajouter une autre main d'œuvre ? (y/n): ");
+                String reponse = scanner.nextLine();
+
+                if (!reponse.equalsIgnoreCase("y")) {
+                    ajouterAutreMainOeuvre = false;
+                }
+            }
+        } else {
+            System.out.println("Option invalide. Veuillez entrer 1 ou 2.");
+        }
+    }
 
     private int getComposantIdInput() {
         System.out.print("Entrer l'ID du composant: ");

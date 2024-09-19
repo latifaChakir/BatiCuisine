@@ -16,7 +16,7 @@ public class PrincipalMenu {
     public void principalMenu() {
         while (true) {
             System.out.println("1. Créer un nouveau projet");
-            System.out.println("2. Afficher les projets");
+            System.out.println("2. update projets");
             System.out.println("3. Calculer le cout total d'un projet'");
             System.out.println("5. Gestion de MATERIAUX ");
             System.out.println("6. Gestion de Devis ");

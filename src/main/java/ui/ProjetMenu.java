@@ -1,6 +1,7 @@
 package ui;
 
 import bean.Client;
+import bean.Composant;
 import bean.Projet;
 import bean.enums.EtatProjet;
 import service.ClientService;
@@ -12,12 +13,14 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class ProjetMenu {
+    private ComposantService composantService;
     private ProjetService projetService;
     private ClientMenu clientMenu;
     private static Scanner scanner;
 
     public ProjetMenu(ProjetService projetService) {
         this.projetService = projetService;
+        this.composantService=new ComposantService();
         this.clientMenu = new ClientMenu(new ClientService());
         scanner = new Scanner(System.in);
     }
@@ -116,16 +119,6 @@ public class ProjetMenu {
         }
     }
 
-    private void findProjetByName() {
-        System.out.print("Entrer le nom du projet : ");
-        String projetName = scanner.nextLine();
-        List<Projet> projets = projetService.findByName(projetName);
-        if (!projets.isEmpty()) {
-            projets.forEach(System.out::println);
-        } else {
-            System.out.println("Aucun projet trouvé avec ce nom.");
-        }
-    }
 
     private int getProjetIdInput() {
         System.out.print("Entrer l'ID du projet : ");
@@ -142,23 +135,52 @@ public class ProjetMenu {
             composantMenu.ajouterComposantAuProjet(projet);
         }
     }
-    public void updateProject() {
+    private List<Composant> findByProject(Projet projet){
+        List<Composant> composants = composantService.findByProject(projet);
+        if (!composants.isEmpty()) {
+            for (Composant c : composants) {
+                System.out.println(c);
+            }
+        } else {
+            System.out.println("Aucun composant trouvé.");
+        }
+        return composants;
+    }
+
+        public void updateProject() {
         System.out.print("Entrer l'ID du projet à mettre à jour : ");
         int projectId = Integer.parseInt(scanner.nextLine());
-        Optional<Projet> projet = projetService.findById(projectId);
-        if (projet.isPresent()) {
-            System.out.println("Projet trouvé : " + projet.get());
-            System.out.println("Entrer les nouvelles informations du projet : ");
+
+        Optional<Projet> projetOptional = projetService.findById(projectId);
+        if (projetOptional.isPresent()) {
+            Projet projet = projetOptional.get();
+            List<Composant> composants = findByProject(projet);
+            boolean materiauExisteDeja = false;
+
+            for (Composant c : composants) {
+                materiauExisteDeja = true;
+                break;
+            }
+
+            if (materiauExisteDeja) {
+                composantService.supprimerComposantsParProjet(projet);
+                System.out.println("Ancien matériau supprimé.");
+            }
+            System.out.println("Projet trouvé : " + projet);
+
             Projet updatedProjet = inputsProjet();
             updatedProjet.setId(projectId);
+
             projetService.update(updatedProjet);
-            System.out.println("Projet mis à jour avec succès.");
-            System.out.println("Voulez-vous ajouter des composants à ce projet ? (oui/non)");
+
+            System.out.println("Voulez-vous modifier les composants de ce projet ? (oui/non)");
             String reponse = scanner.nextLine();
             if (reponse.equalsIgnoreCase("oui")) {
                 ComposantMenu composantMenu = new ComposantMenu(new ComposantService());
-//                composantMenu.updateComposantduProjet(updatedProjet);
+                composantMenu.updateComposantduProjet(updatedProjet);
             }
+
+            System.out.println("Projet et composants mis à jour avec succès.");
         } else {
             System.out.println("Projet non trouvé.");
         }
