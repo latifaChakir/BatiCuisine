@@ -23,6 +23,11 @@ public class Projet {
         this.etat = etat;
         this.client = client;
     }
+    public Projet(int id, String nomProjet, double coutTotal){
+        this.id = id;
+        this.nomProjet = nomProjet;
+        this.coutTotal = coutTotal;
+    }
 
     public Projet(String nomProjet, double margeBeneficiaire, double coutTotal, EtatProjet etat, Client client,double surface) {
         this.nomProjet = nomProjet;

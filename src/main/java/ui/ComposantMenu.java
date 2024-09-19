@@ -67,7 +67,6 @@ public class ComposantMenu {
         while (ajouterAutreComposant) {
             System.out.println("Ajouter un composant au projet: " + projet.getNomProjet());
 
-            // Appel pour obtenir l'entrée du composant et sauvegarder
             getComposantInput(projet);
 
             System.out.print("Voulez-vous ajouter un autre composant ? (oui/non): ");
@@ -125,7 +124,6 @@ public class ComposantMenu {
             while (ajouterAutreMateriau) {
                 Composant materiau = getMateriauInput(projet);
 
-                // Sauvegarde chaque matériau ajouté
                 composantService.save(materiau);
                 System.out.println("Matériau ajouté avec succès !");
 
@@ -143,7 +141,6 @@ public class ComposantMenu {
             while (ajouterAutreMainOeuvre) {
                 Composant mainOeuvre = getMainOeuvreInput(projet);
 
-                // Sauvegarde chaque main-d'œuvre ajoutée
                 composantService.save(mainOeuvre);
                 System.out.println("Main d'œuvre ajoutée avec succès !");
 
