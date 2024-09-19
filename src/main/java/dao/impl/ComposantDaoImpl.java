@@ -149,7 +149,6 @@ public class ComposantDaoImpl implements ComposantDao {
         return composant;
     }
     public void supprimerComposantsParProjet(int projetId) {
-        System.out.println(projetId);
         String sql = "DELETE FROM Composants WHERE projet_id = ?";
 
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {

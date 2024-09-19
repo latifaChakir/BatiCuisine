@@ -36,8 +36,7 @@ public class PrincipalMenu {
                     break;
                 case 2:projetMenu.updateProject();
                     break;
-                case 3:
-
+                case 3:projetMenu.findAllProject();
                     break;
                 case 4:devisMenu.devisMenu();
                     break;

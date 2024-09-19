@@ -2,12 +2,17 @@ package bean;
 
 import bean.enums.TypeComposant;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Composant {
     private int id;
     protected String nom;
     protected TypeComposant typeComposant;
     protected double tauxTVA;
     protected Projet projet;
+    private List<Materiau> materiaux = new ArrayList<>();
+    private List<MainOeuvre> mainOeuvres = new ArrayList<>();
 
     public Composant(int id, String nom, TypeComposant typeComposant, double tauxTVA, Projet projet) {
         this.id = id;
@@ -64,6 +69,22 @@ public class Composant {
 
     public void setProjet(Projet projet) {
         this.projet = projet;
+    }
+
+    public List<Materiau> getMateriaux() {
+        return materiaux;
+    }
+
+    public void setMateriaux(List<Materiau> materiaux) {
+        this.materiaux = materiaux;
+    }
+
+    public List<MainOeuvre> getMainOeuvres() {
+        return mainOeuvres;
+    }
+
+    public void setMainOeuvres(List<MainOeuvre> mainOeuvres) {
+        this.mainOeuvres = mainOeuvres;
     }
 
     @Override

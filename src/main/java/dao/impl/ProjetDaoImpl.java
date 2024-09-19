@@ -1,8 +1,8 @@
 package dao.impl;
 
-import bean.Client;
-import bean.Projet;
+import bean.*;
 import bean.enums.EtatProjet;
+import bean.enums.TypeComposant;
 import config.ConnectionConfig;
 import dao.dao.ProjetDao;
 
@@ -78,22 +78,61 @@ public class ProjetDaoImpl implements ProjetDao {
     @Override
     public List<Projet> findAll() {
         List<Projet> projets = new ArrayList<>();
-        String sql = "SELECT * FROM projets";
-        try (PreparedStatement ps=conn.prepareStatement(sql)){
-            ResultSet rs=ps.executeQuery();
-            while(rs.next()) {
-                Projet projet = new Projet();
-                Client client = new Client();
-                client.setId(rs.getInt("client_id"));
-                projet.setId(rs.getInt("id"));
-                projet.setNomProjet(rs.getString("nomProjet"));
-                projet.setEtat(EtatProjet.valueOf(rs.getString("etat")));
-                projet.setCoutTotal(rs.getDouble("couttotal"));
-                projet.setMargeBeneficiaire(rs.getDouble("margeBeneficiaire"));
-                projet.setClient(client);
-                projets.add(projet);
-            }
+        String sql = "SELECT p.*, c.*, cl.*, m.*, mo.* " +
+                "FROM projets p " +
+                "JOIN clients cl ON p.client_id = cl.id " +
+                "JOIN composants c ON c.projet_id = p.id " +
+                "LEFT JOIN materiaux m ON m.composant_id = c.id " +
+                "LEFT JOIN main_oeuvre mo ON mo.composant_id = c.id";
 
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Client client = new Client();
+                    client.setId(rs.getInt("cl.id"));
+                    client.setNom(rs.getString("cl.nom"));
+                    client.setAdresse(rs.getString("cl.adresse"));
+                    client.setTelephone(rs.getString("cl.telephone"));
+
+
+                    Projet projet = new Projet();
+                    projet.setId(rs.getInt("p.id"));
+                    projet.setNomProjet(rs.getString("p.nomprojet"));
+                    projet.setEtat(EtatProjet.valueOf(rs.getString("p.etat")));
+                    projet.setCoutTotal(rs.getDouble("p.coutTotal"));
+                    projet.setMargeBeneficiaire(rs.getDouble("p.margeBeneficiaire"));
+                    projet.setClient(client);
+
+                    Composant composant = new Composant();
+                    composant.setId(rs.getInt("c.id"));
+                    composant.setNom(rs.getString("c.nom"));
+                    composant.setTypeComposant(TypeComposant.valueOf(rs.getString("c.typecomposant")));
+                    composant.setTauxTVA(rs.getDouble("c.tauxtva"));
+                    composant.setProjet(projet);
+
+                    Materiau materiau = null;
+                    if (rs.getString("c.typecomposant").equals("Materiel")) {
+                        materiau = new Materiau();
+                        materiau.setId(rs.getInt("m.id"));
+                        materiau.setCoutUnitaire(rs.getDouble("m.coutunitaire"));
+                        materiau.setQuantite(rs.getDouble("m.quantite"));
+                        materiau.setCoutTransport(rs.getDouble("m.couttransport"));
+                        materiau.setCoefficientQualite(rs.getDouble("m.coefficientqualite"));
+                        materiau.setComposant(composant);
+                    }
+
+                    MainOeuvre mainOeuvre = null;
+                    if (rs.getString("c.typecomposant").equals("MainDOeuvre")) {
+                        mainOeuvre = new MainOeuvre();
+                        mainOeuvre.setId(rs.getInt("mo.id"));
+                        mainOeuvre.setHeuresTravail(rs.getDouble("mo.heuresTravail"));
+                        mainOeuvre.setTauxHoraire(rs.getDouble("mo.tauxHoraire"));
+                        mainOeuvre.setComposant(composant);
+                    }
+
+                    projets.add(projet);
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
