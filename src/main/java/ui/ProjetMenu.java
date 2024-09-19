@@ -137,17 +137,17 @@ public class ProjetMenu {
         System.out.print("Surface : ");
         double surface = Double.parseDouble(scanner.nextLine());
 
-        System.out.print("Marge bénéficiaire : ");
-        double margeBenif = Double.parseDouble(scanner.nextLine());
-
-        System.out.print("Coût total : ");
-        double coutTotal = Double.parseDouble(scanner.nextLine());
+//        System.out.print("Marge bénéficiaire : ");
+//        double margeBenif = Double.parseDouble(scanner.nextLine());
+//
+//        System.out.print("Coût total : ");
+//        double coutTotal = Double.parseDouble(scanner.nextLine());
 
         System.out.print("État du projet (par ex: ENCOURS, TERMINE, ANNULE) : ");
         String etatInput = scanner.nextLine().toUpperCase();
         EtatProjet etat = EtatProjet.valueOf(etatInput);
 
-        return new Projet(nomProjet, margeBenif, coutTotal, etat, client, surface);
+        return new Projet(nomProjet, 0, 0, etat, client, surface);
     }
 
     private Client searchClientForProject() {
@@ -287,5 +287,16 @@ public class ProjetMenu {
         projet.setClient(client);
         projetService.saveProjetClient(projet, client);
         System.out.println("Projet ajouté avec succès.");
+    }
+
+    public void createProject() {
+        Projet projet = inputsProjet();
+        handleSaveProject(projet, projet.getClient());
+        System.out.println("Voulez-vous ajouter des composants à ce projet ? (oui/non)");
+        String reponse = scanner.nextLine();
+        if (reponse.equalsIgnoreCase("oui")) {
+            ComposantMenu composantMenu = new ComposantMenu(new ComposantService());
+            composantMenu.ajouterComposantAuProjet(projet);
+        }
     }
 }

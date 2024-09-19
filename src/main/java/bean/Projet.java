@@ -99,6 +99,9 @@ public class Projet {
         this.composants = composants;
     }
 
+    public void ajouterComposant(Composant composant) {
+        composants.add(composant);
+    }
     @Override
     public String toString() {
         return "Projet{" +

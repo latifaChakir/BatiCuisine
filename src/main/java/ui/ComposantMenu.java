@@ -65,17 +65,18 @@ public class ComposantMenu {
     public void ajouterComposantAuProjet(Projet projet) {
         boolean ajouterAutreComposant = true;
         while (ajouterAutreComposant) {
-        System.out.println("Ajouter un composant au projet: "+projet.getNomProjet());
-        Composant composant = getComposantInput(projet);
-        composantService.save(composant);
-        System.out.println("Composant ajouté avec succès au projet " + projet.getNomProjet());
+            System.out.println("Ajouter un composant au projet: " + projet.getNomProjet());
+
+            // Appel pour obtenir l'entrée du composant et sauvegarder
+            getComposantInput(projet);
+
             System.out.print("Voulez-vous ajouter un autre composant ? (oui/non): ");
             String reponse = scanner.nextLine();
 
             if (!reponse.equalsIgnoreCase("oui")) {
                 ajouterAutreComposant = false;
             }
-    }
+        }
     }
 
 //    private void modifierComposant() {
@@ -114,40 +115,79 @@ public class ComposantMenu {
         }
     }
 
-    private Composant getComposantInput(Projet projet) {
+    private void getComposantInput(Projet projet) {
         System.out.print("Type de composant (1: Materiel, 2: MainDOeuvre): ");
         int type = Integer.parseInt(scanner.nextLine());
 
-        System.out.print("Entrer le nom du composant: ");
+        if (type == 1) {
+            boolean ajouterAutreMateriau = true;
+
+            while (ajouterAutreMateriau) {
+                Composant materiau = getMateriauInput(projet);
+
+                // Sauvegarde chaque matériau ajouté
+                composantService.save(materiau);
+                System.out.println("Matériau ajouté avec succès !");
+
+                System.out.print("Voulez-vous ajouter un autre matériau ? (y/n): ");
+                String reponse = scanner.nextLine();
+
+                if (!reponse.equalsIgnoreCase("y")) {
+                    ajouterAutreMateriau = false;
+                }
+            }
+
+        } else {
+            boolean ajouterAutreMainOeuvre = true;
+
+            while (ajouterAutreMainOeuvre) {
+                Composant mainOeuvre = getMainOeuvreInput(projet);
+
+                // Sauvegarde chaque main-d'œuvre ajoutée
+                composantService.save(mainOeuvre);
+                System.out.println("Main d'œuvre ajoutée avec succès !");
+
+                System.out.print("Voulez-vous ajouter une autre main d'œuvre ? (y/n): ");
+                String reponse = scanner.nextLine();
+
+                if (!reponse.equalsIgnoreCase("y")) {
+                    ajouterAutreMainOeuvre = false;
+                }
+            }
+        }
+    }
+
+    private Composant getMateriauInput(Projet projet) {
+        System.out.print("Entrer le nom du matériau: ");
         String nom = scanner.nextLine();
         System.out.print("Entrer le taux de TVA: ");
         double tauxTVA = Double.parseDouble(scanner.nextLine());
+        System.out.print("Entrer le coût unitaire: ");
+        double coutUnitaire = Double.parseDouble(scanner.nextLine());
+        System.out.print("Entrer la quantité: ");
+        double quantite = Double.parseDouble(scanner.nextLine());
+        System.out.print("Entrer le coût de transport: ");
+        double coutTransport = Double.parseDouble(scanner.nextLine());
+        System.out.print("Entrer le coefficient de qualité: ");
+        double coefficientQualite = Double.parseDouble(scanner.nextLine());
 
-        if (type == 1) {
-            System.out.print("Entrer le coût unitaire: ");
-            double coutUnitaire = Double.parseDouble(scanner.nextLine());
-            System.out.print("Entrer la quantité: ");
-            double quantite = Double.parseDouble(scanner.nextLine());
-            System.out.print("Entrer le coût de transport: ");
-            double coutTransport = Double.parseDouble(scanner.nextLine());
-            System.out.print("Entrer le coefficient de qualité: ");
-            double coefficientQualite = Double.parseDouble(scanner.nextLine());
+        // Ne sauvegardez pas ici, laissez `ajouterComposantAuProjet` gérer la sauvegarde
+        return new Materiau(0, nom, TypeComposant.Materiel, tauxTVA, coutUnitaire, quantite, coutTransport, coefficientQualite, projet);
+    }
 
-            TypeComposant typeComposant = TypeComposant.Materiel;
+    private Composant getMainOeuvreInput(Projet projet) {
+        System.out.print("Entrer le nom de l'ouvrier: ");
+        String nom = scanner.nextLine();
+        System.out.print("Entrer le taux de TVA: ");
+        double tauxTVA = Double.parseDouble(scanner.nextLine());
+        System.out.print("Entrer le taux horaire: ");
+        double tauxHoraire = Double.parseDouble(scanner.nextLine());
+        System.out.print("Entrer le nombre d'heures travaillées: ");
+        double heuresTravail = Double.parseDouble(scanner.nextLine());
+        System.out.print("Entrer la productivité de l'ouvrier: ");
+        double productiviteOuvrier = Double.parseDouble(scanner.nextLine());
 
-            return new Materiau(0, nom, typeComposant, tauxTVA, coutUnitaire, quantite, coutTransport, coefficientQualite, projet);
-
-        } else {
-            System.out.print("Entrer le taux horaire: ");
-            double tauxHoraire = Double.parseDouble(scanner.nextLine());
-            System.out.print("Entrer le nombre d'heures travaillées: ");
-            double heuresTravail = Double.parseDouble(scanner.nextLine());
-            System.out.print("Entrer la productivité de l'ouvrier: ");
-            double productiviteOuvrier = Double.parseDouble(scanner.nextLine());
-
-            TypeComposant typeComposant = TypeComposant.MainDOeuvre;
-            return new MainOeuvre(0, nom, typeComposant, projet, tauxTVA, tauxHoraire, heuresTravail, productiviteOuvrier);
-        }
+        return new MainOeuvre(0, nom, TypeComposant.MainDOeuvre, projet, tauxTVA, tauxHoraire, heuresTravail, productiviteOuvrier);
     }
 
     private int getComposantIdInput() {

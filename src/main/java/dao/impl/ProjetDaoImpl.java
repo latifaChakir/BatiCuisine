@@ -102,12 +102,10 @@ public class ProjetDaoImpl implements ProjetDao {
 
     @Override
     public Projet update(Projet projet) {
-        String sql = "UPDATE Projets SET nomprojet = ?, margebeneficiaire = ?, couttotal = ?, etat = ?::EtatProjet, surface = ? , client_id = ? WHERE id = ?";
+        String sql = "UPDATE Projets SET nomprojet = ?, etat = ?::EtatProjet, surface = ? , client_id = ? WHERE id = ?";
 
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, projet.getNomProjet());
-            preparedStatement.setDouble(2, projet.getMargeBeneficiaire());
-            preparedStatement.setDouble(3, projet.getCoutTotal());
             preparedStatement.setString(4, projet.getEtat().name());
             preparedStatement.setDouble(5, projet.getSurface());
             preparedStatement.setInt(6, projet.getClient().getId());

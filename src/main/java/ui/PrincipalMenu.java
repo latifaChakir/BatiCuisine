@@ -15,7 +15,7 @@ public class PrincipalMenu {
         this.scanner=new Scanner(System.in);
 
     }
-    public void PrincipalMenu() {
+    public void principalMenu() {
         while (true) {
             System.out.println("1. Créer un nouveau projet");
             System.out.println("2. Afficher les projets");
@@ -33,8 +33,7 @@ public class PrincipalMenu {
             }
 
             switch (choice) {
-                case 1:
-
+                case 1:projetMenu.createProject();
                     break;
                 case 2:
                     break;
@@ -55,5 +54,6 @@ public class PrincipalMenu {
             }
         }
     }
+
 
 }
