@@ -156,7 +156,7 @@ public class ProjetMenu {
         List<Client> clientsByName = clientMenu.findClientByName(name);
 
         if (!clientsByName.isEmpty()) {
-            System.out.println("Sélectionnez un client par ID ou tapez '0' pour annuler.");
+            System.out.print("Sélectionnez un client par ID ou tapez '0' pour annuler.");
 
             int clientId = Integer.parseInt(scanner.nextLine());
             if (clientId == 0) {
@@ -262,7 +262,7 @@ public class ProjetMenu {
         List<Client> clientsByName = clientMenu.findClientByName(name);
         if (!clientsByName.isEmpty()) {
             clientsByName.forEach(System.out::println);
-            System.out.println("Voulez-vous ajouter un projet à ce client ? (oui/non)");
+            System.out.print("Voulez-vous ajouter un projet à ce client ? (oui/non)");
             String response = scanner.nextLine();
             if (response.equalsIgnoreCase("oui")) {
                 Client selectedClient = clientsByName.get(0);

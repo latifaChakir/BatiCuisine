@@ -63,10 +63,19 @@ public class ComposantMenu {
     }
 
     public void ajouterComposantAuProjet(Projet projet) {
-        System.out.println("Ajouter un composant au projet: " +projet.getId()+ projet.getNomProjet());
+        boolean ajouterAutreComposant = true;
+        while (ajouterAutreComposant) {
+        System.out.println("Ajouter un composant au projet: "+projet.getNomProjet());
         Composant composant = getComposantInput(projet);
         composantService.save(composant);
         System.out.println("Composant ajouté avec succès au projet " + projet.getNomProjet());
+            System.out.print("Voulez-vous ajouter un autre composant ? (oui/non): ");
+            String reponse = scanner.nextLine();
+
+            if (!reponse.equalsIgnoreCase("oui")) {
+                ajouterAutreComposant = false;
+            }
+    }
     }
 
 //    private void modifierComposant() {
@@ -106,22 +115,22 @@ public class ComposantMenu {
     }
 
     private Composant getComposantInput(Projet projet) {
-        System.out.println("Type de composant (1: Materiel, 2: MainDOeuvre): ");
+        System.out.print("Type de composant (1: Materiel, 2: MainDOeuvre): ");
         int type = Integer.parseInt(scanner.nextLine());
 
-        System.out.println("Entrer le nom du composant: ");
+        System.out.print("Entrer le nom du composant: ");
         String nom = scanner.nextLine();
-        System.out.println("Entrer le taux de TVA: ");
+        System.out.print("Entrer le taux de TVA: ");
         double tauxTVA = Double.parseDouble(scanner.nextLine());
 
         if (type == 1) {
-            System.out.println("Entrer le coût unitaire: ");
+            System.out.print("Entrer le coût unitaire: ");
             double coutUnitaire = Double.parseDouble(scanner.nextLine());
-            System.out.println("Entrer la quantité: ");
+            System.out.print("Entrer la quantité: ");
             double quantite = Double.parseDouble(scanner.nextLine());
-            System.out.println("Entrer le coût de transport: ");
+            System.out.print("Entrer le coût de transport: ");
             double coutTransport = Double.parseDouble(scanner.nextLine());
-            System.out.println("Entrer le coefficient de qualité: ");
+            System.out.print("Entrer le coefficient de qualité: ");
             double coefficientQualite = Double.parseDouble(scanner.nextLine());
 
             TypeComposant typeComposant = TypeComposant.Materiel;
@@ -129,11 +138,11 @@ public class ComposantMenu {
             return new Materiau(0, nom, typeComposant, tauxTVA, coutUnitaire, quantite, coutTransport, coefficientQualite, projet);
 
         } else {
-            System.out.println("Entrer le taux horaire: ");
+            System.out.print("Entrer le taux horaire: ");
             double tauxHoraire = Double.parseDouble(scanner.nextLine());
-            System.out.println("Entrer le nombre d'heures travaillées: ");
+            System.out.print("Entrer le nombre d'heures travaillées: ");
             double heuresTravail = Double.parseDouble(scanner.nextLine());
-            System.out.println("Entrer la productivité de l'ouvrier: ");
+            System.out.print("Entrer la productivité de l'ouvrier: ");
             double productiviteOuvrier = Double.parseDouble(scanner.nextLine());
 
             TypeComposant typeComposant = TypeComposant.MainDOeuvre;
@@ -142,7 +151,7 @@ public class ComposantMenu {
     }
 
     private int getComposantIdInput() {
-        System.out.println("Entrer l'ID du composant: ");
+        System.out.print("Entrer l'ID du composant: ");
         return Integer.parseInt(scanner.nextLine());
     }
 
