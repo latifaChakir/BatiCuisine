@@ -17,9 +17,9 @@ public class Main {
     public static void main(String[] args) throws SQLException {
 
 //        Connection connection = ConnectionConfig.getInstance().getConnection();
-//        ProjetService projetService=new ProjetService();
-//        ProjetMenu projetMenu=new ProjetMenu(projetService);
-//        projetMenu.projetMenu();
+        ProjetService projetService=new ProjetService();
+        ProjetMenu projetMenu=new ProjetMenu(projetService);
+        projetMenu.projetMenu();
 //
 //        ClientService clientService=new ClientService();
 //        ClientMenu clientMenu=new ClientMenu(clientService);
@@ -28,9 +28,9 @@ public class Main {
 //        ComposantMenu composantMenu=new ComposantMenu(composantService);
 //        composantMenu.composantMenu();
 
-        DevisService devisService=new DevisService();
-        DevisMenu devisMenu=new DevisMenu(devisService);
-        devisMenu.devisMenu();
+//        DevisService devisService=new DevisService();
+//        DevisMenu devisMenu=new DevisMenu(devisService);
+//        devisMenu.devisMenu();
 
     }
 }

@@ -5,6 +5,7 @@ CREATE TABLE clients (
                          telephone VARCHAR(20),
                          estProfessionnel BOOLEAN NOT NULL
 );
+
 CREATE TYPE etatProjet AS ENUM ('ENCOURS', 'TERMINE', 'ANNULE');
 CREATE TABLE projets (
                          id SERIAL PRIMARY KEY,

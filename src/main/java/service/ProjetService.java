@@ -37,6 +37,12 @@ public class ProjetService {
         ProjetDaoImpl projectDaoImpl = new ProjetDaoImpl();
         projectDaoImpl.save(projet);
     }
+    public void saveProjetClientFound(Projet projet, Client client) {
+        projet.setClient(client);
+        ProjetDaoImpl projectDaoImpl = new ProjetDaoImpl();
+        projectDaoImpl.save(projet);
+    }
+
     public void updateProjetClient(Projet projet, Client client) {
         ClientDaoImpl clientDaoImpl = new ClientDaoImpl();
         if (client.getId() == 0) {

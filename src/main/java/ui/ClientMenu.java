@@ -38,12 +38,7 @@ public class ClientMenu {
 
             switch (choice) {
                 case 1:
-                    Client client = getClientInput();
-                    if (client != null) {
-                        clientService.save(client);
-                    } else {
-                        System.err.println("Le client n'a pas été ajouté en raison d'erreurs de validation.");
-                    }
+                    addNewClient();
                     break;
                 case 2:
                     int clientIdToUpdate = getClientIdInput();
@@ -126,4 +121,26 @@ public class ClientMenu {
         System.out.println("Entrer le nom du client: ");
         return scanner.nextLine();
     }
+    
+        public List<Client> findClientByName(String clientName) {
+        List<Client> clientsByName = clientService.findByNom(clientName);
+        if (!clientsByName.isEmpty()) {
+            for (Client c : clientsByName) {
+                System.out.println(c);
+            }
+        } else {
+            System.out.println("Aucun client trouvé avec ce nom.");
+        }
+            return clientsByName;
+        }
+
+        public Client addNewClient() {
+            Client client = getClientInput();
+            if (client != null) {
+                clientService.save(client);
+            } else {
+                System.err.println("Le client n'a pas été ajouté en raison d'erreurs de validation.");
+            }
+            return client;
+        }
 }
