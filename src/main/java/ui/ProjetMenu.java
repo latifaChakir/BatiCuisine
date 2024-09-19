@@ -164,7 +164,7 @@ public class ProjetMenu {
 
             if (materiauExisteDeja) {
                 composantService.supprimerComposantsParProjet(projet);
-                System.out.println("Ancien matériau supprimé.");
+                System.out.println("Ancien matériau supprimé avec succes.");
             }
             System.out.println("Projet trouvé : " + projet);
 
