@@ -152,8 +152,6 @@ public class DevisDaoImpl implements DevisDao {
             if (affectedRows == 0) {
                 throw new SQLException("Updating devis failed, no rows affected.");
             }
-
-            System.out.println("Devis updated successfully: " + devis);
         } catch (SQLException e) {
             throw new RuntimeException("Error updating devis", e);
         }

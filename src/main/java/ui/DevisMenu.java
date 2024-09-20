@@ -3,16 +3,20 @@ package ui;
 import bean.Devis;
 import bean.Projet;
 import service.DevisService;
+import service.ProjetService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class DevisMenu {
     private DevisService devisService;
+    private ProjetService projetService;
     private Scanner scanner;
     public DevisMenu(DevisService devisService) {
         this.devisService = devisService;
+        this.projetService = new ProjetService();
         this.scanner = new Scanner(System.in);
     }
     public void devisMenu() {
@@ -46,6 +50,11 @@ public class DevisMenu {
                     long devisIdToUpdate = getDevisIdInput();
                     Devis devisToUpdate = getDevisInput();
                     devisToUpdate.setId(devisIdToUpdate);
+                    System.out.print("le devis est accepté? OUI/NON");
+                    String reponse=scanner.nextLine();
+                    if(reponse.equals("OUI")){
+                        devisToUpdate.setAccepted(true);
+                    }
                     devisService.update(devisToUpdate);
                     System.out.println("Devis modifié avec succès.");
 
@@ -95,14 +104,13 @@ public class DevisMenu {
         Projet projet=new Projet();
         projet.setId(projetId);
         scanner.nextLine();
-        System.out.print("Entrer le montant d'estimation: ");
-        double estimation=scanner.nextDouble();
-        scanner.nextLine();
+        Optional<Projet> projet1=projetService.findById(projetId);
+        double montantEstimation=projet1.get().getCoutTotal();
         System.out.print("Entrer la date d'emission: ");
         LocalDate estimationDate=LocalDate.parse(scanner.nextLine());
         System.out.print("Entrer la date de validation: ");
         LocalDate dateValidation=LocalDate.parse(scanner.nextLine());
-        Devis devis=new Devis(0L, estimation,estimationDate,dateValidation,false,projet);
+        Devis devis=new Devis(0L, montantEstimation,estimationDate,dateValidation,false,projet);
         return devis;
     }
 
