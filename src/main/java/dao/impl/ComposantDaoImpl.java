@@ -128,20 +128,50 @@ public class ComposantDaoImpl implements ComposantDao {
 
     @Override
     public Composant update(Composant composant) {
-        String sql="UPDATE composants SET nom=?,typecomposant=?::TupeComposant,tauxtva=?,projet_id=? where id=?";
+        String sql = "UPDATE composants SET nom = ?, typecomposant = ?::TypeComposant, tauxtva = ?, projet_id = ? WHERE id = ?";
         try {
-            PreparedStatement ps=conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, composant.getNom());
             ps.setString(2, composant.getTypeComposant().name());
             ps.setDouble(3, composant.getTauxTVA());
             ps.setInt(4, composant.getProjet().getId());
             ps.setInt(5, composant.getId());
-            ps.executeUpdate();
+
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Échec de la mise à jour du composant, aucune ligne affectée.");
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
         return composant;
     }
+    public void supprimerComposantsParProjet(int projetId) {
+        String sql = "DELETE FROM Composants WHERE projet_id = ?";
+
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setInt(1, projetId);
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Aucun composant n'a été supprimé pour le projet avec l'ID: " + projetId);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la suppression des composants : " + e.getMessage());
+        }
+    }
+    public void mettreAJourComposantsDuProjet(Projet projet, List<Composant> nouveauxComposants) {
+        supprimerComposantsParProjet(projet.getId());
+        for (Composant composant : nouveauxComposants) {
+            composant.setProjet(projet);
+            save(composant);
+        }
+
+        System.out.println("Les composants du projet ont été mis à jour avec succès.");
+    }
+
+
 
     @Override
     public void delete(int id) {
@@ -178,6 +208,62 @@ public class ComposantDaoImpl implements ComposantDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return composants;
+    }
+
+
+    public void update(Projet projet, List<Composant> nouveauxComposants) {
+        try {
+            String sqlDeleteMateriaux = "DELETE FROM materiaux WHERE composant_id IN (SELECT id FROM composants WHERE projet_id = ?)";
+            String sqlDeleteMainOeuvre = "DELETE FROM main_oeuvre WHERE composant_id IN (SELECT id FROM composants WHERE projet_id = ?)";
+            String sqlDeleteComposants = "DELETE FROM composants WHERE projet_id = ?";
+
+            try (PreparedStatement psDeleteMateriaux = conn.prepareStatement(sqlDeleteMateriaux);
+                 PreparedStatement psDeleteMainOeuvre = conn.prepareStatement(sqlDeleteMainOeuvre);
+                 PreparedStatement psDeleteComposants = conn.prepareStatement(sqlDeleteComposants)) {
+
+                psDeleteMateriaux.setInt(1, projet.getId());
+                psDeleteMainOeuvre.setInt(1, projet.getId());
+                psDeleteComposants.setInt(1, projet.getId());
+
+                psDeleteMateriaux.executeUpdate();
+                psDeleteMainOeuvre.executeUpdate();
+                psDeleteComposants.executeUpdate();
+            }
+
+            for (Composant composant : nouveauxComposants) {
+                save(composant);
+            }
+
+            System.out.println("Composants du projet " + projet.getNomProjet() + " mis à jour avec succès.");
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la mise à jour des composants du projet: " + e.getMessage(), e);
+        }
+
+}
+
+    public List<Composant> findByProjet(Projet projet) {
+        List<Composant> composants = new ArrayList<>();
+        String query = "SELECT * FROM Composants WHERE projet_id = ?";
+
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setInt(1, projet.getId());
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Composant composant = new Composant();
+                composant.setId(resultSet.getInt("id"));
+                composant.setNom(resultSet.getString("nom"));
+                composant.setTypeComposant(TypeComposant.valueOf(resultSet.getString("typecomposant")));
+                composant.setTauxTVA(resultSet.getDouble("tauxtva"));
+                composant.setProjet(projet);
+                composants.add(composant);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return composants;
     }
 }

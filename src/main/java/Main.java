@@ -1,9 +1,6 @@
 import bean.Composant;
 import config.ConnectionConfig;
-import service.ClientService;
-import service.ComposantService;
-import service.DevisService;
-import service.ProjetService;
+import service.*;
 import ui.*;
 
 import java.sql.Connection;
@@ -18,6 +15,8 @@ public class Main {
         ProjetMenu projetMenu=new ProjetMenu(projetService);
         DevisService devisService=new DevisService();
         DevisMenu devisMenu=new DevisMenu(devisService);
+//        MateriauService materiauService=new MateriauService();
+//        MateriauMenu materiauMenu=new MateriauMenu(materiauService);
 
         PrincipalMenu menu=new PrincipalMenu(devisMenu,projetMenu);
         menu.principalMenu();

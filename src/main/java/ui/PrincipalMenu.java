@@ -1,13 +1,11 @@
 package ui;
 
-import bean.Devis;
-
-import java.util.List;
 import java.util.Scanner;
 
 public class PrincipalMenu {
     private DevisMenu devisMenu;
     private ProjetMenu projetMenu;
+    private MateriauMenu materiauMenu;
     private Scanner scanner;
     public PrincipalMenu(DevisMenu devisMenu, ProjetMenu projetMenu){
         this.devisMenu = devisMenu;
@@ -18,10 +16,11 @@ public class PrincipalMenu {
     public void principalMenu() {
         while (true) {
             System.out.println("1. Créer un nouveau projet");
-            System.out.println("2. Afficher les projets");
+            System.out.println("2. update projets");
             System.out.println("3. Calculer le cout total d'un projet'");
-            System.out.println("4. Gestion de Devis ");
-            System.out.println("5. Quitter");
+            System.out.println("5. Gestion de MATERIAUX ");
+            System.out.println("6. Gestion de Devis ");
+            System.out.println("7. Quitter");
             System.out.print("Choisir une option: ");
 
             int choice;
@@ -35,16 +34,14 @@ public class PrincipalMenu {
             switch (choice) {
                 case 1:projetMenu.createProject();
                     break;
-                case 2:
+                case 2:projetMenu.updateProject();
                     break;
-                case 3:
-
+                case 3:projetMenu.findAllProject();
                     break;
                 case 4:devisMenu.devisMenu();
                     break;
 
                 case 5:
-
                     break;
                 case 6:
                     System.out.println("Au revoir !");

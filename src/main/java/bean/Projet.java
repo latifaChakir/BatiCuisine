@@ -107,6 +107,7 @@ public class Projet {
     public void ajouterComposant(Composant composant) {
         composants.add(composant);
     }
+
     @Override
     public String toString() {
         return "Projet{" +
@@ -114,9 +115,10 @@ public class Projet {
                 ", nomProjet='" + nomProjet + '\'' +
                 ", margeBeneficiaire=" + margeBeneficiaire +
                 ", coutTotal=" + coutTotal +
-                ", surface=" + surface +
                 ", etat=" + etat +
+                ", surface=" + surface +
                 ", client=" + client +
+                ", composants=" + composants +
                 '}';
     }
 }

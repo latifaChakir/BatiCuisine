@@ -1,10 +1,7 @@
 package ui;
 
 import bean.Composant;
-import bean.Materiau;
-import bean.MainOeuvre;
 import bean.Projet;
-import bean.enums.TypeComposant;
 import service.ComposantService;
 
 import java.util.List;
@@ -77,15 +74,20 @@ public class ComposantMenu {
             }
         }
     }
+    public void updateComposantduProjet(Projet projet) {
+        boolean ajouterAutreComposant = true;
+        while (ajouterAutreComposant) {
+            System.out.println("Modifier un composant du projet: " + projet.getNomProjet());
+            getComposantInputToUpdate(projet);
 
-//    private void modifierComposant() {
-//        System.out.println("Modifier un composant");
-//        int composantIdToUpdate = getComposantIdInput();
-//        Composant composantToUpdate = getComposantInput();
-//        composantToUpdate.setId(composantIdToUpdate);
-//        composantService.update(composantToUpdate);
-//        System.out.println("Composant modifié avec succès.");
-//    }
+            System.out.print("Voulez-vous modifier un autre composant ? (oui/non): ");
+            String reponse = scanner.nextLine();
+
+            if (!reponse.equalsIgnoreCase("oui")) {
+                ajouterAutreComposant = false;
+            }
+        }
+    }
 
     private void supprimerComposant() {
         int composantIdToDelete = getComposantIdInput();
@@ -122,7 +124,8 @@ public class ComposantMenu {
             boolean ajouterAutreMateriau = true;
 
             while (ajouterAutreMateriau) {
-                Composant materiau = getMateriauInput(projet);
+                MateriauMenu materiauMenu=new MateriauMenu(composantService);
+                Composant materiau = materiauMenu.getMateriauInput(projet);
 
                 composantService.save(materiau);
                 System.out.println("Matériau ajouté avec succès !");
@@ -139,8 +142,8 @@ public class ComposantMenu {
             boolean ajouterAutreMainOeuvre = true;
 
             while (ajouterAutreMainOeuvre) {
-                Composant mainOeuvre = getMainOeuvreInput(projet);
-
+                MainOeuvreMenu mainOeuvreMenu = new MainOeuvreMenu(composantService);
+                Composant mainOeuvre =mainOeuvreMenu.getMainOeuvreInput(projet);
                 composantService.save(mainOeuvre);
                 System.out.println("Main d'œuvre ajoutée avec succès !");
 
@@ -153,38 +156,58 @@ public class ComposantMenu {
             }
         }
     }
-
-    private Composant getMateriauInput(Projet projet) {
-        System.out.print("Entrer le nom du matériau: ");
-        String nom = scanner.nextLine();
-        System.out.print("Entrer le taux de TVA: ");
-        double tauxTVA = Double.parseDouble(scanner.nextLine());
-        System.out.print("Entrer le coût unitaire: ");
-        double coutUnitaire = Double.parseDouble(scanner.nextLine());
-        System.out.print("Entrer la quantité: ");
-        double quantite = Double.parseDouble(scanner.nextLine());
-        System.out.print("Entrer le coût de transport: ");
-        double coutTransport = Double.parseDouble(scanner.nextLine());
-        System.out.print("Entrer le coefficient de qualité: ");
-        double coefficientQualite = Double.parseDouble(scanner.nextLine());
-
-        // Ne sauvegardez pas ici, laissez `ajouterComposantAuProjet` gérer la sauvegarde
-        return new Materiau(0, nom, TypeComposant.Materiel, tauxTVA, coutUnitaire, quantite, coutTransport, coefficientQualite, projet);
+    private List<Composant> findByProject(Projet projet){
+        List<Composant> composants = composantService.findByProject(projet);
+        if (!composants.isEmpty()) {
+            for (Composant c : composants) {
+                System.out.println(c);
+            }
+        } else {
+            System.out.println("Aucun composant trouvé.");
+        }
+        return composants;
     }
+    private void getComposantInputToUpdate(Projet projet) {
+        System.out.print("Type de composant (1: Materiel, 2: MainDOeuvre): ");
+        int type = Integer.parseInt(scanner.nextLine());
 
-    private Composant getMainOeuvreInput(Projet projet) {
-        System.out.print("Entrer le nom de l'ouvrier: ");
-        String nom = scanner.nextLine();
-        System.out.print("Entrer le taux de TVA: ");
-        double tauxTVA = Double.parseDouble(scanner.nextLine());
-        System.out.print("Entrer le taux horaire: ");
-        double tauxHoraire = Double.parseDouble(scanner.nextLine());
-        System.out.print("Entrer le nombre d'heures travaillées: ");
-        double heuresTravail = Double.parseDouble(scanner.nextLine());
-        System.out.print("Entrer la productivité de l'ouvrier: ");
-        double productiviteOuvrier = Double.parseDouble(scanner.nextLine());
+        if (type == 1) {
+            boolean ajouterAutreMateriau = true;
 
-        return new MainOeuvre(0, nom, TypeComposant.MainDOeuvre, projet, tauxTVA, tauxHoraire, heuresTravail, productiviteOuvrier);
+            while (ajouterAutreMateriau) {
+                MateriauMenu materiauMenu = new MateriauMenu(composantService);
+                Composant materiau = materiauMenu.getMateriauInput(projet);
+                composantService.save(materiau);
+                System.out.println("Matériau ajouté avec succès !");
+
+                System.out.print("Voulez-vous ajouter un autre matériau ? (y/n): ");
+                String reponse = scanner.nextLine();
+
+                if (!reponse.equalsIgnoreCase("y")) {
+                    ajouterAutreMateriau = false;
+                }
+            }
+
+        } else if (type == 2) {
+            boolean ajouterAutreMainOeuvre = true;
+
+            while (ajouterAutreMainOeuvre) {
+                MainOeuvreMenu mainOeuvreMenu = new MainOeuvreMenu(composantService);
+                Composant mainOeuvre = mainOeuvreMenu.getMainOeuvreInput(projet);
+
+                composantService.save(mainOeuvre);
+                System.out.println("Main d'œuvre ajoutée avec succès !");
+
+                System.out.print("Voulez-vous ajouter une autre main d'œuvre ? (y/n): ");
+                String reponse = scanner.nextLine();
+
+                if (!reponse.equalsIgnoreCase("y")) {
+                    ajouterAutreMainOeuvre = false;
+                }
+            }
+        } else {
+            System.out.println("Option invalide. Veuillez entrer 1 ou 2.");
+        }
     }
 
     private int getComposantIdInput() {

@@ -1,15 +1,19 @@
 package service;
 
 import bean.Client;
+import bean.Composant;
 import bean.Projet;
 import dao.impl.ClientDaoImpl;
+import dao.impl.ComposantDaoImpl;
 import dao.impl.ProjetDaoImpl;
 import java.util.List;
 import java.util.Optional;
 
 public class ProjetService {
     private ProjetDaoImpl projectDaoImpl;
+    private ComposantDaoImpl composantDaoImpl;
     public ProjetService() {
+        this.composantDaoImpl=new ComposantDaoImpl();
         this.projectDaoImpl=new ProjetDaoImpl();
     }
     public Projet save(Projet projet) {
@@ -18,6 +22,7 @@ public class ProjetService {
     public Optional<Projet> findById(int projectId) {
         return this.projectDaoImpl.findById(projectId);
     }
+
     public List<Projet> findAll() {
         return this.projectDaoImpl.findAll();
     }
@@ -25,7 +30,16 @@ public class ProjetService {
         this.projectDaoImpl.delete(projectId);
     }
     public Projet update(Projet projet) {
-        return this.projectDaoImpl.update(projet);
+        // Update the project
+        Projet updatedProjet = this.projectDaoImpl.update(projet);
+
+        // Find the existing components related to the project
+        List<Composant> composants = composantDaoImpl.findByProjet(updatedProjet);
+
+        // Update or re-assign components if needed
+        composantDaoImpl.mettreAJourComposantsDuProjet(updatedProjet, composants);
+
+        return updatedProjet;
     }
     public List<Projet> findByName(String projetName) {
         return this.projectDaoImpl.findByName(projetName);
