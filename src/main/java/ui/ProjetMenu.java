@@ -14,11 +14,13 @@ public class ProjetMenu {
     private ComposantService composantService;
     private ProjetService projetService;
     private ClientMenu clientMenu;
+    private CalculTotalMenu calculTotalMenu;
     private static Scanner scanner;
 
     public ProjetMenu(ProjetService projetService) {
         this.projetService = projetService;
         this.composantService=new ComposantService();
+        this.calculTotalMenu=new CalculTotalMenu();
         this.clientMenu = new ClientMenu(new ClientService());
         scanner = new Scanner(System.in);
     }
@@ -185,15 +187,15 @@ public class ProjetMenu {
 
     public void findAllProject() {
         projetService.findAll().forEach(projet -> {
-            System.out.println("les détails de projet");
+            System.out.println("--- Détail du Projet ---");
             System.out.println("ID: " + projet.getId());
             System.out.println("Nom de projet: " + projet.getNomProjet());
             System.out.println("Surface: " + projet.getSurface());
-            System.out.println("Etat de projet: " + projet.getEtat());
-            System.out.println("Marge beneficiaire: " + projet.getMargeBeneficiaire());
-            System.out.println("Cout Total: " + projet.getCoutTotal());
+            System.out.println("État de projet: " + projet.getEtat());
+            System.out.println("Marge bénéficiaire: " + projet.getMargeBeneficiaire());
+            System.out.println("Coût Total: " + projet.getCoutTotal());
 
-            System.out.println("les détails de client de ce projet");
+            System.out.println("---- Détails du Client ----");
             Client client = projet.getClient();
             if (client != null) {
                 System.out.println("ID: " + client.getId());
@@ -202,54 +204,193 @@ public class ProjetMenu {
                 System.out.println("Téléphone: " + client.getTelephone());
             }
 
-            System.out.println("Les détails des composants de ce projet");
+            System.out.println("---- Détails des Composants du Projet ----");
 
-            if (projet.getComposants() != null) {
-                projet.getComposants().forEach(composant -> {
-                    double totalCoutMateriaux = 0.0;
-                    double totalCoutMainOeuvre = 0.0;
+            double totalCoutMateriaux = 0.0;
+            double totalCoutMateriauxAvecTVA = 0.0;
+            double totalCoutMainOeuvre = 0.0;
+            double totalCoutMainOeuvreAvecTVA = 0.0;
 
+            boolean hasMaterials = false;
+            boolean hasMainOeuvre = false;
+
+            // Traitement des matériaux
+            for (Composant composant : projet.getComposants()) {
+                if (composant.getMateriaux() != null && !composant.getMateriaux().isEmpty()) {
+                    if (!hasMaterials) {
+                        System.out.println("1. Matériaux :");
+                        hasMaterials = true;
+                    }
+                    for (Materiau materiau : composant.getMateriaux()) {
+                        double coutMateriauBrute = materiau.getQuantite() * materiau.getCoutUnitaire();
+                        double coutMateriauAjuste = coutMateriauBrute * materiau.getCoefficientQualite();
+                        double coutMateriauTotal = coutMateriauAjuste + materiau.getCoutTransport();
+                        totalCoutMateriaux += coutMateriauTotal;
+
+                        double tva = composant.getTauxTVA() / 100;
+                        double coutMateriauTotalAvecTVA = coutMateriauTotal * (1 + tva);
+                        totalCoutMateriauxAvecTVA += coutMateriauTotalAvecTVA;
+
+                        System.out.printf("- %s : %.2f € (quantité : %.2f, coût unitaire : %.2f €/unité, qualité : %.2f, transport : %.2f €, total avec TVA : %.2f €)\n",
+                                composant.getNom(),
+                                coutMateriauTotal,
+                                materiau.getQuantite(),
+                                materiau.getCoutUnitaire(),
+                                materiau.getCoefficientQualite(),
+                                materiau.getCoutTransport(),
+                                coutMateriauTotalAvecTVA);
+                    }
+                }
+            }
+
+            if (hasMaterials) {
+                System.out.printf("**Coût total des matériaux avant TVA : %.2f €**\n", totalCoutMateriaux);
+                System.out.printf("**Coût total des matériaux avec TVA  : %.2f €**\n", totalCoutMateriauxAvecTVA);
+            }
+
+            // Traitement de la main-d'œuvre
+            for (Composant composant : projet.getComposants()) {
+                if (composant.getMainOeuvres() != null && !composant.getMainOeuvres().isEmpty()) {
+                    if (!hasMainOeuvre) {
+                        System.out.println("2. Main-d'œuvre :");
+                        hasMainOeuvre = true;
+                    }
+                    for (MainOeuvre mainOeuvre : composant.getMainOeuvres()) {
+                        double coutMainOeuvre = mainOeuvre.getTauxHoraire() * mainOeuvre.getHeuresTravail();
+                        totalCoutMainOeuvre += coutMainOeuvre;
+
+                        double tva = composant.getTauxTVA() / 100;
+                        double coutMainOeuvreAvecTVA = coutMainOeuvre * (1 + tva);
+                        totalCoutMainOeuvreAvecTVA += coutMainOeuvreAvecTVA;
+
+                        System.out.printf("- %s : %.2f € (taux horaire : %.2f €/h, heures travaillées : %.2f h, productivité : %.1f, total avec TVA : %.2f €)\n",
+                                composant.getNom(),
+                                coutMainOeuvre,
+                                mainOeuvre.getTauxHoraire(),
+                                mainOeuvre.getHeuresTravail(),
+                                mainOeuvre.getProductiviteOuvrier(),
+                                coutMainOeuvreAvecTVA);
+                    }
+                }
+            }
+
+            if (hasMainOeuvre) {
+                System.out.printf("**Coût total de la main-d'œuvre avant TVA : %.2f €**\n", totalCoutMainOeuvre);
+                System.out.printf("**Coût total de la main-d'œuvre avec TVA : %.2f €**\n", totalCoutMainOeuvreAvecTVA);
+            }
+
+            System.out.println("--- Fin des Détails du Projet ---\n");
+        });
+    }
+
+    public void findByIdProject() {
+        System.out.println("Entrez l'ID du projet que vous souhaitez trouver :");
+        int projectId = Integer.parseInt(scanner.nextLine());
+
+        Optional<Projet> projetOptional = projetService.findById(projectId);
+        if (projetOptional.isPresent()) {
+            Projet projet = projetOptional.get();
+            System.out.println("--- Détail du Projet ---");
+            System.out.println("ID: " + projet.getId());
+            System.out.println("Nom de projet: " + projet.getNomProjet());
+            System.out.println("Surface: " + projet.getSurface());
+            System.out.println("État de projet: " + projet.getEtat());
+            System.out.println("---- Détails du Client ----");
+            Client client = projet.getClient();
+            if (client != null) {
+                System.out.println("ID: " + client.getId());
+                System.out.println("Nom: " + client.getNom());
+                System.out.println("Adresse: " + client.getAdresse());
+                System.out.println("Téléphone: " + client.getTelephone());
+                System.out.println("---- Détails des Composants du Projet ----");
+
+                double totalCoutMateriaux = 0.0;
+                double totalCoutMateriauxAvecTVA = 0.0;
+                double totalCoutMainOeuvre = 0.0;
+                double totalCoutMainOeuvreAvecTVA = 0.0;
+
+                boolean hasMaterials = false;
+                boolean hasMainOeuvre = false;
+
+                // Traitement des matériaux
+                for (Composant composant : projet.getComposants()) {
                     if (composant.getMateriaux() != null && !composant.getMateriaux().isEmpty()) {
-                        System.out.println("****** Matériaux : ******");
+                        if (!hasMaterials) {
+                            System.out.println("1. Matériaux :");
+                            hasMaterials = true;
+                        }
                         for (Materiau materiau : composant.getMateriaux()) {
-                            double coutMateriau = materiau.getQuantite() * materiau.getCoutUnitaire();
-                            totalCoutMateriaux += coutMateriau + materiau.getCoutTransport();
-                            System.out.printf("- %s : %.2f € (quantité : %.2f %s, coût unitaire : %.2f €/unité, transport : %.2f €, qualité : %.1f)\n",
+                            double coutMateriauBrute = materiau.getQuantite() * materiau.getCoutUnitaire();
+                            double coutMateriauAjuste = coutMateriauBrute * materiau.getCoefficientQualite();
+                            double coutMateriauTotal = coutMateriauAjuste + materiau.getCoutTransport();
+                            totalCoutMateriaux += coutMateriauTotal;
+
+                            double tva = composant.getTauxTVA() / 100;
+                            double coutMateriauTotalAvecTVA = coutMateriauTotal * (1 + tva);
+                            totalCoutMateriauxAvecTVA += coutMateriauTotalAvecTVA;
+
+                            System.out.printf("- %s : %.2f € (quantité : %.2f, coût unitaire : %.2f €/unité, qualité : %.2f, transport : %.2f €, total avec TVA : %.2f €)\n",
                                     composant.getNom(),
-                                    coutMateriau,
+                                    coutMateriauTotal,
                                     materiau.getQuantite(),
                                     materiau.getCoutUnitaire(),
-                                    materiau.getCoutUnitaire(),
+                                    materiau.getCoefficientQualite(),
                                     materiau.getCoutTransport(),
-                                    materiau.getCoefficientQualite());
+                                    coutMateriauTotalAvecTVA);
                         }
-                        System.out.printf("**Coût total des matériaux avant TVA : %.2f €**\n", totalCoutMateriaux);
-                        double tva = composant.getTauxTVA() / 100;
-                        System.out.printf("**Coût total des matériaux avec TVA (%.0f%%) : %.2f €**\n",
-                                composant.getTauxTVA(),
-                                totalCoutMateriaux * (1 + tva));
                     }
+                }
 
+                if (hasMaterials) {
+                    System.out.printf("**Coût total des matériaux avant TVA : %.2f €**\n", totalCoutMateriaux);
+                    System.out.printf("**Coût total des matériaux avec TVA  : %.2f €**\n", totalCoutMateriauxAvecTVA);
+                }
+
+                // Traitement de la main-d'œuvre
+                for (Composant composant : projet.getComposants()) {
                     if (composant.getMainOeuvres() != null && !composant.getMainOeuvres().isEmpty()) {
-                        System.out.println("****** Affichage de Main-d'œuvre : ******");
+                        if (!hasMainOeuvre) {
+                            System.out.println("2. Main-d'œuvre :");
+                            hasMainOeuvre = true;
+                        }
                         for (MainOeuvre mainOeuvre : composant.getMainOeuvres()) {
                             double coutMainOeuvre = mainOeuvre.getTauxHoraire() * mainOeuvre.getHeuresTravail();
                             totalCoutMainOeuvre += coutMainOeuvre;
-                            System.out.printf("- %s : %.2f € (taux horaire : %.2f €/heure, heures de travail : %.2f, productivité : %.1f)\n",
+
+                            double tva = composant.getTauxTVA() / 100;
+                            double coutMainOeuvreAvecTVA = coutMainOeuvre * (1 + tva);
+                            totalCoutMainOeuvreAvecTVA += coutMainOeuvreAvecTVA;
+
+                            System.out.printf("- %s : %.2f € (taux horaire : %.2f €/h, heures travaillées : %.2f h, productivité : %.1f, total avec TVA : %.2f €)\n",
                                     composant.getNom(),
                                     coutMainOeuvre,
                                     mainOeuvre.getTauxHoraire(),
                                     mainOeuvre.getHeuresTravail(),
-                                    mainOeuvre.getProductiviteOuvrier());
+                                    mainOeuvre.getProductiviteOuvrier(),
+                                    coutMainOeuvreAvecTVA);
                         }
-                        System.out.printf("**Coût total de la main-d'œuvre : %.2f €**\n", totalCoutMainOeuvre);
                     }
+                }
 
-                });
-            } else {
-                System.out.println("Aucun composant trouvé pour ce projet.");
+                if (hasMainOeuvre) {
+                    System.out.printf("**Coût total de la main-d'œuvre avant TVA : %.2f €**\n", totalCoutMainOeuvre);
+                    System.out.printf("**Coût total de la main-d'œuvre avec TVA : %.2f €**\n", totalCoutMainOeuvreAvecTVA);
+                }
+
+                System.out.println("--- Fin des Détails du Projet ---\n");
+                System.out.println("--- Calcul en cours ---\n");
+                calculTotalMenu.inputForCalculTotal(projet);
+                double coutTotal = totalCoutMainOeuvre+totalCoutMateriaux;
+                double coutTotalAvantMarge = totalCoutMainOeuvreAvecTVA+totalCoutMateriauxAvecTVA;
+                double coutTotalAvecMarge = coutTotalAvantMarge * (1 + (projet.getMargeBeneficiaire()/100));
+
+                System.out.println("total de projet avant marge : "+coutTotalAvantMarge);
+                    System.out.println("Marge beneficaire : "+projet.getMargeBeneficiaire());
+                System.out.println("total de projet final : " + coutTotalAvecMarge);
+
             }
-
-        });
+        } else {
+            System.out.println("Projet non trouvé.");
+        }
     }
 }
