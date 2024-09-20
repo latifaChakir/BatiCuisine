@@ -185,51 +185,55 @@ public class ProjetMenu {
         }
     }
 
-    public void findAllProject(){
-        projetService.findAll().forEach(projet ->{
-            System.out.print("les détails de projet");
-            System.out.print("ID: " + projet.getId());
-            System.out.print("Nom de projet: " + projet.getNomProjet());
-            System.out.print("Surface: " + projet.getSurface());
-            System.out.print("Etat de projet: " + projet.getEtat());
-            System.out.print("Marge beneficiaire: " + projet.getMargeBeneficiaire());
-            System.out.print("Cout Total: " + projet.getCoutTotal());
+    public void findAllProject() {
+        projetService.findAll().forEach(projet -> {
+            System.out.println("les détails de projet");
+            System.out.println("ID: " + projet.getId());
+            System.out.println("Nom de projet: " + projet.getNomProjet());
+            System.out.println("Surface: " + projet.getSurface());
+            System.out.println("Etat de projet: " + projet.getEtat());
+            System.out.println("Marge beneficiaire: " + projet.getMargeBeneficiaire());
+            System.out.println("Cout Total: " + projet.getCoutTotal());
 
             System.out.println("les détails de client de ce projet");
-            Client client=projet.getClient();
-            if(client!=null){
-                System.out.print("ID: " + client.getId());
-                System.out.print("Nom: " + client.getNom());
-                System.out.print("Adresse: " + client.getAdresse());
-                System.out.print("Téléphone: " + client.getTelephone());
+            Client client = projet.getClient();
+            if (client != null) {
+                System.out.println("ID: " + client.getId());
+                System.out.println("Nom: " + client.getNom());
+                System.out.println("Adresse: " + client.getAdresse());
+                System.out.println("Téléphone: " + client.getTelephone());
             }
+
             System.out.println("les détails des composants de ce projet");
+            if (projet.getComposants() != null) {
+                projet.getComposants().forEach(composant -> {
+                    System.out.println("ID: " + composant.getId());
+                    System.out.println("Nom: " + composant.getNom());
+                    System.out.println("Type :" + composant.getTypeComposant());
+                    System.out.println("tva :" + composant.getTauxTVA());
 
-            projet.getComposants().forEach(composant -> {
-                System.out.print("ID: " + composant.getId());
-                System.out.print("Nom: " + composant.getNom());
-                System.out.print("Type :" +composant.getTypeComposant());
-                System.out.print("tva :" +composant.getTauxTVA());
-                composant.getMateriaux().forEach(materiau -> {
-                    System.out.print("ID: " + materiau.getId());
-                    System.out.print("Nom: " + materiau.getNom());
-                    System.out.print("Quantité: " + materiau.getQuantite());
-                    System.out.print("cout transport : " + materiau.getCoutTransport());
-                    System.out.print("coefficient de qualité : " + materiau.getCoefficientQualite());
+                    if (composant.getMateriaux() != null) {
+                        composant.getMateriaux().forEach(materiau -> {
+//                            System.out.println("ID: " + materiau.getId());
+                            System.out.println("Quantité: " + materiau.getQuantite());
+                            System.out.println("cout transport : " + materiau.getCoutTransport());
+                            System.out.println("coefficient de qualité : " + materiau.getCoefficientQualite());
+                        });
+                    }
 
+                    if (composant.getMainOeuvres() != null) {
+                        composant.getMainOeuvres().forEach(mainOeuvre -> {
+                            System.out.println("ID: " + mainOeuvre.getId());
+                            System.out.println("Nom: " + mainOeuvre.getNom());
+                            System.out.println("taux horaire : " + mainOeuvre.getTauxHoraire());
+                            System.out.println("heures de travail  : " + mainOeuvre.getHeuresTravail());
+                            System.out.println("productivité ouvrier : " + mainOeuvre.getProductiviteOuvrier());
+                        });
+                    }
                 });
-                composant.getMainOeuvres().forEach(mainOeuvre -> {
-                    System.out.print("ID: " + mainOeuvre.getId());
-                    System.out.print("Nom: " + mainOeuvre.getNom());
-                    System.out.print("taux horaire : " + mainOeuvre.getTauxHoraire());
-                    System.out.print("heures de travail  : " + mainOeuvre.getHeuresTravail());
-                    System.out.print("productivité ouvrier : " + mainOeuvre.getProductiviteOuvrier());
-                });
-                
-            });
-
-
-                }
-        );
+            } else {
+                System.out.println("Aucun composant trouvé pour ce projet.");
+            }
+        });
     }
 }

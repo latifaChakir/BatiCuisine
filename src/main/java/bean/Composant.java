@@ -11,8 +11,8 @@ public class Composant {
     protected TypeComposant typeComposant;
     protected double tauxTVA;
     protected Projet projet;
-    private List<Materiau> materiaux = new ArrayList<>();
-    private List<MainOeuvre> mainOeuvres = new ArrayList<>();
+    private List<Materiau> materiaux;
+    private List<MainOeuvre> mainOeuvres;
 
     public Composant(int id, String nom, TypeComposant typeComposant, double tauxTVA, Projet projet) {
         this.id = id;
