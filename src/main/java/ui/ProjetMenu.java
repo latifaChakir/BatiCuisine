@@ -1,8 +1,6 @@
 package ui;
 
-import bean.Client;
-import bean.Composant;
-import bean.Projet;
+import bean.*;
 import bean.enums.EtatProjet;
 import service.ClientService;
 import service.ComposantService;
@@ -204,36 +202,54 @@ public class ProjetMenu {
                 System.out.println("Téléphone: " + client.getTelephone());
             }
 
-            System.out.println("les détails des composants de ce projet");
+            System.out.println("Les détails des composants de ce projet");
+
             if (projet.getComposants() != null) {
                 projet.getComposants().forEach(composant -> {
-                    System.out.println("ID: " + composant.getId());
-                    System.out.println("Nom: " + composant.getNom());
-                    System.out.println("Type :" + composant.getTypeComposant());
-                    System.out.println("tva :" + composant.getTauxTVA());
+                    double totalCoutMateriaux = 0.0;
+                    double totalCoutMainOeuvre = 0.0;
 
-                    if (composant.getMateriaux() != null) {
-                        composant.getMateriaux().forEach(materiau -> {
-//                            System.out.println("ID: " + materiau.getId());
-                            System.out.println("Quantité: " + materiau.getQuantite());
-                            System.out.println("cout transport : " + materiau.getCoutTransport());
-                            System.out.println("coefficient de qualité : " + materiau.getCoefficientQualite());
-                        });
+                    if (composant.getMateriaux() != null && !composant.getMateriaux().isEmpty()) {
+                        System.out.println("****** Matériaux : ******");
+                        for (Materiau materiau : composant.getMateriaux()) {
+                            double coutMateriau = materiau.getQuantite() * materiau.getCoutUnitaire();
+                            totalCoutMateriaux += coutMateriau + materiau.getCoutTransport();
+                            System.out.printf("- %s : %.2f € (quantité : %.2f %s, coût unitaire : %.2f €/unité, transport : %.2f €, qualité : %.1f)\n",
+                                    composant.getNom(),
+                                    coutMateriau,
+                                    materiau.getQuantite(),
+                                    materiau.getCoutUnitaire(),
+                                    materiau.getCoutUnitaire(),
+                                    materiau.getCoutTransport(),
+                                    materiau.getCoefficientQualite());
+                        }
+                        System.out.printf("**Coût total des matériaux avant TVA : %.2f €**\n", totalCoutMateriaux);
+                        double tva = composant.getTauxTVA() / 100;
+                        System.out.printf("**Coût total des matériaux avec TVA (%.0f%%) : %.2f €**\n",
+                                composant.getTauxTVA(),
+                                totalCoutMateriaux * (1 + tva));
                     }
 
-                    if (composant.getMainOeuvres() != null) {
-                        composant.getMainOeuvres().forEach(mainOeuvre -> {
-                            System.out.println("ID: " + mainOeuvre.getId());
-                            System.out.println("Nom: " + mainOeuvre.getNom());
-                            System.out.println("taux horaire : " + mainOeuvre.getTauxHoraire());
-                            System.out.println("heures de travail  : " + mainOeuvre.getHeuresTravail());
-                            System.out.println("productivité ouvrier : " + mainOeuvre.getProductiviteOuvrier());
-                        });
+                    if (composant.getMainOeuvres() != null && !composant.getMainOeuvres().isEmpty()) {
+                        System.out.println("****** Affichage de Main-d'œuvre : ******");
+                        for (MainOeuvre mainOeuvre : composant.getMainOeuvres()) {
+                            double coutMainOeuvre = mainOeuvre.getTauxHoraire() * mainOeuvre.getHeuresTravail();
+                            totalCoutMainOeuvre += coutMainOeuvre;
+                            System.out.printf("- %s : %.2f € (taux horaire : %.2f €/heure, heures de travail : %.2f, productivité : %.1f)\n",
+                                    composant.getNom(),
+                                    coutMainOeuvre,
+                                    mainOeuvre.getTauxHoraire(),
+                                    mainOeuvre.getHeuresTravail(),
+                                    mainOeuvre.getProductiviteOuvrier());
+                        }
+                        System.out.printf("**Coût total de la main-d'œuvre : %.2f €**\n", totalCoutMainOeuvre);
                     }
+
                 });
             } else {
                 System.out.println("Aucun composant trouvé pour ce projet.");
             }
+
         });
     }
 }
