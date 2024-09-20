@@ -17,7 +17,8 @@ public class PrincipalMenu {
         while (true) {
             System.out.println("1. Créer un nouveau projet");
             System.out.println("2. update projets");
-            System.out.println("3. Calculer le cout total d'un projet'");
+            System.out.println("3. Afficher tous les projets");
+            System.out.println("4. Calculer le cout total d'un projet'");
             System.out.println("5. Gestion de MATERIAUX ");
             System.out.println("6. Gestion de Devis ");
             System.out.println("7. Quitter");
@@ -38,12 +39,13 @@ public class PrincipalMenu {
                     break;
                 case 3:projetMenu.findAllProject();
                     break;
-                case 4:devisMenu.devisMenu();
-                    break;
-
+                case 4:projetMenu.findByIdProject();
                 case 5:
                     break;
-                case 6:
+
+                case 6:devisMenu.devisMenu();
+                    break;
+                case 7:
                     System.out.println("Au revoir !");
                     return;
                 default:

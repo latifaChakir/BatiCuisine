@@ -30,15 +30,9 @@ public class ProjetService {
         this.projectDaoImpl.delete(projectId);
     }
     public Projet update(Projet projet) {
-        // Update the project
         Projet updatedProjet = this.projectDaoImpl.update(projet);
-
-        // Find the existing components related to the project
         List<Composant> composants = composantDaoImpl.findByProjet(updatedProjet);
-
-        // Update or re-assign components if needed
         composantDaoImpl.mettreAJourComposantsDuProjet(updatedProjet, composants);
-
         return updatedProjet;
     }
     public List<Projet> findByName(String projetName) {
@@ -55,19 +49,6 @@ public class ProjetService {
         projet.setClient(client);
         ProjetDaoImpl projectDaoImpl = new ProjetDaoImpl();
         projectDaoImpl.save(projet);
-    }
-
-    public void updateProjetClient(Projet projet, Client client) {
-        ClientDaoImpl clientDaoImpl = new ClientDaoImpl();
-        if (client.getId() == 0) {
-            Client savedClient = clientDaoImpl.save(client);
-            projet.setClient(savedClient);
-        } else {
-            Client updatedClient = clientDaoImpl.update(client);
-            projet.setClient(updatedClient);
-        }
-        ProjetDaoImpl projectDaoImpl = new ProjetDaoImpl();
-        projectDaoImpl.update(projet);
     }
 
 

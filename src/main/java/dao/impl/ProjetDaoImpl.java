@@ -50,27 +50,82 @@ public class ProjetDaoImpl implements ProjetDao {
 
     @Override
     public Optional<Projet> findById(int id) {
-        String sql = "SELECT * FROM projets WHERE id = ?";
-        try(PreparedStatement ps=conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            ResultSet rs=ps.executeQuery();
-            while(rs.next()) {
-                Projet projet = new Projet();
-                Client client = new Client();
-                client.setId(rs.getInt("client_id"));
-                projet.setId(rs.getInt("id"));
-                projet.setNomProjet(rs.getString("nomProjet"));
-                projet.setEtat(EtatProjet.valueOf(rs.getString("etat")));
-                projet.setCoutTotal(rs.getDouble("couttotal"));
-                projet.setMargeBeneficiaire(rs.getDouble("margeBeneficiaire"));
-                projet.setClient(client);
-                return Optional.of(projet);
-            }
+        String sql = "SELECT p.id AS projet_id, p.nomProjet AS projet_nom, p.etat AS projet_etat, p.coutTotal AS projet_coutTotal, p.margeBeneficiaire AS projet_margeBeneficiaire, " +
+                "cl.id AS client_id, cl.nom AS client_nom, cl.adresse AS client_adresse, cl.telephone AS client_telephone, " +
+                "c.id AS composant_id, c.nom AS composant_nom, c.typecomposant AS composant_type, c.tauxtva AS composant_tauxtva, " +
+                "m.id AS materiau_id, m.coutunitaire AS materiau_coutunitaire, m.quantite AS materiau_quantite, m.couttransport AS materiau_couttransport, m.coefficientqualite AS materiau_coefficientqualite, " +
+                "mo.id AS main_oeuvre_id, mo.heuresTravail AS main_oeuvre_heuresTravail, mo.tauxHoraire AS main_oeuvre_tauxHoraire, mo.productiviteouvrier AS main_oeuvre_productivite " +
+                "FROM projets p " +
+                "JOIN clients cl ON p.client_id = cl.id " +
+                "JOIN composants c ON c.projet_id = p.id " +
+                "LEFT JOIN materiaux m ON m.composant_id = c.id " +
+                "LEFT JOIN main_oeuvre mo ON mo.composant_id = c.id " +
+                "WHERE p.id = ?";
 
-        } catch (Exception e) {
+        Map<Integer, Projet> projetMap = new HashMap<>();
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int projetId = rs.getInt("projet_id");
+                    Projet projet = projetMap.get(projetId);
+
+                    if (projet == null) {
+                        Client client = new Client();
+                        client.setId(rs.getInt("client_id"));
+                        client.setNom(rs.getString("client_nom"));
+                        client.setAdresse(rs.getString("client_adresse"));
+                        client.setTelephone(rs.getString("client_telephone"));
+
+                        projet = new Projet();
+                        projet.setId(projetId);
+                        projet.setNomProjet(rs.getString("projet_nom"));
+                        projet.setEtat(EtatProjet.valueOf(rs.getString("projet_etat")));
+                        projet.setCoutTotal(rs.getDouble("projet_coutTotal"));
+                        projet.setMargeBeneficiaire(rs.getDouble("projet_margeBeneficiaire"));
+                        projet.setClient(client);
+                        projet.setComposants(new ArrayList<>());
+
+                        projetMap.put(projetId, projet);
+                    }
+
+                    Composant composant = new Composant();
+                    composant.setMateriaux(new ArrayList<>());
+                    composant.setMainOeuvres(new ArrayList<>());
+                    composant.setId(rs.getInt("composant_id"));
+                    composant.setNom(rs.getString("composant_nom"));
+                    composant.setTypeComposant(TypeComposant.valueOf(rs.getString("composant_type")));
+                    composant.setTauxTVA(rs.getDouble("composant_tauxtva"));
+                    composant.setProjet(projet);
+
+                    if ("Materiel".equals(rs.getString("composant_type"))) {
+                        Materiau materiau = new Materiau();
+                        materiau.setId(rs.getInt("materiau_id"));
+                        materiau.setCoutUnitaire(rs.getDouble("materiau_coutunitaire"));
+                        materiau.setQuantite(rs.getDouble("materiau_quantite"));
+                        materiau.setCoutTransport(rs.getDouble("materiau_couttransport"));
+                        materiau.setCoefficientQualite(rs.getDouble("materiau_coefficientqualite"));
+                        composant.getMateriaux().add(materiau);
+                    }
+
+                    if ("MainDOeuvre".equals(rs.getString("composant_type"))) {
+                        MainOeuvre mainOeuvre = new MainOeuvre();
+                        mainOeuvre.setId(rs.getInt("main_oeuvre_id"));
+                        mainOeuvre.setHeuresTravail(rs.getDouble("main_oeuvre_heuresTravail"));
+                        mainOeuvre.setTauxHoraire(rs.getDouble("main_oeuvre_tauxHoraire"));
+                        mainOeuvre.setProductiviteOuvrier(rs.getDouble("main_oeuvre_productivite"));
+                        composant.getMainOeuvres().add(mainOeuvre);
+                    }
+
+                    projet.getComposants().add(composant);
+                }
+            }
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return Optional.empty();
+
+        return projetMap.isEmpty() ? Optional.empty() : Optional.of(projetMap.values().iterator().next());
     }
 
     @Override
@@ -79,8 +134,8 @@ public class ProjetDaoImpl implements ProjetDao {
         String sql = "SELECT p.id AS projet_id, p.nomProjet AS projet_nom, p.etat AS projet_etat, p.coutTotal AS projet_coutTotal, p.margeBeneficiaire AS projet_margeBeneficiaire, " +
                 "cl.id AS client_id, cl.nom AS client_nom, cl.adresse AS client_adresse, cl.telephone AS client_telephone, " +
                 "c.id AS composant_id, c.nom AS composant_nom, c.typecomposant AS composant_type, c.tauxtva AS composant_tauxtva, " +
-                "m.id AS materiau_id, m.coutunitaire AS materiau_coutunitaire, m.quantite AS materiau_quantite, m.couttransport AS materiau_couttransport, m.coefficientqualite AS materiau_coefficientqualite, " +
-                "mo.id AS main_oeuvre_id, mo.heuresTravail AS main_oeuvre_heuresTravail, mo.tauxHoraire AS main_oeuvre_tauxHoraire " +
+                "m.id AS materiau_id, m.coutunitaire AS materiau_coutunitaire, m.quantite AS materiau_quantite, m.couttransport AS materiau_couttransport, m.coefficientqualite AS materiau_coefficientqualite ,  " +
+                "mo.id AS main_oeuvre_id, mo.heuresTravail AS main_oeuvre_heuresTravail, mo.tauxHoraire AS main_oeuvre_tauxHoraire , mo.productiviteouvrier AS main_oeuvre_productivite " +
                 "FROM projets p " +
                 "JOIN clients cl ON p.client_id = cl.id " +
                 "JOIN composants c ON c.projet_id = p.id " +
@@ -107,12 +162,11 @@ public class ProjetDaoImpl implements ProjetDao {
                         projet.setCoutTotal(rs.getDouble("projet_coutTotal"));
                         projet.setMargeBeneficiaire(rs.getDouble("projet_margeBeneficiaire"));
                         projet.setClient(client);
-                        projet.setComposants(new ArrayList<>()); // Initialize the composants list
+                        projet.setComposants(new ArrayList<>());
 
                         projetMap.put(projetId, projet);
                     }
 
-                    // Create and add components
                     Composant composant = new Composant();
                     composant.setMateriaux(new ArrayList<>());
                     composant.setMainOeuvres(new ArrayList<>());
@@ -122,7 +176,6 @@ public class ProjetDaoImpl implements ProjetDao {
                     composant.setTauxTVA(rs.getDouble("composant_tauxtva"));
                     composant.setProjet(projet);
 
-                    // Add materials if applicable
                     if ("Materiel".equals(rs.getString("composant_type"))) {
                         Materiau materiau = new Materiau();
                         materiau.setId(rs.getInt("materiau_id"));
@@ -133,22 +186,22 @@ public class ProjetDaoImpl implements ProjetDao {
                         composant.getMateriaux().add(materiau);
                     }
 
-                    // Add labor if applicable
                     if ("MainDOeuvre".equals(rs.getString("composant_type"))) {
                         MainOeuvre mainOeuvre = new MainOeuvre();
                         mainOeuvre.setId(rs.getInt("main_oeuvre_id"));
                         mainOeuvre.setHeuresTravail(rs.getDouble("main_oeuvre_heuresTravail"));
                         mainOeuvre.setTauxHoraire(rs.getDouble("main_oeuvre_tauxHoraire"));
+                        mainOeuvre.setProductiviteOuvrier(rs.getDouble("main_oeuvre_productivite"));
                         composant.getMainOeuvres().add(mainOeuvre);                    }
 
-                    projet.getComposants().add(composant); // Add component to project
+                    projet.getComposants().add(composant);
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return new ArrayList<>(projetMap.values()); // Return all projects
+        return new ArrayList<>(projetMap.values());
     }
 
     @Override
