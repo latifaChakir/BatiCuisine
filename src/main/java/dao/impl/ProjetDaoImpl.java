@@ -204,6 +204,25 @@ public class ProjetDaoImpl implements ProjetDao {
         return new ArrayList<>(projetMap.values());
     }
 
+    public Projet updateTotal(Projet projet) {
+        String sql = "UPDATE Projets SET coutTotal = ?, margebeneficiaire=?  WHERE id = ?";
+
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setDouble(1, projet.getCoutTotal());
+            preparedStatement.setDouble(2, projet.getMargeBeneficiaire());
+            preparedStatement.setInt(3, projet.getId());
+
+            int affectedRows = preparedStatement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("La mise à jour du projet a échoué, aucune ligne affectée.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la mise à jour du projet : " + e.getMessage());
+        }
+        return projet;
+    }
     @Override
     public Projet update(Projet projet) {
         String sql = "UPDATE Projets SET nomprojet = ?, etat = ?::EtatProjet, surface = ? , client_id = ? WHERE id = ?";
