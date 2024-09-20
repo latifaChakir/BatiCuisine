@@ -187,7 +187,7 @@ public class ProjetMenu {
 
     public void findAllProject() {
         projetService.findAll().forEach(projet -> {
-            System.out.println("--- Détail du Projet ---");
+            System.out.println("--------------------------------------------------Détail du Projet "+projet.getNomProjet()+"--------------------------------------------------");
             System.out.println("ID: " + projet.getId());
             System.out.println("Nom de projet: " + projet.getNomProjet());
             System.out.println("Surface: " + projet.getSurface());
@@ -231,7 +231,7 @@ public class ProjetMenu {
                         double coutMateriauTotalAvecTVA = coutMateriauTotal * (1 + tva);
                         totalCoutMateriauxAvecTVA += coutMateriauTotalAvecTVA;
 
-                        System.out.printf("- %s : %.2f € (quantité : %.2f, coût unitaire : %.2f €/unité, qualité : %.2f, transport : %.2f €, total avec TVA : %.2f €)\n",
+                        System.out.printf("- %s : %.2f DH (quantité : %.2f, coût unitaire : %.2f DH/unité, qualité : %.2f, transport : %.2f DH, total avec TVA : %.2f DH)\n",
                                 composant.getNom(),
                                 coutMateriauTotal,
                                 materiau.getQuantite(),
@@ -244,8 +244,8 @@ public class ProjetMenu {
             }
 
             if (hasMaterials) {
-                System.out.printf("**Coût total des matériaux avant TVA : %.2f €**\n", totalCoutMateriaux);
-                System.out.printf("**Coût total des matériaux avec TVA  : %.2f €**\n", totalCoutMateriauxAvecTVA);
+                System.out.printf("**Coût total des matériaux avant TVA : %.2f DH**\n", totalCoutMateriaux);
+                System.out.printf("**Coût total des matériaux avec TVA  : %.2f DH**\n", totalCoutMateriauxAvecTVA);
             }
 
             // Traitement de la main-d'œuvre
@@ -263,7 +263,7 @@ public class ProjetMenu {
                         double coutMainOeuvreAvecTVA = coutMainOeuvre * (1 + tva);
                         totalCoutMainOeuvreAvecTVA += coutMainOeuvreAvecTVA;
 
-                        System.out.printf("- %s : %.2f € (taux horaire : %.2f €/h, heures travaillées : %.2f h, productivité : %.1f, total avec TVA : %.2f €)\n",
+                        System.out.printf("- %s : %.2f DH (taux horaire : %.2f DH/h, heures travaillées : %.2f h, productivité : %.1f, total avec TVA : %.2f DH)\n",
                                 composant.getNom(),
                                 coutMainOeuvre,
                                 mainOeuvre.getTauxHoraire(),
@@ -275,15 +275,15 @@ public class ProjetMenu {
             }
 
             if (hasMainOeuvre) {
-                System.out.printf("**Coût total de la main-d'œuvre avant TVA : %.2f €**\n", totalCoutMainOeuvre);
-                System.out.printf("**Coût total de la main-d'œuvre avec TVA : %.2f €**\n", totalCoutMainOeuvreAvecTVA);
+                System.out.printf("**Coût total de la main-d'œuvre avant TVA : %.2f DH**\n", totalCoutMainOeuvre);
+                System.out.printf("**Coût total de la main-d'œuvre avec TVA : %.2f DH**\n", totalCoutMainOeuvreAvecTVA);
             }
 
             System.out.println("--- Fin des Détails du Projet ---\n");
         });
     }
 
-    public void findByIdProject() {
+    public void calculTotalProjet() {
         System.out.println("Entrez l'ID du projet que vous souhaitez trouver :");
         int projectId = Integer.parseInt(scanner.nextLine());
 
@@ -329,7 +329,7 @@ public class ProjetMenu {
                             double coutMateriauTotalAvecTVA = coutMateriauTotal * (1 + tva);
                             totalCoutMateriauxAvecTVA += coutMateriauTotalAvecTVA;
 
-                            System.out.printf("- %s : %.2f € (quantité : %.2f, coût unitaire : %.2f €/unité, qualité : %.2f, transport : %.2f €, total avec TVA : %.2f €)\n",
+                            System.out.printf("- %s : %.2f DH (quantité : %.2f, coût unitaire : %.2f DH/unité, qualité : %.2f, transport : %.2f DH, total avec TVA : %.2f DH)\n",
                                     composant.getNom(),
                                     coutMateriauTotal,
                                     materiau.getQuantite(),
@@ -342,8 +342,8 @@ public class ProjetMenu {
                 }
 
                 if (hasMaterials) {
-                    System.out.printf("**Coût total des matériaux avant TVA : %.2f €**\n", totalCoutMateriaux);
-                    System.out.printf("**Coût total des matériaux avec TVA  : %.2f €**\n", totalCoutMateriauxAvecTVA);
+                    System.out.printf("**Coût total des matériaux avant TVA : %.2f DH**\n", totalCoutMateriaux);
+                    System.out.printf("**Coût total des matériaux avec TVA  : %.2f DH**\n", totalCoutMateriauxAvecTVA);
                 }
 
                 // Traitement de la main-d'œuvre
@@ -361,7 +361,7 @@ public class ProjetMenu {
                             double coutMainOeuvreAvecTVA = coutMainOeuvre * (1 + tva);
                             totalCoutMainOeuvreAvecTVA += coutMainOeuvreAvecTVA;
 
-                            System.out.printf("- %s : %.2f € (taux horaire : %.2f €/h, heures travaillées : %.2f h, productivité : %.1f, total avec TVA : %.2f €)\n",
+                            System.out.printf("- %s : %.2f DH (taux horaire : %.2f DH/h, heures travaillées : %.2f h, productivité : %.1f, total avec TVA : %.2f DH)\n",
                                     composant.getNom(),
                                     coutMainOeuvre,
                                     mainOeuvre.getTauxHoraire(),
@@ -373,11 +373,10 @@ public class ProjetMenu {
                 }
 
                 if (hasMainOeuvre) {
-                    System.out.printf("**Coût total de la main-d'œuvre avant TVA : %.2f €**\n", totalCoutMainOeuvre);
-                    System.out.printf("**Coût total de la main-d'œuvre avec TVA : %.2f €**\n", totalCoutMainOeuvreAvecTVA);
+                    System.out.printf("**Coût total de la main-d'œuvre avant TVA : %.2f DH**\n", totalCoutMainOeuvre);
+                    System.out.printf("**Coût total de la main-d'œuvre avec TVA : %.2f DH**\n", totalCoutMainOeuvreAvecTVA);
                 }
 
-                System.out.println("--- Fin des Détails du Projet ---\n");
                 System.out.println("--- Calcul en cours ---\n");
                 calculTotalMenu.inputForCalculTotal(projet);
                 double coutTotal = totalCoutMainOeuvre+totalCoutMateriaux;
@@ -385,8 +384,11 @@ public class ProjetMenu {
                 double coutTotalAvecMarge = coutTotalAvantMarge * (1 + (projet.getMargeBeneficiaire()/100));
 
                 System.out.println("total de projet avant marge : "+coutTotalAvantMarge);
-                    System.out.println("Marge beneficaire : "+projet.getMargeBeneficiaire());
+                System.out.println("Marge beneficaire : "+projet.getMargeBeneficiaire());
                 System.out.println("total de projet final : " + coutTotalAvecMarge);
+                projet.setCoutTotal(coutTotalAvecMarge);
+                projet.setMargeBeneficiaire(projet.getMargeBeneficiaire());
+                projetService.miseAJourProjet(projet);
 
             }
         } else {

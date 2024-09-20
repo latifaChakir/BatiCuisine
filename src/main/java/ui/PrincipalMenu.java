@@ -39,7 +39,7 @@ public class PrincipalMenu {
                     break;
                 case 3:projetMenu.findAllProject();
                     break;
-                case 4:projetMenu.findByIdProject();
+                case 4:projetMenu.calculTotalProjet();
                 case 5:
                     break;
 

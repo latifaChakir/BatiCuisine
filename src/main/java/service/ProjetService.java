@@ -35,6 +35,9 @@ public class ProjetService {
         composantDaoImpl.mettreAJourComposantsDuProjet(updatedProjet, composants);
         return updatedProjet;
     }
+    public Projet miseAJourProjet(Projet projet) {
+        return this.projectDaoImpl.updateTotal(projet);
+    }
     public List<Projet> findByName(String projetName) {
         return this.projectDaoImpl.findByName(projetName);
     }
