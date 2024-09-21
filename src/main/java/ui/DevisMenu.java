@@ -4,11 +4,15 @@ import bean.Client;
 import bean.Composant;
 import bean.Devis;
 import bean.Projet;
+import exceptions.ClientValidationException;
+import exceptions.DevisValidationException;
 import service.DevisService;
 import service.ProjetService;
+import utils.Validations;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -95,12 +99,43 @@ public class DevisMenu {
         projet.setId(projetId);
         scanner.nextLine();
         Optional<Projet> projet1=projetService.findById(projetId);
+        if (!projet1.isPresent()) {
+            System.err.println("Projet non trouvé avec l'ID : " + projetId);
+            return null;
+        }
         double montantEstimation=projet1.get().getCoutTotal();
-        System.out.print("Entrer la date d'emission: ");
-        LocalDate estimationDate=LocalDate.parse(scanner.nextLine());
-        System.out.print("Entrer la date de validation: ");
-        LocalDate dateValidation=LocalDate.parse(scanner.nextLine());
+        LocalDate estimationDate = null;
+        while (estimationDate == null) {
+            System.out.print("Entrer la date d'émission (format AAAA-MM-JJ) : ");
+            String dateInput = scanner.nextLine();
+            try {
+                estimationDate = LocalDate.parse(dateInput);
+            } catch (DateTimeParseException e) {
+                System.err.println("Date invalide. Veuillez entrer une date valide au format AAAA-MM-JJ.");
+            }
+        }
+        LocalDate dateValidation = null;
+        while (dateValidation == null) {
+            System.out.print("Entrer la date de validation (format AAAA-MM-JJ) : ");
+            String validationInput = scanner.nextLine();
+            try {
+                dateValidation = LocalDate.parse(validationInput);
+                if (dateValidation.isBefore(estimationDate)) {
+                    System.err.println("La date de validation ne peut pas être antérieure à la date d'émission.");
+                    dateValidation = null;
+                }
+            } catch (DateTimeParseException e) {
+                System.err.println("Date invalide. Veuillez entrer une date valide au format AAAA-MM-JJ.");
+            }
+        }
+
         Devis devis=new Devis(0L, montantEstimation,estimationDate,dateValidation,false,projet);
+        try {
+            Validations.devisValidation(devis);
+        } catch (DevisValidationException e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
         return devis;
     }
 

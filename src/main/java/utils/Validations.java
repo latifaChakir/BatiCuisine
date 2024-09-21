@@ -8,6 +8,8 @@ import exceptions.DevisValidationException;
 import exceptions.ProjectValidationException;
 import service.ProjetService;
 
+import java.time.LocalDate;
+
 public class Validations {
     public static void clientValidation(Client client) {
         if (client.getNom() == null || client.getNom().isEmpty()) {
@@ -47,11 +49,11 @@ public class Validations {
         if(devis.getProjet() == null || devis.getProjet().getId() <= 0){
             throw new DevisValidationException("Le projet du devis ne peut pas être nul ou son id inférieur ou égal à 0.");
         }
-        if(devis.getEstimatedAmount() <= 0) {
+        if(devis.getEstimatedAmount() < 0) {
             throw new DevisValidationException("Le montant estimé du devis ne peut pas être inférieur ou égal à 0.");
         }
-        if(devis.getIssueDate() == null) {
-            throw new DevisValidationException("La date d'émission du devis ne peut pas être nulle.");
+        if(devis.getIssueDate() == null && devis.getIssueDate().isBefore(LocalDate.now())) {
+            throw new DevisValidationException("La date d'émission du devis ne peut pas être nulle et interieure la date d'aujourd'hui.");
         }
         if(devis.getValidatedDate()==null && devis.getValidatedDate().isBefore(devis.getIssueDate())) {
             throw new DevisValidationException("La date de validation du devis ne peut pas être antérieure à la date d'émission.");
