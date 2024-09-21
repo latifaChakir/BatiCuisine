@@ -18,10 +18,11 @@ public class PrincipalMenu {
             System.out.println("1. Créer un nouveau projet");
             System.out.println("2. update projets");
             System.out.println("3. Afficher tous les projets");
-            System.out.println("4. Calculer le cout total d'un projet'");
-            System.out.println("5. Gestion de MATERIAUX ");
-            System.out.println("6. Gestion de Devis ");
-            System.out.println("7. Quitter");
+            System.out.println("4. Calculer le cout total d'un projet ");
+            System.out.println("5. Afficher un projet par son ID ");
+            System.out.println("6. Supprimer le projet ");
+            System.out.println("7. Gestion de Devis ");
+            System.out.println("8. Quitter");
             System.out.print("Choisir une option: ");
 
             int choice;
@@ -40,12 +41,14 @@ public class PrincipalMenu {
                 case 3:projetMenu.findAllProject();
                     break;
                 case 4:projetMenu.calculTotalProjet();
-                case 5:
                     break;
-
-                case 6:devisMenu.devisMenu();
+                case 5:projetMenu.findProjetById();
                     break;
-                case 7:
+                case 6:projetMenu.deleteProjetById();
+                    break;
+                case 7:devisMenu.devisMenu();
+                    break;
+                case 8:
                     System.out.println("Au revoir !");
                     return;
                 default:

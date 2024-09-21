@@ -101,28 +101,115 @@ public class ProjetMenu {
         return clientMenu.addNewClient();
     }
 
-    private void deleteProjetById() {
+    public void deleteProjetById() {
         System.out.print("Entrer l'ID du projet à supprimer : ");
         int projectId = Integer.parseInt(scanner.nextLine());
         projetService.delete(projectId);
-        System.out.println("Projet supprimé.");
     }
 
-    private void findProjetById() {
+    public void findProjetById() {
         System.out.print("Entrer l'ID du projet : ");
         int projectId = Integer.parseInt(scanner.nextLine());
-        Optional<Projet> projet = projetService.findById(projectId);
-        if (projet.isPresent()) {
-            System.out.println(projet.get());
+        Optional<Projet> projetOpt = projetService.findById(projectId);
+
+        if (projetOpt.isPresent()) {
+            Projet projet = projetOpt.get();
+
+            System.out.println("--------------------------------------------------Détail du Projet " + projet.getNomProjet() + "--------------------------------------------------");
+            System.out.println("ID: " + projet.getId());
+            System.out.println("Nom de projet: " + projet.getNomProjet());
+            System.out.println("État de projet: " + projet.getEtat());
+            System.out.println("Surface de projet: " + projet.getSurface());
+
+            System.out.println("---- Détails du Client ----");
+            Client client = projet.getClient();
+            if (client != null) {
+                System.out.println("ID: " + client.getId());
+                System.out.println("Nom: " + client.getNom());
+                System.out.println("Adresse: " + client.getAdresse());
+                System.out.println("Téléphone: " + client.getTelephone());
+            } else {
+                System.out.println("Aucun client associé à ce projet.");
+            }
+
+            // Initialize total costs
+            double totalCoutMateriaux = 0.0;
+            double totalCoutMateriauxAvecTVA = 0.0;
+            double totalCoutMainOeuvre = 0.0;
+            double totalCoutMainOeuvreAvecTVA = 0.0;
+
+            boolean hasMaterials = false;
+            boolean hasMainOeuvre = false;
+
+            System.out.println("---- Détails des Composants du Projet ----");
+            for (Composant composant : projet.getComposants()) {
+                if (composant.getMateriaux() != null && !composant.getMateriaux().isEmpty()) {
+                    if (!hasMaterials) {
+                        System.out.println("1. Matériaux :");
+                        hasMaterials = true;
+                    }
+                    for (Materiau materiau : composant.getMateriaux()) {
+                        double coutMateriauBrute = materiau.getQuantite() * materiau.getCoutUnitaire();
+                        double coutMateriauAjuste = coutMateriauBrute * materiau.getCoefficientQualite();
+                        double coutMateriauTotal = coutMateriauAjuste + materiau.getCoutTransport();
+                        totalCoutMateriaux += coutMateriauTotal;
+
+                        double tva = composant.getTauxTVA() / 100;
+                        double coutMateriauTotalAvecTVA = coutMateriauTotal * (1 + tva);
+                        totalCoutMateriauxAvecTVA += coutMateriauTotalAvecTVA;
+
+                        System.out.printf("- %s : %.2f DH (quantité : %.2f, coût unitaire : %.2f DH/unité, qualité : %.2f, transport : %.2f DH, total avec TVA : %.2f DH)\n",
+                                composant.getNom(),
+                                coutMateriauTotal,
+                                materiau.getQuantite(),
+                                materiau.getCoutUnitaire(),
+                                materiau.getCoefficientQualite(),
+                                materiau.getCoutTransport(),
+                                coutMateriauTotalAvecTVA);
+                    }
+                }
+            }
+
+            if (hasMaterials) {
+                System.out.printf("**Coût total des matériaux avant TVA : %.2f DH**\n", totalCoutMateriaux);
+                System.out.printf("**Coût total des matériaux avec TVA  : %.2f DH**\n", totalCoutMateriauxAvecTVA);
+            }
+
+            // Process labor
+            for (Composant composant : projet.getComposants()) {
+                if (composant.getMainOeuvres() != null && !composant.getMainOeuvres().isEmpty()) {
+                    if (!hasMainOeuvre) {
+                        System.out.println("2. Main-d'œuvre :");
+                        hasMainOeuvre = true;
+                    }
+                    for (MainOeuvre mainOeuvre : composant.getMainOeuvres()) {
+                        double coutMainOeuvre = mainOeuvre.getTauxHoraire() * mainOeuvre.getHeuresTravail();
+                        totalCoutMainOeuvre += coutMainOeuvre;
+
+                        double tva = composant.getTauxTVA() / 100;
+                        double coutMainOeuvreAvecTVA = coutMainOeuvre * (1 + tva);
+                        totalCoutMainOeuvreAvecTVA += coutMainOeuvreAvecTVA;
+
+                        System.out.printf("- %s : %.2f DH (taux horaire : %.2f DH/h, heures travaillées : %.2f h, productivité : %.1f, total avec TVA : %.2f DH)\n",
+                                composant.getNom(),
+                                coutMainOeuvre,
+                                mainOeuvre.getTauxHoraire(),
+                                mainOeuvre.getHeuresTravail(),
+                                mainOeuvre.getProductiviteOuvrier(),
+                                coutMainOeuvreAvecTVA);
+                    }
+                }
+            }
+
+            if (hasMainOeuvre) {
+                System.out.printf("**Coût total de la main-d'œuvre avant TVA : %.2f DH**\n", totalCoutMainOeuvre);
+                System.out.printf("**Coût total de la main-d'œuvre avec TVA : %.2f DH**\n", totalCoutMainOeuvreAvecTVA);
+                System.out.println("--------------------------------------------------FIN de Détail du Projet--------------------------------------------------");
+            }
+
         } else {
             System.out.println("Projet non trouvé.");
         }
-    }
-
-
-    private int getProjetIdInput() {
-        System.out.print("Entrer l'ID du projet : ");
-        return Integer.parseInt(scanner.nextLine());
     }
 
     public void createProject() {
@@ -188,17 +275,14 @@ public class ProjetMenu {
     public void findAllProject() {
         projetService.findAll().forEach(projet -> {
             System.out.println("--------------------------------------------------Détail du Projet "+projet.getNomProjet()+"--------------------------------------------------");
-            System.out.println("ID: " + projet.getId());
+            System.out.println("ID de projet: " + projet.getId());
             System.out.println("Nom de projet: " + projet.getNomProjet());
-            System.out.println("Surface: " + projet.getSurface());
             System.out.println("État de projet: " + projet.getEtat());
-            System.out.println("Marge bénéficiaire: " + projet.getMargeBeneficiaire());
-            System.out.println("Coût Total: " + projet.getCoutTotal());
 
             System.out.println("---- Détails du Client ----");
             Client client = projet.getClient();
             if (client != null) {
-                System.out.println("ID: " + client.getId());
+                System.out.println("ID de client: " + client.getId());
                 System.out.println("Nom: " + client.getNom());
                 System.out.println("Adresse: " + client.getAdresse());
                 System.out.println("Téléphone: " + client.getTelephone());
@@ -283,8 +367,9 @@ public class ProjetMenu {
         });
     }
 
+
     public void calculTotalProjet() {
-        System.out.println("Entrez l'ID du projet que vous souhaitez trouver :");
+        System.out.println("Entrez l'ID du projet que vous souhaitez calculer son total  :");
         int projectId = Integer.parseInt(scanner.nextLine());
 
         Optional<Projet> projetOptional = projetService.findById(projectId);

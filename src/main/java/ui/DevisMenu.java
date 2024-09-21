@@ -195,10 +195,12 @@ public class DevisMenu {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
             System.out.println("# Devis n°" + DevisFound.getId() + " - Projet " + projet.getNomProjet());
+            System.out.println("--------------------------------------------------------------------------------");
             System.out.println();
             System.out.println("**Date d'émission:** " + DevisFound.getIssueDate().format(formatter));
             System.out.println("**Date de validité:** " + DevisFound.getValidatedDate().format(formatter));
             System.out.println();
+            System.out.println("--------------------------------------------------------------------------------");
 
             System.out.println("## Détails du client");
             System.out.println("Nom: " + client.getNom());
@@ -220,7 +222,7 @@ public class DevisMenu {
                 System.out.println("  TVA: " + composant.getTauxTVA() + "%");
             }
             System.out.println();
-
+            System.out.println("--------------------------------------------------------------------------------");
             System.out.println("### Coûts");
             System.out.printf("Coût total du projet: %.2f €%n", projet.getCoutTotal());
             System.out.println();
@@ -245,8 +247,7 @@ public class DevisMenu {
             System.out.println(DevisFound.isAccepted() ? "☑ Accepté   □ Refusé" : "□ Accepté   ☑ Refusé");
             System.out.println("Date d'acceptation: " + DevisFound.getValidatedDate().format(formatter));
             System.out.println();
-
-            System.out.println("---");
+            System.out.println("--------------------------------------------------------------------------------");
             System.out.println();
             System.out.println("**Informations complémentaires:**");
             System.out.println("- ID du Devis: " + DevisFound.getId());
