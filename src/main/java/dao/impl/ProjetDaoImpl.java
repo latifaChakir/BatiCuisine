@@ -5,6 +5,7 @@ import bean.enums.EtatProjet;
 import bean.enums.TypeComposant;
 import config.ConnectionConfig;
 import dao.dao.ProjetDao;
+import exceptions.ProjectNotFoundException;
 
 import java.sql.*;
 import java.util.*;
@@ -50,7 +51,7 @@ public class ProjetDaoImpl implements ProjetDao {
 
     @Override
     public Optional<Projet> findById(int id) {
-        String sql = "SELECT p.id AS projet_id, p.nomProjet AS projet_nom, p.etat AS projet_etat, p.coutTotal AS projet_coutTotal, p.margeBeneficiaire AS projet_margeBeneficiaire, " +
+        String sql = "SELECT p.id AS projet_id,p.surface as projet_surface, p.nomProjet AS projet_nom, p.etat AS projet_etat, p.coutTotal AS projet_coutTotal, p.margeBeneficiaire AS projet_margeBeneficiaire, " +
                 "cl.id AS client_id, cl.nom AS client_nom, cl.adresse AS client_adresse, cl.telephone AS client_telephone, " +
                 "c.id AS composant_id, c.nom AS composant_nom, c.typecomposant AS composant_type, c.tauxtva AS composant_tauxtva, " +
                 "m.id AS materiau_id, m.coutunitaire AS materiau_coutunitaire, m.quantite AS materiau_quantite, m.couttransport AS materiau_couttransport, m.coefficientqualite AS materiau_coefficientqualite, " +
@@ -81,6 +82,7 @@ public class ProjetDaoImpl implements ProjetDao {
                         projet = new Projet();
                         projet.setId(projetId);
                         projet.setNomProjet(rs.getString("projet_nom"));
+                        projet.setSurface(rs.getDouble("projet_surface"));
                         projet.setEtat(EtatProjet.valueOf(rs.getString("projet_etat")));
                         projet.setCoutTotal(rs.getDouble("projet_coutTotal"));
                         projet.setMargeBeneficiaire(rs.getDouble("projet_margeBeneficiaire"));
@@ -250,23 +252,21 @@ public class ProjetDaoImpl implements ProjetDao {
 
     @Override
     public void delete(int id) {
-        String sql = "DELETE FROM Projets WHERE id = ?";
-
+        String sql = "DELETE FROM projets WHERE id = ?";
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+
             preparedStatement.setInt(1, id);
-
-            int affectedRows = preparedStatement.executeUpdate();
-
-            if (affectedRows == 0) {
-                throw new SQLException("La suppression du projet a échoué, aucune ligne affectée.");
+            int result = preparedStatement.executeUpdate();
+            if (result == 1) {
+                System.out.println("Project Supprimé");
+            } else {
+                throw new ProjectNotFoundException("Delete failed, project not found");
             }
-
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la suppression du projet : " + e.getMessage());
-        } finally {
-            ConnectionConfig.closeConnection(conn);
+            System.out.println(e.getMessage());
         }
     }
+
 
     @Override
     public List<Projet> findByName(String nom) {

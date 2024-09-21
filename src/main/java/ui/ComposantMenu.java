@@ -3,17 +3,22 @@ package ui;
 import bean.Composant;
 import bean.Projet;
 import service.ComposantService;
+import service.ProjetService;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class ComposantMenu {
     private ComposantService composantService;
+    private ProjetMenu projetMenu;
+    private ProjetService projetService;
     private Scanner scanner;
 
     public ComposantMenu(ComposantService composantService) {
         this.composantService = composantService;
         this.scanner = new Scanner(System.in);
+        this.projetService = new ProjetService();
+        this.projetMenu = new ProjetMenu(projetService);
     }
 
     public void composantMenu() {
@@ -70,7 +75,13 @@ public class ComposantMenu {
             String reponse = scanner.nextLine();
 
             if (!reponse.equalsIgnoreCase("oui")) {
-                ajouterAutreComposant = false;
+                projetService.findById(projet.getId());
+                System.out.println("le projet "+projet.getNomProjet()+ " qui a id "+projet.getId()+ " ajouté avec succes ");
+                System.out.println("voulez vous calculer le cout  total de projet ? oui/non");
+                if (scanner.nextLine().equalsIgnoreCase("oui")){
+                    projetMenu.calculTotalProjet();
+                }
+                    ajouterAutreComposant = false;
             }
         }
     }
@@ -155,17 +166,7 @@ public class ComposantMenu {
                 }
             }
         }
-    }
-    private List<Composant> findByProject(Projet projet){
-        List<Composant> composants = composantService.findByProject(projet);
-        if (!composants.isEmpty()) {
-            for (Composant c : composants) {
-                System.out.println(c);
-            }
-        } else {
-            System.out.println("Aucun composant trouvé.");
-        }
-        return composants;
+//        projetMenu.calculTotalProjet();
     }
     private void getComposantInputToUpdate(Projet projet) {
         System.out.print("Type de composant (1: Materiel, 2: MainDOeuvre): ");
