@@ -6,23 +6,30 @@ public class PrincipalMenu {
     private DevisMenu devisMenu;
     private ProjetMenu projetMenu;
     private MateriauMenu materiauMenu;
+    private ClientMenu clientMenu;
     private Scanner scanner;
-    public PrincipalMenu(DevisMenu devisMenu, ProjetMenu projetMenu){
+    public PrincipalMenu(DevisMenu devisMenu, ProjetMenu projetMenu,ClientMenu clientMenu){
         this.devisMenu = devisMenu;
         this.projetMenu = projetMenu;
+        this.clientMenu=clientMenu;
         this.scanner=new Scanner(System.in);
 
     }
     public void principalMenu() {
         while (true) {
-            System.out.println("1. Créer un nouveau projet");
-            System.out.println("2. update projets");
-            System.out.println("3. Afficher tous les projets");
-            System.out.println("4. Calculer le cout total d'un projet ");
-            System.out.println("5. Afficher un projet par son ID ");
-            System.out.println("6. Supprimer le projet ");
-            System.out.println("7. Gestion de Devis ");
-            System.out.println("8. Quitter");
+            System.out.println("╔═════════════════════════════════════════╗");
+            System.out.println("║             BATI-CUISINE                ║");
+            System.out.println("╚═════════════════════════════════════════╝");
+            System.out.println(" 1. Créer un nouveau projet");
+            System.out.println(" 2. update projets");
+            System.out.println(" 3. Afficher tous les projets");
+            System.out.println(" 4. Calculer le cout total d'un projet ");
+            System.out.println(" 5. Afficher un projet par son ID ");
+            System.out.println(" 6. Supprimer le projet ");
+            System.out.println(" 7. Gestion de Devis ");
+            System.out.println(" 8. Gestion de Clients ");
+            System.out.println(" 9. Quitter");
+            System.out.println("╚═════════════════════════════════════════╝");
             System.out.print("Choisir une option: ");
 
             int choice;
@@ -49,6 +56,9 @@ public class PrincipalMenu {
                 case 7:devisMenu.devisMenu();
                     break;
                 case 8:
+                    clientMenu.clientMenu();
+                    break;
+                case 9:
                     System.out.println("Au revoir !");
                     return;
                 default:

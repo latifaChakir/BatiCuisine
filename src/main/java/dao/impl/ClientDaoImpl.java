@@ -106,7 +106,6 @@ public class ClientDaoImpl implements ClientDao {
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, clientId);
             pstmt.executeUpdate();
-            System.out.println("Client deleted successfully!");
         } catch (SQLException sqlException) {
             System.out.println("Error deleting client: " + sqlException.getMessage());
         }

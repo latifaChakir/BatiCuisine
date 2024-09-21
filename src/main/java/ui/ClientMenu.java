@@ -39,6 +39,7 @@ public class ClientMenu {
             switch (choice) {
                 case 1:
                     addNewClient();
+                    System.out.println("Client ajouté avec succès.");
                     break;
                 case 2:
                     int clientIdToUpdate = getClientIdInput();
@@ -56,27 +57,32 @@ public class ClientMenu {
                     int clientId = getClientIdInput();
                     Client clientFound = clientService.findById(clientId);
                     if (clientFound != null) {
-                        System.out.println(clientFound);
+                        System.out.println("ID de client: " + clientFound.getId());
+                        System.out.println("Nom: " + clientFound.getNom());
+                        System.out.println("Adresse: " + clientFound.getAdresse());
+                        System.out.println("Téléphone: " + clientFound.getTelephone());
+                        System.out.println("est professionnel : " + clientFound.isEstProfessionnel());
+
                     } else {
                         System.out.println("Client non trouvé.");
                     }
                     break;
                 case 5:
                     String clientName = getClientNameInput();
-                    List<Client> clientsByName = clientService.findByNom(clientName);
-                    if (!clientsByName.isEmpty()) {
-                        for (Client c : clientsByName) {
-                            System.out.println(c);
-                        }
-                    } else {
-                        System.out.println("Aucun client trouvé avec ce nom.");
-                    }
+                    findClientByName(clientName);
                     break;
                 case 6:
                     List<Client> clients = clientService.findAll();
                     if (!clients.isEmpty()) {
                         for (Client c : clients) {
-                            System.out.println(c);
+                            System.out.println("------------------------------------------------------");
+                            System.out.println("ID de client: " + c.getId());
+                            System.out.println("Nom: " + c.getNom());
+                            System.out.println("Adresse: " + c.getAdresse());
+                            System.out.println("Téléphone: " + c.getTelephone());
+                            System.out.println("est professionnel : " + c.isEstProfessionnel());
+                            System.out.println("------------------------------------------------------");
+
                         }
                     } else {
                         System.out.println("Aucun client trouvé.");
@@ -92,13 +98,13 @@ public class ClientMenu {
     }
 
     private Client getClientInput() {
-        System.out.println("Entrer le nom du client: ");
+        System.out.print("Entrer le nom du client: ");
         String nom = scanner.nextLine();
-        System.out.println("Entrer l'adresse du client: ");
+        System.out.print("Entrer l'adresse du client: ");
         String adresse = scanner.nextLine();
-        System.out.println("Entrer le téléphone du client: ");
+        System.out.print("Entrer le téléphone du client: ");
         String telephone = scanner.nextLine();
-        System.out.println("Le client est professionnel (true/false) ?");
+        System.out.print("Le client est professionnel (true/false) ?");
         boolean estProfessionnel = scanner.nextBoolean();
         scanner.nextLine();
         Client client = new Client(nom, adresse, telephone, estProfessionnel);
@@ -113,12 +119,12 @@ public class ClientMenu {
 
 
     private int getClientIdInput() {
-        System.out.println("Entrer l'ID du client: ");
+        System.out.print("Entrer l'ID du client: ");
         return Integer.parseInt(scanner.nextLine());
     }
 
     private String getClientNameInput() {
-        System.out.println("Entrer le nom du client: ");
+        System.out.print("Entrer le nom du client: ");
         return scanner.nextLine();
     }
     
@@ -126,7 +132,11 @@ public class ClientMenu {
         List<Client> clientsByName = clientService.findByNom(clientName);
         if (!clientsByName.isEmpty()) {
             for (Client c : clientsByName) {
-                System.out.println(c);
+                System.out.println("ID de client: " + c.getId());
+                System.out.println("Nom: " + c.getNom());
+                System.out.println("Adresse: " + c.getAdresse());
+                System.out.println("Téléphone: " + c.getTelephone());
+                System.out.println("est professionnel : " + c.isEstProfessionnel());
             }
         } else {
             System.out.println("Aucun client trouvé avec ce nom.");

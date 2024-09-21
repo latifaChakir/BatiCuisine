@@ -5,7 +5,7 @@ import bean.enums.EtatProjet;
 import bean.enums.TypeComposant;
 import config.ConnectionConfig;
 import dao.dao.ProjetDao;
-import exceptions.ProjectNotFoundException;
+import exceptions.ProjectValidationException;
 
 import java.sql.*;
 import java.util.*;
@@ -260,7 +260,7 @@ public class ProjetDaoImpl implements ProjetDao {
             if (result == 1) {
                 System.out.println("Project Supprimé");
             } else {
-                throw new ProjectNotFoundException("Delete failed, project not found");
+                throw new ProjectValidationException("Delete failed, project not found");
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
