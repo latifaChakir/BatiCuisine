@@ -19,13 +19,13 @@ public class ClientMenu {
 
     public void clientMenu() {
         while (true) {
-            System.out.println("1. Ajouter Client");
-            System.out.println("2. Modifier Client");
-            System.out.println("3. Supprimer Client par id");
-            System.out.println("4. Chercher Client par id");
-            System.out.println("5. Chercher Client par nom");
-            System.out.println("6. Afficher tous les clients");
-            System.out.println("7. Quitter");
+            System.out.println("1. ➤ Ajouter Client");
+            System.out.println("2. ➤ Modifier Client");
+            System.out.println("3. ➤ Supprimer Client par id");
+            System.out.println("4. ➤ Chercher Client par id");
+            System.out.println("5. ➤ Chercher Client par nom");
+            System.out.println("6. ➤ Afficher tous les clients");
+            System.out.println("7. ➤ Quitter");
             System.out.print("Choisir une option: ");
 
             int choice;
@@ -132,11 +132,11 @@ public class ClientMenu {
         List<Client> clientsByName = clientService.findByNom(clientName);
         if (!clientsByName.isEmpty()) {
             for (Client c : clientsByName) {
-                System.out.println("ID de client: " + c.getId());
-                System.out.println("Nom: " + c.getNom());
-                System.out.println("Adresse: " + c.getAdresse());
-                System.out.println("Téléphone: " + c.getTelephone());
-                System.out.println("est professionnel : " + c.isEstProfessionnel());
+                System.out.println("✦ ID de client: " + c.getId());
+                System.out.println("✦ Nom: " + c.getNom());
+                System.out.println("✦ Adresse: " + c.getAdresse());
+                System.out.println("✦ Téléphone: " + c.getTelephone());
+                System.out.println("✦ est professionnel : " + c.isEstProfessionnel());
             }
         } else {
             System.out.println("Aucun client trouvé avec ce nom.");

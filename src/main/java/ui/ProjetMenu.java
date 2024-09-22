@@ -36,9 +36,8 @@ public class ProjetMenu {
 
         while (client == null) {
             System.out.println("Voulez-vous associer ce projet à un client existant ou créer un nouveau client ?");
-            System.out.println("1. Chercher un client existant");
-            System.out.println("2. Ajouter un nouveau client");
-            System.out.println("3. Quitter");
+            System.out.println("1. \uD83D\uDD0D Chercher un client existant");
+            System.out.println("2. ➕ Ajouter un nouveau client");
             System.out.print("Choisir une option: ");
             int choixClient;
             try {
@@ -54,8 +53,8 @@ public class ProjetMenu {
                 case 2:
                     client = addNewClientForProject();
                     break;
-//                case 3:principalMenu.principalMenu();
-//                    break;
+                case 3:
+                        return null;
                 default:
                     System.out.println("Option non valide. Veuillez réessayer.");
             }
@@ -164,18 +163,18 @@ public class ProjetMenu {
             Projet projet = projetOpt.get();
 
             System.out.println("--------------------------------------------------Détail du Projet " + projet.getNomProjet() + "--------------------------------------------------");
-            System.out.println("ID: " + projet.getId());
-            System.out.println("Nom de projet: " + projet.getNomProjet());
-            System.out.println("État de projet: " + projet.getEtat());
-            System.out.println("Surface de projet: " + projet.getSurface());
+            System.out.println("✨ ID: " + projet.getId());
+            System.out.println("✨ Nom de projet: " + projet.getNomProjet());
+            System.out.println("✨ État de projet: " + projet.getEtat());
+            System.out.println("✨ Surface de projet: " + projet.getSurface());
 
-            System.out.println("---- Détails du Client ----");
+            System.out.println("---- Détails du Client \uD83E\uDDD1 ----");
             Client client = projet.getClient();
             if (client != null) {
-                System.out.println("ID: " + client.getId());
-                System.out.println("Nom: " + client.getNom());
-                System.out.println("Adresse: " + client.getAdresse());
-                System.out.println("Téléphone: " + client.getTelephone());
+                System.out.println("✨ ID: " + client.getId());
+                System.out.println("✨ Nom: " + client.getNom());
+                System.out.println("✨ Adresse: " + client.getAdresse());
+                System.out.println("✨ Téléphone: " + client.getTelephone());
             } else {
                 System.out.println("Aucun client associé à ce projet.");
             }
@@ -189,7 +188,7 @@ public class ProjetMenu {
             boolean hasMaterials = false;
             boolean hasMainOeuvre = false;
 
-            System.out.println("---- Détails des Composants du Projet ----");
+            System.out.println("---- Détails des Composants du Projet \uD83D\uDD75\uFE0F ----");
             for (Composant composant : projet.getComposants()) {
                 if (composant.getMateriaux() != null && !composant.getMateriaux().isEmpty()) {
                     if (!hasMaterials) {
@@ -219,8 +218,8 @@ public class ProjetMenu {
             }
 
             if (hasMaterials) {
-                System.out.printf("**Coût total des matériaux avant TVA : %.2f DH**\n", totalCoutMateriaux);
-                System.out.printf("**Coût total des matériaux avec TVA  : %.2f DH**\n", totalCoutMateriauxAvecTVA);
+                System.out.printf("\uD83D\uDCB0 Coût total des matériaux avant TVA : %.2f DH\n", totalCoutMateriaux);
+                System.out.printf("\uD83D\uDCB0 Coût total des matériaux avec TVA  : %.2f DH\n", totalCoutMateriauxAvecTVA);
             }
 
             // Process labor
@@ -250,8 +249,8 @@ public class ProjetMenu {
             }
 
             if (hasMainOeuvre) {
-                System.out.printf("**Coût total de la main-d'œuvre avant TVA : %.2f DH**\n", totalCoutMainOeuvre);
-                System.out.printf("**Coût total de la main-d'œuvre avec TVA : %.2f DH**\n", totalCoutMainOeuvreAvecTVA);
+                System.out.printf("\uD83D\uDCB0 Coût total de la main-d'œuvre avant TVA : %.2f DH\n", totalCoutMainOeuvre);
+                System.out.printf("\uD83D\uDCB0 Coût total de la main-d'œuvre avec TVA : %.2f DH\n", totalCoutMainOeuvreAvecTVA);
                 System.out.println("--------------------------------------------------FIN de Détail du Projet--------------------------------------------------");
             }
 

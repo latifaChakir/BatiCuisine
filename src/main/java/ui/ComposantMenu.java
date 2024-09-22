@@ -2,7 +2,6 @@ package ui;
 
 import bean.*;
 import service.ComposantService;
-import service.DevisService;
 import service.ProjetService;
 
 import java.util.List;
@@ -132,7 +131,7 @@ import java.util.Scanner;
         int type = -1;
 
         while (type != 1 && type != 2) {
-            System.out.print("Type de composant (1: Materiel, 2: MainDOeuvre): ");
+            System.out.print("Type de composant (1: ✨ Materiel, 2: ✨ MainDOeuvre): ");
             String input = scanner.nextLine();
 
             try {
@@ -314,7 +313,7 @@ import java.util.Scanner;
                          }
                          for (MainOeuvre mainOeuvre : composant.getMainOeuvres()) {
                              double coutMainOeuvre = mainOeuvre.getTauxHoraire() * mainOeuvre.getHeuresTravail();
-                             totalCoutMainOeuvre += coutMainOeuvre;
+                             totalCoutMainOeuvre += coutMainOeuvre * mainOeuvre.getProductiviteOuvrier();
 
                              double tva = composant.getTauxTVA() / 100;
                              double coutMainOeuvreAvecTVA = coutMainOeuvre * (1 + tva);
