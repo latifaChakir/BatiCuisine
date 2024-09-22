@@ -84,15 +84,17 @@ public class ProjetMenu {
             }
         }
         EtatProjet etat = null;
+        boolean etatValide = false;
 
-        while (etat == null) {
-            System.out.print("État du projet (par ex: ENCours, TERMINE, ANNULE) : ");
+        while (!etatValide ) {
+            System.out.print("État du projet (par ex: ENCOURS, TERMINE, ANNULE) : ");
             String etatInput = scanner.nextLine().toUpperCase();
 
             try {
                 etat = EtatProjet.valueOf(etatInput);
+                etatValide = true;
             } catch (IllegalArgumentException e) {
-                System.out.println("L'état saisi est invalide. Veuillez entrer un état valide (ENCOURS, TERMINE, ANNULE).");
+                System.out.println("L'état saisi n'existe pas. Veuillez entrer un état valide (ENCOURS, TERMINE, ANNULE).");
             }
         }
 
