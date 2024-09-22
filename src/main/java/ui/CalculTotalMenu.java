@@ -6,8 +6,8 @@ import java.util.Scanner;
 
 public class CalculTotalMenu {
     private Scanner scanner;
-    public CalculTotalMenu() {
-        this.scanner = new Scanner(System.in);
+    public CalculTotalMenu(Scanner scanner) {
+        this.scanner = scanner;
 
     }
     public void inputForCalculTotal(Projet projet) {
@@ -20,5 +20,6 @@ public class CalculTotalMenu {
             projet.setMargeBeneficiaire(marge);
         }
     }
+
 
 }

@@ -14,19 +14,15 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class DevisDaoImpl implements DevisDao {
-    private Connection conn;
     public DevisDaoImpl() {
-        try {
-            this.conn = ConnectionConfig.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
     @Override
     public Devis save(Devis devis) {
         String sql = "INSERT INTO devis (montantestime, dateemission, datevalidite, accepte, projet_id) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setDouble(1, devis.getEstimatedAmount());
             ps.setDate(2, java.sql.Date.valueOf(devis.getIssueDate()));
             ps.setDate(3, (devis.getValidatedDate() != null) ? java.sql.Date.valueOf(devis.getValidatedDate()) : null);
@@ -67,7 +63,8 @@ public class DevisDaoImpl implements DevisDao {
                 "LEFT JOIN materiaux m ON m.composant_id = c.id " +
                 "LEFT JOIN main_oeuvre mo ON mo.composant_id = c.id " +
                 "WHERE d.id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -155,7 +152,8 @@ public class DevisDaoImpl implements DevisDao {
                 "LEFT JOIN main_oeuvre mo ON mo.composant_id = c.id";
 
         Map<Long, Devis> devisMap = new HashMap<>();
-        try (PreparedStatement ps = conn.prepareStatement(sql);
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
@@ -235,7 +233,8 @@ public class DevisDaoImpl implements DevisDao {
     @Override
     public Devis update(Devis devis) {
         String sql = "UPDATE devis SET montantestime = ?, dateemission = ?, datevalidite = ?, accepte = ?, projet_id = ? WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setDouble(1, devis.getEstimatedAmount());
             ps.setDate(2, java.sql.Date.valueOf(devis.getIssueDate()));
             ps.setDate(3, devis.getValidatedDate() != null ? java.sql.Date.valueOf(devis.getValidatedDate()) : null);
@@ -261,7 +260,8 @@ public class DevisDaoImpl implements DevisDao {
     @Override
     public void delete(int id) {
         String sql = "DELETE FROM devis WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
 
             int affectedRows = ps.executeUpdate();

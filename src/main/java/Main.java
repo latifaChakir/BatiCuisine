@@ -5,26 +5,28 @@ import ui.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 
 public class Main {
     public static void main(String[] args) throws SQLException {
-        ProjetService projetService=new ProjetService();
-        ProjetMenu projetMenu=new ProjetMenu(projetService);
-        DevisService devisService=new DevisService();
-        DevisMenu devisMenu=new DevisMenu(devisService);
-        ClientService clientService=new ClientService();
-        ClientMenu clientMenu=new ClientMenu(clientService);
-//        MateriauService materiauService=new MateriauService();
-//        MateriauMenu materiauMenu=new MateriauMenu(materiauService);
+        Scanner scanner = new Scanner(System.in);
 
-        PrincipalMenu menu=new PrincipalMenu(devisMenu,projetMenu,clientMenu);
-        menu.principalMenu();
-//
+        DevisService devisService = new DevisService();
+        ProjetService projetService = new ProjetService();
+        ComposantService composantService = new ComposantService();
+        ClientService clientService = new ClientService();
 
-//        ComposantService composantService = new ComposantService();
-//        ComposantMenu composantMenu=new ComposantMenu(composantService);
-//        composantMenu.composantMenu();
+        ClientMenu clientMenu = new ClientMenu(clientService, scanner);
+        DevisMenu devisMenu = new DevisMenu(devisService, scanner);
+        ProjetMenu projetMenu = new ProjetMenu(projetService, devisService, composantService, clientMenu, scanner);
+        ComposantMenu composantMenu = new ComposantMenu(composantService, scanner);
+
+        PrincipalMenu principalMenu = new PrincipalMenu(devisMenu, projetMenu, clientMenu, scanner,composantMenu);
+        principalMenu.principalMenu();
+
+        scanner.close();
+
 
     }
 }
