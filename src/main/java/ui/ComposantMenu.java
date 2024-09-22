@@ -154,10 +154,10 @@ import java.util.Scanner;
                 composantService.save(materiau);
                 System.out.println("Matériau ajouté avec succès !");
 
-                System.out.print("Voulez-vous ajouter un autre matériau ? (y/n): ");
+                System.out.print("Voulez-vous ajouter un autre matériau ? (oui/non): ");
                 String reponse = scanner.nextLine();
 
-                if (!reponse.equalsIgnoreCase("y")) {
+                if (!reponse.equalsIgnoreCase("oui")) {
                     ajouterAutreMateriau = false;
                 }
             }
@@ -171,10 +171,10 @@ import java.util.Scanner;
                 composantService.save(mainOeuvre);
                 System.out.println("Main d'œuvre ajoutée avec succès !");
 
-                System.out.print("Voulez-vous ajouter une autre main d'œuvre ? (y/n): ");
+                System.out.print("Voulez-vous ajouter une autre main d'œuvre ? (oui/non): ");
                 String reponse = scanner.nextLine();
 
-                if (!reponse.equalsIgnoreCase("y")) {
+                if (!reponse.equalsIgnoreCase("oui")) {
                     ajouterAutreMainOeuvre = false;
                 }
             }

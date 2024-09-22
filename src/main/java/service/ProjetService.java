@@ -39,6 +39,7 @@ public class ProjetService {
         return this.projectDaoImpl.updateTotal(projet);
     }
     public List<Projet> findByName(String projetName) {
+
         return this.projectDaoImpl.findByName(projetName);
     }
     public void saveProjetClient(Projet projet, Client client) {

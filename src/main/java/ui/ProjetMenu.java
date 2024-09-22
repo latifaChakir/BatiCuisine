@@ -10,6 +10,7 @@ import service.DevisService;
 import service.ProjetService;
 import utils.Validations;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -416,6 +417,110 @@ public class ProjetMenu {
 
             System.out.println("--- Fin des Détails du Projet ---\n");
         });
+    }
+
+    public void findByName(){
+        System.out.print("Entrez le nom du projet à rechercher : ");
+        String nomProjet = scanner.nextLine();
+        List<Projet> projets = projetService.findByName(nomProjet);
+        if (!projets.isEmpty()) {
+            projets.stream().sorted(Comparator.comparing(Projet::getNomProjet))
+                    .forEach(projet -> {
+                                System.out.println("--------------------------------------------------Détail du Projet " + projet.getNomProjet() + "--------------------------------------------------");
+                                System.out.println("✨ ID: " + projet.getId());
+                                System.out.println("✨ Nom de projet: " + projet.getNomProjet());
+                                System.out.println("✨ État de projet: " + projet.getEtat());
+                                System.out.println("✨ Surface de projet: " + projet.getSurface());
+
+                                System.out.println("---- Détails du Client \uD83E\uDDD1 ----");
+                                Client client = projet.getClient();
+                                if (client != null) {
+                                    System.out.println("✨ ID: " + client.getId());
+                                    System.out.println("✨ Nom: " + client.getNom());
+                                    System.out.println("✨ Adresse: " + client.getAdresse());
+                                    System.out.println("✨ Téléphone: " + client.getTelephone());
+                                } else {
+                                    System.out.println("Aucun client associé à ce projet.");
+                                }
+
+                                // Initialize total costs
+                                double totalCoutMateriaux = 0.0;
+                                double totalCoutMateriauxAvecTVA = 0.0;
+                                double totalCoutMainOeuvre = 0.0;
+                                double totalCoutMainOeuvreAvecTVA = 0.0;
+
+                                boolean hasMaterials = false;
+                                boolean hasMainOeuvre = false;
+
+                                System.out.println("---- Détails des Composants du Projet \uD83D\uDD75\uFE0F ----");
+                                for (Composant composant : projet.getComposants()) {
+                                    if (composant.getMateriaux() != null && !composant.getMateriaux().isEmpty()) {
+                                        if (!hasMaterials) {
+                                            System.out.println("1. Matériaux :");
+                                            hasMaterials = true;
+                                        }
+                                        for (Materiau materiau : composant.getMateriaux()) {
+                                            double coutMateriauBrute = materiau.getQuantite() * materiau.getCoutUnitaire();
+                                            double coutMateriauAjuste = coutMateriauBrute * materiau.getCoefficientQualite();
+                                            double coutMateriauTotal = coutMateriauAjuste + materiau.getCoutTransport();
+                                            totalCoutMateriaux += coutMateriauTotal;
+
+                                            double tva = composant.getTauxTVA() / 100;
+                                            double coutMateriauTotalAvecTVA = coutMateriauTotal * (1 + tva);
+                                            totalCoutMateriauxAvecTVA += coutMateriauTotalAvecTVA;
+
+                                            System.out.printf("- %s : %.2f DH (quantité : %.2f, coût unitaire : %.2f DH/unité, qualité : %.2f, transport : %.2f DH, total avec TVA : %.2f DH)\n",
+                                                    composant.getNom(),
+                                                    coutMateriauTotal,
+                                                    materiau.getQuantite(),
+                                                    materiau.getCoutUnitaire(),
+                                                    materiau.getCoefficientQualite(),
+                                                    materiau.getCoutTransport(),
+                                                    coutMateriauTotalAvecTVA);
+                                        }
+                                    }
+                                }
+
+                                if (hasMaterials) {
+                                    System.out.printf("\uD83D\uDCB0 Coût total des matériaux avant TVA : %.2f DH\n", totalCoutMateriaux);
+                                    System.out.printf("\uD83D\uDCB0 Coût total des matériaux avec TVA  : %.2f DH\n", totalCoutMateriauxAvecTVA);
+                                }
+
+                                // Process labor
+                                for (Composant composant : projet.getComposants()) {
+                                    if (composant.getMainOeuvres() != null && !composant.getMainOeuvres().isEmpty()) {
+                                        if (!hasMainOeuvre) {
+                                            System.out.println("2. Main-d'œuvre :");
+                                            hasMainOeuvre = true;
+                                        }
+                                        for (MainOeuvre mainOeuvre : composant.getMainOeuvres()) {
+                                            double coutMainOeuvre = mainOeuvre.getTauxHoraire() * mainOeuvre.getHeuresTravail();
+                                            totalCoutMainOeuvre += coutMainOeuvre * mainOeuvre.getProductiviteOuvrier();
+
+                                            double tva = composant.getTauxTVA() / 100;
+                                            double coutMainOeuvreAvecTVA = coutMainOeuvre * (1 + tva);
+                                            totalCoutMainOeuvreAvecTVA += coutMainOeuvreAvecTVA;
+
+                                            System.out.printf("- %s : %.2f DH (taux horaire : %.2f DH/h, heures travaillées : %.2f h, productivité : %.1f, total avec TVA : %.2f DH)\n",
+                                                    composant.getNom(),
+                                                    coutMainOeuvre,
+                                                    mainOeuvre.getTauxHoraire(),
+                                                    mainOeuvre.getHeuresTravail(),
+                                                    mainOeuvre.getProductiviteOuvrier(),
+                                                    coutMainOeuvreAvecTVA);
+                                        }
+                                    }
+                                }
+
+                                if (hasMainOeuvre) {
+                                    System.out.printf("\uD83D\uDCB0 Coût total de la main-d'œuvre avant TVA : %.2f DH\n", totalCoutMainOeuvre);
+                                    System.out.printf("\uD83D\uDCB0 Coût total de la main-d'œuvre avec TVA : %.2f DH\n", totalCoutMainOeuvreAvecTVA);
+
+
+                                }
+                            }
+                            );
+        }
     }
 
 }

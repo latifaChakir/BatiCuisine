@@ -5,6 +5,7 @@ import exceptions.ClientValidationException;
 import service.ClientService;
 import utils.Validations;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -128,19 +129,23 @@ public class ClientMenu {
         System.out.print("Entrer le nom du client: ");
         return scanner.nextLine();
     }
-    
+
         public List<Client> findClientByName(String clientName) {
         List<Client> clientsByName = clientService.findByNom(clientName);
         if (!clientsByName.isEmpty()) {
-            for (Client c : clientsByName) {
-                System.out.println();
-                System.out.println("✦ ID de client: " + c.getId());
-                System.out.println("✦ Nom: " + c.getNom());
-                System.out.println("✦ Adresse: " + c.getAdresse());
-                System.out.println("✦ Téléphone: " + c.getTelephone());
-                System.out.println("✦ est professionnel : " + c.isEstProfessionnel());
-                System.out.println();
-            }
+            clientsByName.stream()
+                    .sorted(Comparator.comparing(Client::getNom))
+                    .forEach(c->{
+                        System.out.println("Client trouvé ���");
+                        System.out.println();
+                        System.out.println("✦ ID de client: " + c.getId());
+                        System.out.println("✦ Nom: " + c.getNom());
+                        System.out.println("✦ Adresse: " + c.getAdresse());
+                        System.out.println("✦ Téléphone: " + c.getTelephone());
+                        System.out.println("✦ est professionnel : " + c.isEstProfessionnel());
+                        System.out.println();
+                    }
+                    );
         } else {
             System.out.println("Aucun client trouvé avec ce nom.");
         }
