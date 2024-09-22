@@ -57,11 +57,12 @@ public class ClientMenu {
                     int clientId = getClientIdInput();
                     Client clientFound = clientService.findById(clientId);
                     if (clientFound != null) {
-                        System.out.println("ID de client: " + clientFound.getId());
-                        System.out.println("Nom: " + clientFound.getNom());
-                        System.out.println("Adresse: " + clientFound.getAdresse());
-                        System.out.println("Téléphone: " + clientFound.getTelephone());
-                        System.out.println("est professionnel : " + clientFound.isEstProfessionnel());
+                        System.out.println("Client trouvé ⚙ :");
+                        System.out.println("✨ ID de client: " + clientFound.getId());
+                        System.out.println("✨ Nom: " + clientFound.getNom());
+                        System.out.println("✨ Adresse: " + clientFound.getAdresse());
+                        System.out.println("✨ Téléphone: " + clientFound.getTelephone());
+                        System.out.println("✨ est professionnel : " + clientFound.isEstProfessionnel());
 
                     } else {
                         System.out.println("Client non trouvé.");
@@ -76,11 +77,11 @@ public class ClientMenu {
                     if (!clients.isEmpty()) {
                         for (Client c : clients) {
                             System.out.println("------------------------------------------------------");
-                            System.out.println("ID de client: " + c.getId());
-                            System.out.println("Nom: " + c.getNom());
-                            System.out.println("Adresse: " + c.getAdresse());
-                            System.out.println("Téléphone: " + c.getTelephone());
-                            System.out.println("est professionnel : " + c.isEstProfessionnel());
+                            System.out.println("✦ ID de client: " + c.getId());
+                            System.out.println("✦ Nom: " + c.getNom());
+                            System.out.println("✦ Adresse: " + c.getAdresse());
+                            System.out.println("✦ Téléphone: " + c.getTelephone());
+                            System.out.println("✦ est professionnel : " + c.isEstProfessionnel());
                             System.out.println("------------------------------------------------------");
 
                         }
