@@ -9,7 +9,6 @@ import exceptions.MateriauValidationException;
 import service.ComposantService;
 import utils.Validations;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class MateriauMenu {

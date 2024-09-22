@@ -17,21 +17,16 @@ import java.util.List;
 import java.util.Optional;
 
 public class ComposantDaoImpl implements ComposantDao {
-    private Connection conn;
     public ComposantDaoImpl() {
-        try {
-            this.conn = ConnectionConfig.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
     @Override
     public Composant save(Composant composant) {
         String sql = "insert into composants(nom, typecomposant, tauxtva, projet_id) values(?, ?::TypeComposant, ?, ?)";
 
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)){
             ps.setString(1, composant.getNom());
             ps.setString(2, composant.getTypeComposant().name());
             ps.setDouble(3, composant.getTauxTVA());
@@ -75,14 +70,15 @@ public class ComposantDaoImpl implements ComposantDao {
             throw new RuntimeException(e);
         }
 
+
         return composant;
     }
 
     @Override
     public Optional<Composant> findById(int id) {
         String sql = "select * from composants where id = ?";
-        try {
-            PreparedStatement ps =conn.prepareStatement(sql);
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+            PreparedStatement ps =conn.prepareStatement(sql)){
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -106,8 +102,8 @@ public class ComposantDaoImpl implements ComposantDao {
     public List<Composant> findAll() {
         List<Composant> composants = new ArrayList<>();
         String sql = "select * from composants";
-        try {
-            PreparedStatement ps=conn.prepareStatement(sql);
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+            PreparedStatement ps=conn.prepareStatement(sql)){
             ResultSet rs=ps.executeQuery();
             while (rs.next()) {
                 Composant composant = new Composant();
@@ -129,8 +125,8 @@ public class ComposantDaoImpl implements ComposantDao {
     @Override
     public Composant update(Composant composant) {
         String sql = "UPDATE composants SET nom = ?, typecomposant = ?::TypeComposant, tauxtva = ?, projet_id = ? WHERE id = ?";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setString(1, composant.getNom());
             ps.setString(2, composant.getTypeComposant().name());
             ps.setDouble(3, composant.getTauxTVA());
@@ -151,7 +147,8 @@ public class ComposantDaoImpl implements ComposantDao {
     public void supprimerComposantsParProjet(int projetId) {
         String sql = "DELETE FROM Composants WHERE projet_id = ?";
 
-        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setInt(1, projetId);
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
@@ -176,8 +173,8 @@ public class ComposantDaoImpl implements ComposantDao {
     @Override
     public void delete(int id) {
         String sql = "delete from composants where id = ?";
-        try{
-            PreparedStatement ps=conn.prepareStatement(sql);
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+            PreparedStatement ps=conn.prepareStatement(sql)){
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -190,8 +187,8 @@ public class ComposantDaoImpl implements ComposantDao {
     public List<Composant> findByName(String name) {
         List<Composant> composants = new ArrayList<>();
         String sql = "select * from composants where nom like ?";
-        try {
-            PreparedStatement ps=conn.prepareStatement(sql);
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+            PreparedStatement ps=conn.prepareStatement(sql)){
             ps.setString(1, "%"+name+"%");
             ResultSet rs=ps.executeQuery();
             while (rs.next()) {
@@ -218,7 +215,8 @@ public class ComposantDaoImpl implements ComposantDao {
             String sqlDeleteMainOeuvre = "DELETE FROM main_oeuvre WHERE composant_id IN (SELECT id FROM composants WHERE projet_id = ?)";
             String sqlDeleteComposants = "DELETE FROM composants WHERE projet_id = ?";
 
-            try (PreparedStatement psDeleteMateriaux = conn.prepareStatement(sqlDeleteMateriaux);
+            try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                    PreparedStatement psDeleteMateriaux = conn.prepareStatement(sqlDeleteMateriaux);
                  PreparedStatement psDeleteMainOeuvre = conn.prepareStatement(sqlDeleteMainOeuvre);
                  PreparedStatement psDeleteComposants = conn.prepareStatement(sqlDeleteComposants)) {
 
@@ -247,7 +245,8 @@ public class ComposantDaoImpl implements ComposantDao {
         List<Composant> composants = new ArrayList<>();
         String query = "SELECT * FROM Composants WHERE projet_id = ?";
 
-        try (PreparedStatement statement = conn.prepareStatement(query)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setInt(1, projet.getId());
             ResultSet resultSet = statement.executeQuery();
 

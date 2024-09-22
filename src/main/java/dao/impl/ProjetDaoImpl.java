@@ -11,20 +11,15 @@ import java.sql.*;
 import java.util.*;
 
 public class ProjetDaoImpl implements ProjetDao {
-    private Connection conn;
 
     public ProjetDaoImpl(){
-        try {
-            this.conn = ConnectionConfig.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     public Projet save(Projet projet) {
         String sql = "INSERT INTO Projets (nomprojet, margebeneficiaire, couttotal, etat, client_id,surface) VALUES (?, ?, ?, ?::EtatProjet, ?,?) RETURNING id;";
-        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, projet.getNomProjet());
             preparedStatement.setDouble(2, projet.getMargeBeneficiaire());
             preparedStatement.setDouble(3, projet.getCoutTotal());
@@ -65,7 +60,8 @@ public class ProjetDaoImpl implements ProjetDao {
 
         Map<Integer, Projet> projetMap = new HashMap<>();
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -144,7 +140,8 @@ public class ProjetDaoImpl implements ProjetDao {
                 "LEFT JOIN materiaux m ON m.composant_id = c.id " +
                 "LEFT JOIN main_oeuvre mo ON mo.composant_id = c.id";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     int projetId = rs.getInt("projet_id");
@@ -209,7 +206,8 @@ public class ProjetDaoImpl implements ProjetDao {
     public Projet updateTotal(Projet projet) {
         String sql = "UPDATE Projets SET coutTotal = ?, margebeneficiaire=?  WHERE id = ?";
 
-        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setDouble(1, projet.getCoutTotal());
             preparedStatement.setDouble(2, projet.getMargeBeneficiaire());
             preparedStatement.setInt(3, projet.getId());
@@ -229,7 +227,8 @@ public class ProjetDaoImpl implements ProjetDao {
     public Projet update(Projet projet) {
         String sql = "UPDATE Projets SET nomprojet = ?, etat = ?::EtatProjet, surface = ? , client_id = ? WHERE id = ?";
 
-        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, projet.getNomProjet());
             preparedStatement.setString(2, projet.getEtat().name());
             preparedStatement.setDouble(3, projet.getSurface());
@@ -253,7 +252,8 @@ public class ProjetDaoImpl implements ProjetDao {
     @Override
     public void delete(int id) {
         String sql = "DELETE FROM projets WHERE id = ?";
-        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, id);
             int result = preparedStatement.executeUpdate();
@@ -273,7 +273,8 @@ public class ProjetDaoImpl implements ProjetDao {
         String sql = "SELECT * FROM Projets WHERE nomprojet ILIKE ?";
         List<Projet> projets = new ArrayList<>();
 
-        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, "%" + nom + "%");
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -293,8 +294,6 @@ public class ProjetDaoImpl implements ProjetDao {
 
         } catch (SQLException e) {
             System.out.println("Erreur lors de la récupération des projets par nom : " + e.getMessage());
-        } finally {
-            ConnectionConfig.closeConnection(conn);
         }
 
         return projets;

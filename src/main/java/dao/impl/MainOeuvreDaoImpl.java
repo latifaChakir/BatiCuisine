@@ -16,18 +16,14 @@ import java.util.List;
 import java.util.Optional;
 
 public class MainOeuvreDaoImpl implements MainOeuvreDao {
-    private Connection conn;
     public MainOeuvreDaoImpl() {
-        try {
-            this.conn = ConnectionConfig.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
     }
     @Override
     public MainOeuvre save(MainOeuvre mainOeuvre) {
         String sqlMainOeuvre = "INSERT INTO main_oeuvre (composant_id, tauxHoraire, heuresTravail, productiviteOuvrier) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement psMainOeuvre = conn.prepareStatement(sqlMainOeuvre)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement psMainOeuvre = conn.prepareStatement(sqlMainOeuvre)) {
             psMainOeuvre.setInt(1, mainOeuvre.getComposant().getId());
             psMainOeuvre.setDouble(2, mainOeuvre.getTauxHoraire());
             psMainOeuvre.setDouble(3, mainOeuvre.getHeuresTravail());
@@ -46,7 +42,8 @@ public class MainOeuvreDaoImpl implements MainOeuvreDao {
                 "WHERE m.id = ?";
         MainOeuvre mainOeuvre = null;
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -88,7 +85,8 @@ public class MainOeuvreDaoImpl implements MainOeuvreDao {
                 "  join projets p on c.projet_id = p.id " +
                 "where c.typecomposant='MainDOeuvre' ";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Projet projet = new Projet(
@@ -125,7 +123,8 @@ public class MainOeuvreDaoImpl implements MainOeuvreDao {
     @Override
     public MainOeuvre update(MainOeuvre mainOeuvre) {
         String sql = "UPDATE main_oeuvre SET tauxHoraire = ?, heuresTravail = ?, productiviteOuvrier = ? WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setDouble(1, mainOeuvre.getTauxHoraire());
             ps.setDouble(2, mainOeuvre.getHeuresTravail());
             ps.setDouble(3, mainOeuvre.getProductiviteOuvrier());
@@ -141,7 +140,8 @@ public class MainOeuvreDaoImpl implements MainOeuvreDao {
     @Override
     public void delete(int id) {
         String sql = "DELETE FROM main_oeuvre WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {

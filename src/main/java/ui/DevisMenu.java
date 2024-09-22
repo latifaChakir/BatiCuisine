@@ -19,12 +19,13 @@ import java.util.Scanner;
 
 public class DevisMenu {
     private DevisService devisService;
-    private ProjetService projetService;
     private Scanner scanner;
-    public DevisMenu(DevisService devisService) {
+    private ProjetService projetService;
+
+    public DevisMenu(DevisService devisService, Scanner scanner) {
         this.devisService = devisService;
-        this.projetService = new ProjetService();
-        this.scanner = new Scanner(System.in);
+        this.projetService=new ProjetService();
+        this.scanner = scanner;
     }
     public void devisMenu() {
         while (true) {

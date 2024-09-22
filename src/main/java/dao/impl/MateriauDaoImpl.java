@@ -16,18 +16,14 @@ import java.util.List;
 import java.util.Optional;
 
 public class MateriauDaoImpl implements MateriauDao {
-    private Connection conn;
     public MateriauDaoImpl() {
-        try {
-            this.conn = ConnectionConfig.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
     }
     @Override
     public Materiau save(Materiau materiau) {
         String sqlMateriau = "INSERT INTO materiaux (composant_id, coutunitaire, quantite, couttransport, coefficientqualite) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement psMateriau = conn.prepareStatement(sqlMateriau)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement psMateriau = conn.prepareStatement(sqlMateriau)) {
             psMateriau.setInt(1,materiau.getComposant().getId() );
             psMateriau.setDouble(2, materiau.getCoutUnitaire());
             psMateriau.setDouble(3, materiau.getQuantite());
@@ -48,7 +44,8 @@ public class MateriauDaoImpl implements MateriauDao {
                 "WHERE m.id = ?";
         Materiau materiau = null;
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -88,7 +85,8 @@ public class MateriauDaoImpl implements MateriauDao {
     public List<Materiau> findAll() {
         List<Materiau> materiaux = new ArrayList<>();
         String sql = "SELECT * FROM materiaux m join composants c on m.composant_id = c.id join projets p on c.projet_id = p.id where c.typecomposant='MATERIAU'";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Projet projet=new Projet(
@@ -124,7 +122,8 @@ public class MateriauDaoImpl implements MateriauDao {
     @Override
     public Materiau update(Materiau materiau) {
         String sql = "UPDATE materiaux SET coutunitaire = ?, quantite = ?, couttransport = ?, coefficientqualite = ? WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setDouble(1, materiau.getCoutUnitaire());
             ps.setDouble(2, materiau.getQuantite());
             ps.setDouble(3, materiau.getCoutTransport());
@@ -141,7 +140,8 @@ public class MateriauDaoImpl implements MateriauDao {
     @Override
     public void delete(int id) {
         String sql = "DELETE FROM materiaux WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {

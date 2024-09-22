@@ -1,19 +1,19 @@
 package ui;
-
 import java.util.Scanner;
 
 public class PrincipalMenu {
     private DevisMenu devisMenu;
     private ProjetMenu projetMenu;
-    private MateriauMenu materiauMenu;
     private ClientMenu clientMenu;
+    private ComposantMenu composantMenu;
     private Scanner scanner;
-    public PrincipalMenu(DevisMenu devisMenu, ProjetMenu projetMenu,ClientMenu clientMenu){
+
+    public PrincipalMenu(DevisMenu devisMenu, ProjetMenu projetMenu, ClientMenu clientMenu,Scanner scanner,ComposantMenu composantMenu) {
         this.devisMenu = devisMenu;
         this.projetMenu = projetMenu;
-        this.clientMenu=clientMenu;
-        this.scanner=new Scanner(System.in);
-
+        this.clientMenu = clientMenu;
+        this.composantMenu = composantMenu;
+        this.scanner = new Scanner(System.in);
     }
     public void principalMenu() {
         while (true) {
@@ -47,7 +47,7 @@ public class PrincipalMenu {
                     break;
                 case 3:projetMenu.findAllProject();
                     break;
-                case 4:projetMenu.calculTotalProjet();
+                case 4:composantMenu.calculTotalProjet();
                     break;
                 case 5:projetMenu.findProjetById();
                     break;

@@ -12,9 +12,9 @@ public class ClientMenu {
     private ClientService clientService;
     private Scanner scanner;
 
-    public ClientMenu(ClientService clientService) {
+    public ClientMenu(ClientService clientService, Scanner scanner) {
         this.clientService = clientService;
-        this.scanner = new Scanner(System.in);
+        this.scanner = scanner;
     }
 
     public void clientMenu() {
