@@ -231,7 +231,7 @@ public class ProjetMenu {
                     }
                     for (MainOeuvre mainOeuvre : composant.getMainOeuvres()) {
                         double coutMainOeuvre = mainOeuvre.getTauxHoraire() * mainOeuvre.getHeuresTravail();
-                        totalCoutMainOeuvre += coutMainOeuvre;
+                        totalCoutMainOeuvre += coutMainOeuvre * mainOeuvre.getProductiviteOuvrier();
 
                         double tva = composant.getTauxTVA() / 100;
                         double coutMainOeuvreAvecTVA = coutMainOeuvre * (1 + tva);
@@ -392,7 +392,7 @@ public class ProjetMenu {
                     }
                     for (MainOeuvre mainOeuvre : composant.getMainOeuvres()) {
                         double coutMainOeuvre = mainOeuvre.getTauxHoraire() * mainOeuvre.getHeuresTravail();
-                        totalCoutMainOeuvre += coutMainOeuvre;
+                        totalCoutMainOeuvre += coutMainOeuvre * mainOeuvre.getProductiviteOuvrier();;
 
                         double tva = composant.getTauxTVA() / 100;
                         double coutMainOeuvreAvecTVA = coutMainOeuvre * (1 + tva);
