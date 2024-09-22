@@ -2,9 +2,13 @@ package ui;
 
 import bean.*;
 import bean.enums.EtatProjet;
+import exceptions.ClientValidationException;
+import exceptions.ProjectValidationException;
 import service.ClientService;
 import service.ComposantService;
+import service.DevisService;
 import service.ProjetService;
+import utils.Validations;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,10 +19,14 @@ public class ProjetMenu {
     private ProjetService projetService;
     private ClientMenu clientMenu;
     private CalculTotalMenu calculTotalMenu;
+    private PrincipalMenu principalMenu;
+    private DevisMenu devisMenu;
     private static Scanner scanner;
 
     public ProjetMenu(ProjetService projetService) {
         this.projetService = projetService;
+        this.devisMenu=new DevisMenu(new DevisService());
+        this.principalMenu=new PrincipalMenu(devisMenu,this,clientMenu);
         this.composantService=new ComposantService();
         this.calculTotalMenu=new CalculTotalMenu();
         this.clientMenu = new ClientMenu(new ClientService());
@@ -33,16 +41,23 @@ public class ProjetMenu {
             System.out.println("Voulez-vous associer ce projet à un client existant ou créer un nouveau client ?");
             System.out.println("1. Chercher un client existant");
             System.out.println("2. Ajouter un nouveau client");
+            System.out.println("3. Quitter");
             System.out.print("Choisir une option: ");
-
-            int choixClient = Integer.parseInt(scanner.nextLine());
-
+            int choixClient;
+            try {
+                choixClient = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Entrée invalide. Veuillez entrer un nombre.");
+                continue;
+            }
             switch (choixClient) {
                 case 1:
                     client = searchClientForProject();
                     break;
                 case 2:
                     client = addNewClientForProject();
+                    break;
+                case 3:principalMenu.principalMenu();
                     break;
                 default:
                     System.out.println("Option non valide. Veuillez réessayer.");
@@ -51,14 +66,49 @@ public class ProjetMenu {
 
         System.out.print("Nom du projet : ");
         String nomProjet = scanner.nextLine();
-        System.out.print("Surface : ");
-        double surface = Double.parseDouble(scanner.nextLine());
+        double surface = -1;
+        while (surface <= 0) {
+            System.out.print("Surface : ");
+            String surfaceInput = scanner.nextLine();
+            if (surfaceInput.isEmpty()) {
+                System.out.println("La surface ne peut pas être vide. Veuillez entrer une valeur valide.");
+            } else {
+                try {
+                    surface = Double.parseDouble(surfaceInput);
+                    if (surface <= 0) {
+                        System.out.println("La surface doit être un nombre positif.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Entrée non valide. Veuillez entrer un nombre valide pour la surface.");
+                }
+            }
+        }
+        EtatProjet etat = null;
+        boolean etatValide = false;
 
-        System.out.print("État du projet (par ex: ENCOURS, TERMINE, ANNULE) : ");
-        String etatInput = scanner.nextLine().toUpperCase();
-        EtatProjet etat = EtatProjet.valueOf(etatInput);
+        while (!etatValide ) {
+            System.out.print("État du projet (par ex: ENCOURS, TERMINE, ANNULE) : ");
+            String etatInput = scanner.nextLine().toUpperCase();
 
-        return new Projet(nomProjet, 0, 0, etat, client, surface);
+            try {
+                etat = EtatProjet.valueOf(etatInput);
+                etatValide = true;
+            } catch (IllegalArgumentException e) {
+                System.out.println("L'état saisi n'existe pas. Veuillez entrer un état valide (ENCOURS, TERMINE, ANNULE).");
+            }
+        }
+
+
+        Projet projet =new Projet(nomProjet, 0, 0, etat, client, surface);
+        try {
+            Validations.projetValidation(projet);
+        } catch (ProjectValidationException e) {
+            System.err.println(e.getMessage());
+            System.err.println("Le projet n'a pas été ajouté en raison d'erreurs de validation.");
+            System.out.println();
+            principalMenu.principalMenu();
+        }
+        return projet;
     }
 
     private Client searchClientForProject() {
@@ -214,7 +264,11 @@ public class ProjetMenu {
 
     public void createProject() {
         Projet projet = inputsProjet();
-        handleSaveProject(projet, projet.getClient());
+        if(projet != null) {
+            handleSaveProject(projet, projet.getClient());
+        }else {
+            System.err.println("Le projet n'a pas été ajouté en raison d'erreurs de validation.");
+        }
         System.out.println("Voulez-vous ajouter des composants à ce projet ? (oui/non)");
         String reponse = scanner.nextLine();
         if (reponse.equalsIgnoreCase("oui")) {
