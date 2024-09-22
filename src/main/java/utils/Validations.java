@@ -51,7 +51,7 @@ public class Validations {
         if(devis.getEstimatedAmount() < 0) {
             throw new DevisValidationException("Le montant estimé du devis ne peut pas être inférieur ou égal à 0.");
         }
-        if(devis.getIssueDate() == null && devis.getIssueDate().isBefore(LocalDate.now())) {
+        if(devis.getIssueDate() == null || devis.getIssueDate().isBefore(LocalDate.now())) {
             throw new DevisValidationException("La date d'émission du devis ne peut pas être nulle et interieure la date d'aujourd'hui.");
         }
         if(devis.getValidatedDate()==null && devis.getValidatedDate().isBefore(devis.getIssueDate())) {

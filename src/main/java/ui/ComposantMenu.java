@@ -154,10 +154,10 @@ import java.util.Scanner;
                 composantService.save(materiau);
                 System.out.println("Matériau ajouté avec succès !");
 
-                System.out.print("Voulez-vous ajouter un autre matériau ? (y/n): ");
+                System.out.print("Voulez-vous ajouter un autre matériau ? (oui/non): ");
                 String reponse = scanner.nextLine();
 
-                if (!reponse.equalsIgnoreCase("y")) {
+                if (!reponse.equalsIgnoreCase("oui")) {
                     ajouterAutreMateriau = false;
                 }
             }
@@ -171,10 +171,10 @@ import java.util.Scanner;
                 composantService.save(mainOeuvre);
                 System.out.println("Main d'œuvre ajoutée avec succès !");
 
-                System.out.print("Voulez-vous ajouter une autre main d'œuvre ? (y/n): ");
+                System.out.print("Voulez-vous ajouter une autre main d'œuvre ? (oui/non): ");
                 String reponse = scanner.nextLine();
 
-                if (!reponse.equalsIgnoreCase("y")) {
+                if (!reponse.equalsIgnoreCase("oui")) {
                     ajouterAutreMainOeuvre = false;
                 }
             }
@@ -242,24 +242,24 @@ import java.util.Scanner;
     }
 
      public void calculTotalProjet() {
-         System.out.println("Entrez l'ID du projet que vous souhaitez calculer son total  :");
+         System.out.print("Entrez l'ID du projet que vous souhaitez calculer son total  :");
          int projectId = Integer.parseInt(scanner.nextLine());
 
          Optional<Projet> projetOptional = projetService.findById(projectId);
          if (projetOptional.isPresent()) {
              Projet projet = projetOptional.get();
              System.out.println("--- Détail du Projet ---");
-             System.out.println("ID: " + projet.getId());
-             System.out.println("Nom de projet: " + projet.getNomProjet());
-             System.out.println("Surface: " + projet.getSurface());
-             System.out.println("État de projet: " + projet.getEtat());
+             System.out.println("✦ ID: " + projet.getId());
+             System.out.println("✦ Nom de projet: " + projet.getNomProjet());
+             System.out.println("✦ Surface: " + projet.getSurface());
+             System.out.println("✦ État de projet: " + projet.getEtat());
              System.out.println("---- Détails du Client ----");
              Client client = projet.getClient();
              if (client != null) {
-                 System.out.println("ID: " + client.getId());
-                 System.out.println("Nom: " + client.getNom());
-                 System.out.println("Adresse: " + client.getAdresse());
-                 System.out.println("Téléphone: " + client.getTelephone());
+                 System.out.println("✦ ID: " + client.getId());
+                 System.out.println("✦ Nom: " + client.getNom());
+                 System.out.println("✦ Adresse: " + client.getAdresse());
+                 System.out.println("✦ Téléphone: " + client.getTelephone());
                  System.out.println("---- Détails des Composants du Projet ----");
 
                  double totalCoutMateriaux = 0.0;
@@ -300,8 +300,8 @@ import java.util.Scanner;
                  }
 
                  if (hasMaterials) {
-                     System.out.printf("**Coût total des matériaux avant TVA : %.2f DH**\n", totalCoutMateriaux);
-                     System.out.printf("**Coût total des matériaux avec TVA  : %.2f DH**\n", totalCoutMateriauxAvecTVA);
+                     System.out.printf("\uD83D\uDCB0 Coût total des matériaux avant TVA : %.2f DH\n", totalCoutMateriaux);
+                     System.out.printf("\uD83D\uDCB0 Coût total des matériaux avec TVA  : %.2f DH\n", totalCoutMateriauxAvecTVA);
                  }
 
                  // Traitement de la main-d'œuvre
@@ -331,19 +331,19 @@ import java.util.Scanner;
                  }
 
                  if (hasMainOeuvre) {
-                     System.out.printf("**Coût total de la main-d'œuvre avant TVA : %.2f DH**\n", totalCoutMainOeuvre);
-                     System.out.printf("**Coût total de la main-d'œuvre avec TVA : %.2f DH**\n", totalCoutMainOeuvreAvecTVA);
+                     System.out.printf("\uD83D\uDCB0 Coût total de la main-d'œuvre avant TVA : %.2f DH \uD83D\uDCB0\n", totalCoutMainOeuvre);
+                     System.out.printf("\uD83D\uDCB0 Coût total de la main-d'œuvre avec TVA : %.2f DH \uD83D\uDCB0\n", totalCoutMainOeuvreAvecTVA);
                  }
 
-                 System.out.println("--- Calcul en cours ---\n");
+                 System.out.println("--- Calcul en cours \uD83D\uDD22 ---\n");
                  calculTotalMenu.inputForCalculTotal(projet);
                  double coutTotal = totalCoutMainOeuvre+totalCoutMateriaux;
                  double coutTotalAvantMarge = totalCoutMainOeuvreAvecTVA+totalCoutMateriauxAvecTVA;
                  double coutTotalAvecMarge = coutTotalAvantMarge * (1 + (projet.getMargeBeneficiaire()/100));
 
-                 System.out.println("total de projet avant marge : "+coutTotalAvantMarge);
-                 System.out.println("Marge beneficaire : "+projet.getMargeBeneficiaire());
-                 System.out.println("total de projet final : " + coutTotalAvecMarge);
+                 System.out.println("- total de projet avant marge : "+coutTotalAvantMarge);
+                 System.out.println("- Marge beneficaire : "+projet.getMargeBeneficiaire());
+                 System.out.println("- total de projet final : " + coutTotalAvecMarge);
                  projet.setCoutTotal(coutTotalAvecMarge);
                  projet.setMargeBeneficiaire(projet.getMargeBeneficiaire());
                  projetService.miseAJourProjet(projet);

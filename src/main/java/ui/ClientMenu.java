@@ -5,6 +5,7 @@ import exceptions.ClientValidationException;
 import service.ClientService;
 import utils.Validations;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -57,11 +58,12 @@ public class ClientMenu {
                     int clientId = getClientIdInput();
                     Client clientFound = clientService.findById(clientId);
                     if (clientFound != null) {
-                        System.out.println("ID de client: " + clientFound.getId());
-                        System.out.println("Nom: " + clientFound.getNom());
-                        System.out.println("Adresse: " + clientFound.getAdresse());
-                        System.out.println("Téléphone: " + clientFound.getTelephone());
-                        System.out.println("est professionnel : " + clientFound.isEstProfessionnel());
+                        System.out.println("Client trouvé ⚙ :");
+                        System.out.println("✨ ID de client: " + clientFound.getId());
+                        System.out.println("✨ Nom: " + clientFound.getNom());
+                        System.out.println("✨ Adresse: " + clientFound.getAdresse());
+                        System.out.println("✨ Téléphone: " + clientFound.getTelephone());
+                        System.out.println("✨ est professionnel : " + clientFound.isEstProfessionnel());
 
                     } else {
                         System.out.println("Client non trouvé.");
@@ -76,11 +78,11 @@ public class ClientMenu {
                     if (!clients.isEmpty()) {
                         for (Client c : clients) {
                             System.out.println("------------------------------------------------------");
-                            System.out.println("ID de client: " + c.getId());
-                            System.out.println("Nom: " + c.getNom());
-                            System.out.println("Adresse: " + c.getAdresse());
-                            System.out.println("Téléphone: " + c.getTelephone());
-                            System.out.println("est professionnel : " + c.isEstProfessionnel());
+                            System.out.println("✦ ID de client: " + c.getId());
+                            System.out.println("✦ Nom: " + c.getNom());
+                            System.out.println("✦ Adresse: " + c.getAdresse());
+                            System.out.println("✦ Téléphone: " + c.getTelephone());
+                            System.out.println("✦ est professionnel : " + c.isEstProfessionnel());
                             System.out.println("------------------------------------------------------");
 
                         }
@@ -127,17 +129,23 @@ public class ClientMenu {
         System.out.print("Entrer le nom du client: ");
         return scanner.nextLine();
     }
-    
+
         public List<Client> findClientByName(String clientName) {
         List<Client> clientsByName = clientService.findByNom(clientName);
         if (!clientsByName.isEmpty()) {
-            for (Client c : clientsByName) {
-                System.out.println("✦ ID de client: " + c.getId());
-                System.out.println("✦ Nom: " + c.getNom());
-                System.out.println("✦ Adresse: " + c.getAdresse());
-                System.out.println("✦ Téléphone: " + c.getTelephone());
-                System.out.println("✦ est professionnel : " + c.isEstProfessionnel());
-            }
+            clientsByName.stream()
+                    .sorted(Comparator.comparing(Client::getNom))
+                    .forEach(c->{
+                        System.out.println("Client trouvé ���");
+                        System.out.println();
+                        System.out.println("✦ ID de client: " + c.getId());
+                        System.out.println("✦ Nom: " + c.getNom());
+                        System.out.println("✦ Adresse: " + c.getAdresse());
+                        System.out.println("✦ Téléphone: " + c.getTelephone());
+                        System.out.println("✦ est professionnel : " + c.isEstProfessionnel());
+                        System.out.println();
+                    }
+                    );
         } else {
             System.out.println("Aucun client trouvé avec ce nom.");
         }
