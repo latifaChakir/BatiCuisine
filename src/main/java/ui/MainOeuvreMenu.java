@@ -3,7 +3,9 @@ package ui;
 import bean.MainOeuvre;
 import bean.Projet;
 import bean.enums.TypeComposant;
+import exceptions.MainOeuvreValidationException;
 import service.ComposantService;
+import utils.Validations;
 
 import java.util.Scanner;
 
@@ -28,7 +30,12 @@ public class MainOeuvreMenu {
         double heuresTravail = Double.parseDouble(scanner.nextLine());
         System.out.print("Entrer la productivité de l'ouvrier: ");
         double productiviteOuvrier = Double.parseDouble(scanner.nextLine());
-
-        return new MainOeuvre(0, nom, TypeComposant.MainDOeuvre, projet, tauxTVA, tauxHoraire, heuresTravail, productiviteOuvrier);
-    }
+        MainOeuvre mainOeuvre=new MainOeuvre(0, nom, TypeComposant.MainDOeuvre, projet, tauxTVA, tauxHoraire, heuresTravail, productiviteOuvrier);
+        try {
+            Validations.mainOeuvreValidation(mainOeuvre);
+        } catch (MainOeuvreValidationException e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
+        return mainOeuvre;    }
 }

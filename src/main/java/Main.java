@@ -26,7 +26,5 @@ public class Main {
 //        ComposantMenu composantMenu=new ComposantMenu(composantService);
 //        composantMenu.composantMenu();
 
-
-
     }
 }

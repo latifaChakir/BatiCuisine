@@ -26,7 +26,6 @@ public class ProjetMenu {
     public ProjetMenu(ProjetService projetService) {
         this.projetService = projetService;
         this.devisMenu=new DevisMenu(new DevisService());
-        ProjetMenu projetMenu = null;
         this.principalMenu=new PrincipalMenu(devisMenu,this,clientMenu);
         this.composantService=new ComposantService();
         this.calculTotalMenu=new CalculTotalMenu();
@@ -42,16 +41,23 @@ public class ProjetMenu {
             System.out.println("Voulez-vous associer ce projet à un client existant ou créer un nouveau client ?");
             System.out.println("1. Chercher un client existant");
             System.out.println("2. Ajouter un nouveau client");
+            System.out.println("3. Quitter");
             System.out.print("Choisir une option: ");
-
-            int choixClient = Integer.parseInt(scanner.nextLine());
-
+            int choixClient;
+            try {
+                choixClient = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Entrée invalide. Veuillez entrer un nombre.");
+                continue;
+            }
             switch (choixClient) {
                 case 1:
                     client = searchClientForProject();
                     break;
                 case 2:
                     client = addNewClientForProject();
+                    break;
+                case 3:principalMenu.principalMenu();
                     break;
                 default:
                     System.out.println("Option non valide. Veuillez réessayer.");
@@ -77,9 +83,19 @@ public class ProjetMenu {
                 }
             }
         }
-        System.out.print("État du projet (par ex: ENCOURS, TERMINE, ANNULE) : ");
-        String etatInput = scanner.nextLine().toUpperCase();
-        EtatProjet etat = EtatProjet.valueOf(etatInput);
+        EtatProjet etat = null;
+
+        while (etat == null) {
+            System.out.print("État du projet (par ex: ENCours, TERMINE, ANNULE) : ");
+            String etatInput = scanner.nextLine().toUpperCase();
+
+            try {
+                etat = EtatProjet.valueOf(etatInput);
+            } catch (IllegalArgumentException e) {
+                System.out.println("L'état saisi est invalide. Veuillez entrer un état valide (ENCOURS, TERMINE, ANNULE).");
+            }
+        }
+
 
         Projet projet =new Projet(nomProjet, 0, 0, etat, client, surface);
         try {

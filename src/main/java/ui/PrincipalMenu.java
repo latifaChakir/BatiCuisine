@@ -60,7 +60,7 @@ public class PrincipalMenu {
                     break;
                 case 9:
                     System.out.println("Au revoir !");
-                    return;
+                    break;
                 default:
                     System.out.println("Option invalide. Veuillez choisir une option valide.");
             }

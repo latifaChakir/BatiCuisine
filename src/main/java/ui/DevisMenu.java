@@ -33,7 +33,8 @@ public class DevisMenu {
             System.out.println("3. Supprimer Devis par id");
             System.out.println("4. Chercher Devis par id");
             System.out.println("5. Afficher tous les Deviss");
-            System.out.println("6. Quitter");
+            System.out.println("6. Accepter Devis");
+            System.out.println("7. Quitter");
             System.out.print("Choisir une option: ");
 
             int choice;
@@ -78,7 +79,9 @@ public class DevisMenu {
                 case 5:findAll();
 
                     break;
-                case 6:
+                case 6:accepteDevis();
+                    break;
+                case 7:
                     System.out.println("Au revoir !");
                     return;
                 default:
@@ -287,6 +290,20 @@ public class DevisMenu {
             System.out.println("╠ - ID du client: " + client.getId());
             System.out.println("╠");
             System.out.println(borderBottom);
+        } else {
+            System.out.println("Devis non trouvé.");
+        }
+    }
+
+    public  void accepteDevis() {
+        int DevisId = getDevisIdInput();
+        Devis DevisFound = devisService.findById(DevisId);
+
+        if (DevisFound != null) {
+            DevisFound.setAccepted(true);
+            DevisFound.setValidatedDate(LocalDate.now());
+            devisService.update(DevisFound);
+            System.out.println("Devis accepté avec succès.");
         } else {
             System.out.println("Devis non trouvé.");
         }

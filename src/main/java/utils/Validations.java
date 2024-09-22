@@ -1,10 +1,9 @@
 package utils;
 
-import bean.Client;
-import bean.Devis;
-import bean.Projet;
+import bean.*;
 import exceptions.ClientValidationException;
 import exceptions.DevisValidationException;
+import exceptions.MateriauValidationException;
 import exceptions.ProjectValidationException;
 import service.ProjetService;
 
@@ -59,5 +58,44 @@ public class Validations {
             throw new DevisValidationException("La date de validation du devis ne peut pas être antérieure à la date d'émission.");
         }
 
+    }
+
+    public static void materiauValidation(Materiau materiau) {
+        if(materiau.getNom() == null || materiau.getNom().isEmpty()) {
+            throw new MateriauValidationException("Le nom du matériau ne peut pas être vide.");
+        }
+        if(materiau.getCoutUnitaire() < 0) {
+            throw new MateriauValidationException("Le prix unitaire du matériau ne peut pas être inférieur à 0.");
+        }
+        if(materiau.getQuantite() < 0) {
+            throw new MateriauValidationException("La quantité du matériau ne peut pas être inférieure à 0.");
+        }
+        if(materiau.getCoefficientQualite()<0) {
+            throw new MateriauValidationException("Le coefficient de qualité du matériau ne peut pas être inférieur à 0.");
+        }
+        if(materiau.getCoutTransport() < 0) {
+            throw new MateriauValidationException("Le coût de transport du matériau ne peut pas être inférieur à 0.");
+        }
+        if(materiau.getTauxTVA() < 0) {
+            throw new MateriauValidationException("Le taux de TVA du matériau ne peut pas être inférieur à 0.");
+        }
+    }
+
+    public static void mainOeuvreValidation(MainOeuvre mainOeuvre) {
+        if(mainOeuvre.getNom() == null || mainOeuvre.getNom().isEmpty()) {
+            throw new MateriauValidationException("Le nom de la main-d'œuvre ne peut pas être vide.");
+        }
+        if(mainOeuvre.getTauxHoraire() < 0) {
+            throw new MateriauValidationException("Le taux horaire de la main-d'œuvre ne peut pas être inférieur à 0.");
+        }
+        if(mainOeuvre.getProductiviteOuvrier() < 0) {
+            throw new MateriauValidationException("Le coefficient de qualité de la main-d'œuvre ne peut pas être inférieur à 0.");
+        }
+        if(mainOeuvre.getTauxTVA() < 0) {
+            throw new MateriauValidationException("Le taux de TVA de la main-d'œuvre ne peut pas être inférieur à 0.");
+        }
+        if(mainOeuvre.getHeuresTravail() < 0) {
+            throw new MateriauValidationException("Le taux de transport de la main-d'œuvre ne peut pas être inférieur à 0.");
+        }
     }
 }

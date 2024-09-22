@@ -60,11 +60,6 @@ public class Materiau extends Composant {
         this.coefficientQualite = coefficientQualite;
     }
 
-    public double calculerCoutTotal() {
-        double coutTotal = (coutUnitaire * quantite) + coutTransport;
-        return coutTotal * (1 + tauxTVA / 100);
-    }
-
     public Composant getComposant() {
         return composant;
     }
