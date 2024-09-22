@@ -4,6 +4,7 @@ import bean.Client;
 import bean.Composant;
 import bean.Devis;
 import bean.Projet;
+import bean.enums.EtatProjet;
 import exceptions.ClientValidationException;
 import exceptions.DevisValidationException;
 import service.DevisService;
@@ -301,20 +302,45 @@ public class DevisMenu {
         }
     }
 
-    public  void accepteDevis() {
+    public void accepteDevis() {
         int DevisId = getDevisIdInput();
-        Devis DevisFound = devisService.findById(DevisId);
+        Devis devisFound = devisService.findById(DevisId);
 
-        if (DevisFound != null) {
-            DevisFound.setAccepted(true);
-            DevisFound.setValidatedDate(LocalDate.now());
-            devisService.update(DevisFound);
-            System.out.println("Devis accepté avec succès.");
+        if (devisFound != null) {
+            System.out.println("Voulez-vous accepter le devis ? (Oui/Non)");
+            String reponse = scanner.nextLine();
+            Optional<Projet> projetOpt = projetService.findById(devisFound.getProjet().getId());
+            if (!projetOpt.isPresent()) {
+                System.out.println("Projet associé non trouvé.");
+                return;
+            }
+
+            Projet projet = projetOpt.get();
+
+            if (reponse.equalsIgnoreCase("Oui")) {
+                devisFound.setAccepted(true);
+                projet.setEtat(EtatProjet.TERMINE);
+                devisFound.setValidatedDate(LocalDate.now());
+                System.out.println("Devis accepté avec succès.");
+                devisService.update(devisFound);
+                projetService.updateEtatProjet(projet,projet.getEtat().name());
+
+            } else if (reponse.equalsIgnoreCase("Non")) {
+                devisFound.setAccepted(false);
+                projet.setEtat(EtatProjet.ANNULE);
+                devisFound.setValidatedDate(LocalDate.now());
+                System.out.println("Devis rejeté avec succès.");
+                devisService.update(devisFound);
+                projetService.updateEtatProjet(projet,projet.getEtat().name());
+
+            } else {
+                System.out.println("Réponse invalide. Veuillez entrer 'Oui' ou 'Non'.");
+                return;
+            }
+
         } else {
             System.out.println("Devis non trouvé.");
         }
     }
-
-
 
 }

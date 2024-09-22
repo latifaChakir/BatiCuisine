@@ -3,6 +3,7 @@ package service;
 import bean.Client;
 import bean.Composant;
 import bean.Projet;
+import bean.enums.EtatProjet;
 import dao.impl.ClientDaoImpl;
 import dao.impl.ComposantDaoImpl;
 import dao.impl.ProjetDaoImpl;
@@ -53,6 +54,9 @@ public class ProjetService {
         projet.setClient(client);
         ProjetDaoImpl projectDaoImpl = new ProjetDaoImpl();
         projectDaoImpl.save(projet);
+    }
+    public void updateEtatProjet(Projet projet, String etat) {
+        this.projectDaoImpl.updateEtatProjet(projet.getId(), EtatProjet.valueOf(etat));
     }
 
 
