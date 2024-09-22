@@ -299,4 +299,24 @@ public class ProjetDaoImpl implements ProjetDao {
         return projets;
     }
 
+    public void updateEtatProjet(int projetId, EtatProjet nouvelEtat) {
+        String sql = "UPDATE Projets SET etat = ? WHERE id = ?";
+
+        try (Connection conn = ConnectionConfig.getInstance().getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setObject(1, nouvelEtat, java.sql.Types.OTHER);
+            preparedStatement.setInt(2, projetId);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            System.out.println("l'etat du projet est mis à jour avec succes");
+
+            if (affectedRows == 0) {
+                throw new SQLException("La mise à jour du projet a échoué, aucune ligne affectée.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la mise à jour du projet : " + e.getMessage());
+        }
+    }
+
 }
