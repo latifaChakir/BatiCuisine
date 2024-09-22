@@ -114,6 +114,10 @@ public class DevisMenu {
             String dateInput = scanner.nextLine();
             try {
                 estimationDate = LocalDate.parse(dateInput);
+                if (estimationDate.isAfter(LocalDate.now())) {
+                    System.err.println("La date de validation ne peut pas être antérieure à la date d'émission.");
+                    estimationDate = null;
+                }
             } catch (DateTimeParseException e) {
                 System.err.println("Date invalide. Veuillez entrer une date valide au format AAAA-MM-JJ.");
             }
