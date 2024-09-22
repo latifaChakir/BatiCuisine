@@ -30,11 +30,17 @@ Génération de devis détaillés
 Gestion des dates d'émission et de validité
 Suivi de l'acceptation des devis
 
+## Exigences techniques
 
-### 5. Calcul des Coûts
-
-Intégration des coûts des composants
-Application de marges bénéficiaires
-Prise en compte des taxes et remises
+Java 8
+PostgreSQL
+JDBC
+Streams, Collections, HashMap, Optional
+Enum
+Design patterns : Singleton, Repository Pattern
+Architecture en couches (Service, DAO, UI)
+Validation des données
+Java Time API
+Git et JIRA
 
 
