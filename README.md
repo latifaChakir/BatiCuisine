@@ -91,7 +91,6 @@ Suivi de l'acceptation des devis
 
 ## Structure de projet
 
-
-![App Screenshot](https://github.com/user-attachments/assets/c725ca9d-97fa-4d95-a55c-8174e5d26963)
+<img width="222px" alt="image" src="https://github.com/user-attachments/assets/82d2cbc8-00f2-4a11-a062-5bba75ddf76a">
 
 ## Les outils utilisés : 
