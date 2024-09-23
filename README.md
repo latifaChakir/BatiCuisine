@@ -86,8 +86,12 @@ Cloner le dépôt Git :
 ```bash
   git clone https://github.com/latifaChakir/BatiCuisine.git
 ```
-Installer PostgreSQL et créer une base de données pour le projet.
-Exécuter les scripts SQL fournis pour initialiser la base de données.
+- Installer PostgreSQL et créer une base de données pour le projet.
+- Exécuter les scripts SQL fournis pour initialiser la base de données.
+  Lancer le script en utilisant la commande  :
+```bash
+ flyway -url=jdbc:postgresql://localhost:5432/{dbNAME} -user={USER} -password={PASSWORD} -locations=filesystem:src/main/db/migration migrate
+```
 Configurer les paramètres de connexion à la base de données dans le fichier de configuration de l'application.
 Compiler le projet et générer le fichier JAR :
 
