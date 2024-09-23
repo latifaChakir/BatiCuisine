@@ -32,15 +32,15 @@ Suivi de l'acceptation des devis
 
 ## Exigences techniques
 
-Java 8
-PostgreSQL
-JDBC
-Streams, Collections, HashMap, Optional
-Enum
-Design patterns : Singleton, Repository Pattern
-Architecture en couches (Service, DAO, UI)
-Validation des données
-Java Time API
-Git et JIRA
+- Java 8.
+- PostgreSQL.
+- JDBC.
+- Streams, Collections, HashMap, Optional.
+- Enum.
+- Design patterns : Singleton, Repository Pattern.
+- Architecture en couches (Service, DAO, UI).
+- Validation des données.
+- Java Time API.
+- Git et JIRA.
 
 
