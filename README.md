@@ -45,6 +45,20 @@ Suivi de l'acceptation des devis
 
 ## Structure de projet
 
-<img width="222px" alt="image" src="https://github.com/user-attachments/assets/82d2cbc8-00f2-4a11-a062-5bba75ddf76a">
-
+└── BATI-CUISINE
+    ├── BatiCuisine.iml
+    ├── README.md
+    ├── diagrammes
+    │   └── baticuisine.mdj
+    └── src
+          |
+          java
+          ├── bean
+          ├── config
+          ├── dao
+          ├── Main.java
+          ├── exceptions
+          ├── Service
+          ├── ui
+          └── utils
 ## Les outils utilisés : 
