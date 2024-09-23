@@ -42,6 +42,7 @@ Suivi de l'acceptation des devis
 - Validation des données.
 - Java Time API.
 - Git et JIRA.
+<img width="222" alt="structure" src="https://github.com/user-attachments/assets/121493d3-295b-4bec-92fd-1908704291f8">
 
 ## Structure de projet
 <img width="222" alt="structure" src="https://github.com/user-attachments/assets/3b5b25ad-a565-4bf3-be8a-104bb9e6f6f2">
