@@ -48,19 +48,19 @@ Suivi de l'acceptation des devis
 
 Le projet Bati-Cuisine est structuré selon une architecture en couches, facilitant la séparation des responsabilités et améliorant la maintenabilité du code. Voici une description de chaque composant :
 
-- src: Source principale du projet contient tout le code source et les ressources.
-- db: Base de données
-- migration: scripts de migration de la base de données
-- V1__initial_tables.sql: script initial pour créer les tables de la base de données.
-- main/java: Code source principal contient les packages Java du projet.
-- bean: Objets métier contient les classes Java représentant les entités métier (par exemple, Client, Projet, Matériau).
-- config: Configuration gère la configuration de l'application, potentiellement incluant la connexion à la base de données.
-- dao: Data Access Object contient les classes responsables de l'interaction avec la base de données.
-- exceptions: Gestion des exceptions définit des exceptions personnalisées pour gérer les erreurs spécifiques à l'application.
-- service: Couche de service Implémente la logique métier de l'application, faisant le lien entre l'interface utilisateur et la couche DAO.
-- ui: Interface utilisateur gère l'interaction avec l'utilisateur via une interface console.
-- utils: utilitaires contient des classes utilitaires réutilisables dans l'ensemble du projet.
-- Main.java: Point d'entrée, classe principale contenant la méthode main() pour démarrer l'application.
+- **src:** Source principale du projet contient tout le code source et les ressources.
+- **db:** Base de données
+- **migration:** scripts de migration de la base de données
+- **V1__initial_tables.sql:** script initial pour créer les tables de la base de données.
+- **main/java:** Code source principal contient les packages Java du projet.
+- **bean:** Objets métier contient les classes Java représentant les entités métier (par exemple, Client, Projet, Matériau).
+- **config:** Configuration gère la configuration de l'application, potentiellement incluant la connexion à la base de données.
+- **dao:** Data Access Object contient les classes responsables de l'interaction avec la base de données.
+- **exceptions:** Gestion des exceptions définit des exceptions personnalisées pour gérer les erreurs spécifiques à l'application.
+- **service:** Couche de service Implémente la logique métier de l'application, faisant le lien entre l'interface utilisateur et la couche DAO.
+- **ui:** Interface utilisateur gère l'interaction avec l'utilisateur via une interface console.
+- **utils:** utilitaires contient des classes utilitaires réutilisables dans l'ensemble du projet.
+- **Main.java:** Point d'entrée, classe principale contenant la méthode main() pour démarrer l'application.
 
 Cette architecture suit les principes de conception modernes, favorisant la modularité, la réutilisabilité et la facilité de maintenance du code. La séparation claire entre les différentes couches (UI, Service, DAO) permet une meilleure gestion des responsabilités.
 ## Les outils utilisés : 
