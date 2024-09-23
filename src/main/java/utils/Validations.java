@@ -54,8 +54,12 @@ public class Validations {
         if(devis.getIssueDate() == null || devis.getIssueDate().isBefore(LocalDate.now())) {
             throw new DevisValidationException("La date d'émission du devis ne peut pas être nulle et interieure la date d'aujourd'hui.");
         }
-        if(devis.getValidatedDate()==null && devis.getValidatedDate().isBefore(devis.getIssueDate())) {
+        if(devis.getValidatedDate() != null && devis.getValidatedDate().isBefore(devis.getIssueDate())) {
             throw new DevisValidationException("La date de validation du devis ne peut pas être antérieure à la date d'émission.");
+        }
+
+        if(devis.getValidatedDate()==null ){
+            throw new DevisValidationException("La date de validation ne peut pas etre null.");
         }
 
     }

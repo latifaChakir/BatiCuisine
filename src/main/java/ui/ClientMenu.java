@@ -43,11 +43,7 @@ public class ClientMenu {
                     System.out.println("Client ajouté avec succès.");
                     break;
                 case 2:
-                    int clientIdToUpdate = getClientIdInput();
-                    Client clientToUpdate = getClientInput();
-                    clientToUpdate.setId(clientIdToUpdate);
-                    clientService.update(clientToUpdate);
-                    System.out.println("Client modifié avec succès.");
+                    updateClient();
                     break;
                 case 3:
                     int clientIdToDelete = getClientIdInput();
@@ -161,4 +157,47 @@ public class ClientMenu {
             }
             return client;
         }
+
+    public void updateClient() {
+        System.out.print("Entrer l'ID du client à modifier: ");
+        int clientId = Integer.parseInt(scanner.nextLine());
+        Client client = clientService.findById(clientId);
+
+        if (client != null) {
+            System.out.print("Entrer un nouveau nom (actuel: " + client.getNom() + "): ");
+            String newName = scanner.nextLine();
+            if (!newName.trim().isEmpty()) {
+                client.setNom(newName);
+            }
+
+            System.out.print("Entrer une nouvelle adresse (actuelle: " + client.getAdresse() + "): ");
+            String newAdresse = scanner.nextLine();
+            if (!newAdresse.trim().isEmpty()) {
+                client.setAdresse(newAdresse);
+            }
+
+            System.out.print("Entrer un nouveau téléphone (actuel: " + client.getTelephone() + "): ");
+            String newTelephone = scanner.nextLine();
+            if (!newTelephone.trim().isEmpty()) {
+                client.setTelephone(newTelephone);
+            }
+
+            System.out.print("Le client est professionnel (actuel: " + client.isEstProfessionnel() + ") (true/false) ? ");
+            String isProInput = scanner.nextLine();
+            if (!isProInput.trim().isEmpty()) {
+                client.setEstProfessionnel(Boolean.parseBoolean(isProInput));
+            }
+            try {
+                Validations.clientValidation(client);
+                clientService.update(client);
+                System.out.println("Client modifié avec succès.");
+            } catch (ClientValidationException e) {
+                System.out.println("Erreur de validation: " + e.getMessage());
+            }
+
+        } else {
+            System.out.println("Client non trouvé.");
+        }
+    }
+
 }

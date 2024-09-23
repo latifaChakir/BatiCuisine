@@ -150,10 +150,7 @@ public class ComposantDaoImpl implements ComposantDao {
         try (Connection conn = ConnectionConfig.getInstance().getConnection();
                 PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setInt(1, projetId);
-            int affectedRows = preparedStatement.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Aucun composant n'a été supprimé pour le projet avec l'ID: " + projetId);
-            }
+             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Erreur lors de la suppression des composants : " + e.getMessage());
         }

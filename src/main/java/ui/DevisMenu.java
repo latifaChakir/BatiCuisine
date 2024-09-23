@@ -58,16 +58,7 @@ public class DevisMenu {
                     }
                     break;
                 case 2:
-                    long devisIdToUpdate = getDevisIdInput();
-                    Devis devisToUpdate = getDevisInput();
-                    devisToUpdate.setId(devisIdToUpdate);
-                    System.out.print("le devis est accepté? OUI/NON");
-                    String reponse=scanner.nextLine();
-                    if(reponse.equals("OUI")){
-                        devisToUpdate.setAccepted(true);
-                    }
-                    devisService.update(devisToUpdate);
-                    System.out.println("Devis modifié avec succès.");
+                   updateDevis();
 
                     break;
                 case 3:
@@ -301,6 +292,52 @@ public class DevisMenu {
             System.out.println("Devis non trouvé.");
         }
     }
+
+    private void updateDevis() {
+        System.out.print("Entrer l'ID du devis à modifier: ");
+        int devisId = Integer.parseInt(scanner.nextLine());
+        Devis devis = devisService.findById(devisId);
+
+        if (devis != null) {
+            System.out.print("Entrer un nouveau montant d'estimation (actuel: " + devis.getEstimatedAmount() + "): ");
+            String newAmountInput = scanner.nextLine();
+            if (!newAmountInput.trim().isEmpty()) {
+                double newAmount = Double.parseDouble(newAmountInput);
+                devis.setEstimatedAmount(newAmount);
+            }
+
+            System.out.print("Entrer une nouvelle date d'émission (actuelle: " + devis.getIssueDate() + "): ");
+            String newIssueDateInput = scanner.nextLine();
+            if (!newIssueDateInput.trim().isEmpty()) {
+                LocalDate newIssueDate = LocalDate.parse(newIssueDateInput);
+                devis.setIssueDate(newIssueDate);
+            }
+
+            System.out.print("Entrer une nouvelle date de validation (actuelle: " + devis.getValidatedDate() + "): ");
+            String newValidatedDateInput = scanner.nextLine();
+            if (!newValidatedDateInput.trim().isEmpty()) {
+                LocalDate newValidatedDate = LocalDate.parse(newValidatedDateInput);
+                devis.setValidatedDate(newValidatedDate);
+            }
+
+            try {
+                Validations.devisValidation(devis);
+                System.out.print("le devis est accepté OUI/NON ?");
+                String reponse=scanner.nextLine();
+                if(reponse.equals("OUI")){
+                    devis.setAccepted(true);
+                }
+                devisService.update(devis);
+                System.out.println("Devis modifié avec succès.");
+            } catch (DevisValidationException e) {
+                System.err.println(e.getMessage());
+            }
+
+        } else {
+            System.out.println("Devis non trouvé.");
+        }
+    }
+
 
     public void accepteDevis() {
         int DevisId = getDevisIdInput();

@@ -237,11 +237,10 @@ public class DevisDaoImpl implements DevisDao {
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setDouble(1, devis.getEstimatedAmount());
             ps.setDate(2, java.sql.Date.valueOf(devis.getIssueDate()));
-            ps.setDate(3, devis.getValidatedDate() != null ? java.sql.Date.valueOf(devis.getValidatedDate()) : null);
+            ps.setDate(3, java.sql.Date.valueOf(devis.getValidatedDate()));
             ps.setBoolean(4, devis.isAccepted());
             ps.setLong(5, devis.getProjet().getId());
             ps.setLong(6, devis.getId());
-            LocalDate validatedDate = devis.getValidatedDate();
 //            boolean isAccepted = devis.isAccepted();
 //            if (validatedDate != null && validatedDate.isBefore(LocalDate.now())) {
 //                isAccepted = false;
