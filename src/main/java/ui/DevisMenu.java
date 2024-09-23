@@ -94,7 +94,7 @@ public class DevisMenu {
     }
 
     private int getDevisIdInput() {
-        System.out.println("Entrer l'ID du devis: ");
+        System.out.print("Entrer l'ID du devis: ");
         return Integer.parseInt(scanner.nextLine());
     }
 
@@ -168,25 +168,25 @@ public class DevisMenu {
                         System.out.println("║ Devis n°" + devis.getId() + " - Projet " + projet.getNomProjet()+ " ".repeat(46 ));
                         System.out.println("║" + "═".repeat(boxWidth - 2) + "╣");
                         System.out.println("║");
-                        System.out.println("║ Date d'émission:** " + devis.getIssueDate().format(formatter));
-                        System.out.println("║ Date de validité:** " + devis.getValidatedDate().format(formatter));
+                        System.out.println("║ Date d'émission: " + devis.getIssueDate().format(formatter));
+                        System.out.println("║ Date de validité: " + devis.getValidatedDate().format(formatter));
                         System.out.println("║");
                         System.out.println("║" + "═".repeat(boxWidth - 2) + "╣");
-                        System.out.println("║ ## Détails du client");
+                        System.out.println("║ ✦ Détails du client");
                         System.out.println("║ Nom: " + client.getNom());
                         System.out.println("║ Adresse: " + client.getAdresse());
                         System.out.println("║ Téléphone: " + client.getTelephone());
                         System.out.println("║ Type de client: " + (client.isEstProfessionnel() ? "Professionnel" : "Particulier"));
                         System.out.println("║" + "═".repeat(boxWidth - 2) + "╣");
                         System.out.println("║");
-                        System.out.println("║ ## Description du projet");
+                        System.out.println("║ ✦ Description du projet");
                         System.out.println("║ Nom du projet: " + projet.getNomProjet());
                         System.out.println("║ État du projet: " + projet.getEtat());
                         System.out.println("║");
 
-                        System.out.println("║ ## Estimation détaillée");
+                        System.out.println("║ ✦ Estimation détaillée");
                         System.out.println("║");
-                        System.out.println("║ ### Composants");
+                        System.out.println("║ ✦ Composants");
                         for (Composant composant : composants) {
                             System.out.println("║ - " + composant.getNom() + " (" + composant.getTypeComposant() + ")");
                             System.out.println("║  TVA: " + composant.getTauxTVA() + "%");
@@ -194,27 +194,27 @@ public class DevisMenu {
                         System.out.println("║");
                         System.out.println("║" + "═".repeat(boxWidth - 2) + "╣");
 
-                        System.out.println("║ ### Coûts");
+                        System.out.println("║ ✦ Coûts");
                         System.out.printf("║ Coût total du projet: %.2f €%n", projet.getCoutTotal());
                         System.out.println("║");
 
                         double marge = projet.getCoutTotal() * (projet.getMargeBeneficiaire() / 100);
-                        System.out.println("║ ### Marge bénéficiaire");
+                        System.out.println("║ ✦ Marge bénéficiaire");
                         System.out.println("║ Taux de marge: " + projet.getMargeBeneficiaire() + "%");
                         System.out.printf("║ Montant de la marge: %.2f €%n", marge);
                         System.out.println("║");
 
-                        System.out.println("║ ### Récapitulatif");
+                        System.out.println("║ ✦ Récapitulatif");
                         System.out.printf("║ Coût total (hors marge): %.2f €%n", projet.getCoutTotal());
-                        System.out.printf("║ **Montant total estimé:** %.2f €%n", devis.getEstimatedAmount());
+                        System.out.printf("║ Montant total estimé: %.2f €%n", devis.getEstimatedAmount());
                         System.out.println("║");
 
-                        System.out.println("║## Acceptation du Devis");
+                        System.out.println("║ ✦ Acceptation du Devis");
                         System.out.println("║ " + (devis.isAccepted() ? "☑ Accepté   □ Refusé" : "□ Accepté   ☑ Refusé"));
                         System.out.println("║ Date d'acceptation: " + devis.getValidatedDate().format(formatter));
                         System.out.println("║");
                         System.out.println("║" + "═".repeat(boxWidth - 2) + "╣");
-                        System.out.println("║ **Informations complémentaires:**");
+                        System.out.println("║ ✦ Informations complémentaires:**");
                         System.out.println("║ - ID du Devis: " + devis.getId());
                         System.out.println("║ - ID du projet: " + projet.getId());
                         System.out.println("║ - ID du client: " + client.getId());
@@ -245,25 +245,25 @@ public class DevisMenu {
             System.out.println("║ Devis n°" + DevisFound.getId() + " - Projet " + projet.getNomProjet()+ " ".repeat(46 )+"╣");
             System.out.println("║" + "═".repeat(boxWidth - 2) + "╣");
             System.out.println("║");
-            System.out.println("║ Date d'émission:** " + DevisFound.getIssueDate().format(formatter));
-            System.out.println("║ Date de validité:** " + DevisFound.getValidatedDate().format(formatter));
+            System.out.println("║ Date d'émission:" + DevisFound.getIssueDate().format(formatter));
+            System.out.println("║ Date de validité: " + DevisFound.getValidatedDate().format(formatter));
             System.out.println("║");
             System.out.println("║" + "═".repeat(boxWidth - 2) + "╣");
-            System.out.println("║ ## Détails du client");
+            System.out.println("║ ✦ Détails du client");
             System.out.println("║ Nom: " + client.getNom());
             System.out.println("║ Adresse: " + client.getAdresse());
             System.out.println("║ Téléphone: " + client.getTelephone());
             System.out.println("║ Type de client: " + (client.isEstProfessionnel() ? "Professionnel" : "Particulier"));
             System.out.println("║" + "═".repeat(boxWidth - 2) + "╣");
             System.out.println("║");
-            System.out.println("║ ## Description du projet");
+            System.out.println("║ ✦ Description du projet");
             System.out.println("║ Nom du projet: " + projet.getNomProjet());
             System.out.println("║ État du projet: " + projet.getEtat());
             System.out.println("║");
 
-            System.out.println("║ ## Estimation détaillée");
+            System.out.println("║ ✦ Estimation détaillée");
             System.out.println("║");
-            System.out.println("║ ### Composants");
+            System.out.println("║ ✦ Composants");
             for (Composant composant : composants) {
                 System.out.println("║ - " + composant.getNom() + " (" + composant.getTypeComposant() + ")");
                 System.out.println("║  TVA: " + composant.getTauxTVA() + "%");
@@ -271,27 +271,27 @@ public class DevisMenu {
             System.out.println("║");
             System.out.println("║" + "═".repeat(boxWidth - 2) + "╣");
 
-            System.out.println("║ ### Coûts");
+            System.out.println("║ ✦ Coûts");
             System.out.printf("║ Coût total du projet: %.2f €%n", projet.getCoutTotal());
             System.out.println("║");
 
             double marge = projet.getCoutTotal() * (projet.getMargeBeneficiaire() / 100);
-            System.out.println("║ ### Marge bénéficiaire");
+            System.out.println("║ ✦ Marge bénéficiaire");
             System.out.println("║ Taux de marge: " + projet.getMargeBeneficiaire() + "%");
             System.out.printf("║ Montant de la marge: %.2f €%n", marge);
             System.out.println("║");
 
-            System.out.println("║ ### Récapitulatif");
+            System.out.println("║ ✦ Récapitulatif");
             System.out.printf("║ Coût total (hors marge): %.2f €%n", projet.getCoutTotal());
-            System.out.printf("║ **Montant total estimé:** %.2f €%n", DevisFound.getEstimatedAmount());
+            System.out.printf("║ Montant total estimé: %.2f €%n", DevisFound.getEstimatedAmount());
             System.out.println("║");
 
-            System.out.println("║## Acceptation du Devis");
+            System.out.println("║ ✦ Acceptation du Devis");
             System.out.println("║ " + (DevisFound.isAccepted() ? "☑ Accepté   □ Refusé" : "□ Accepté   ☑ Refusé"));
             System.out.println("║ Date d'acceptation: " + DevisFound.getValidatedDate().format(formatter));
             System.out.println("║");
             System.out.println("║" + "═".repeat(boxWidth - 2) + "╣");
-            System.out.println("║ **Informations complémentaires:**");
+            System.out.println("║ ✦ Informations complémentaires: ");
             System.out.println("║ - ID du Devis: " + DevisFound.getId());
             System.out.println("║ - ID du projet: " + projet.getId());
             System.out.println("║ - ID du client: " + client.getId());
