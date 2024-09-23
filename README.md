@@ -44,21 +44,7 @@ Suivi de l'acceptation des devis
 - Git et JIRA.
 
 ## Structure de projet
+<img src="https://cdn.worldvectorlogo.com/logos/django.svg" alt="django" width="40" height="40"/>
+<img src="https://github.com/user-attachments/assets/d38e1428-ef8a-425c-9818-a2d569f19c59" alt="structure">
 
-└── BATI-CUISINE
-    ├── BatiCuisine.iml
-    ├── README.md
-    ├── diagrammes
-    │   └── baticuisine.mdj
-    └── src
-          |
-          java
-          ├── bean
-          ├── config
-          ├── dao
-          ├── Main.java
-          ├── exceptions
-          ├── Service
-          ├── ui
-          └── utils
 ## Les outils utilisés : 
