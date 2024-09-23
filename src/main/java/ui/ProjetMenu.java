@@ -304,11 +304,24 @@ public class ProjetMenu {
             if (materiauExisteDeja) {
                 composantService.supprimerComposantsParProjet(projet);
             }
-            System.out.println("Projet trouvé : " + projet);
+            System.out.println("Projet trouvé : ");
+            System.out.println("✨ ID: " + projet.getId());
+            System.out.println("✨ Nom de projet: " + projet.getNomProjet());
+            System.out.println("✨ État de projet: " + projet.getEtat());
+            System.out.println("✨ Surface de projet: " + projet.getSurface());//////0 VOIR
+            System.out.println("---- Détails du Client \uD83E\uDDD1 ----");
+            Client client = projet.getClient();
+            if (client != null) {
+                System.out.println("✨ ID: " + client.getId());
+                System.out.println("✨ Nom: " + client.getNom());
+                System.out.println("✨ Adresse: " + client.getAdresse());
+                System.out.println("✨ Téléphone: " + client.getTelephone());
+            } else {
+                System.out.println("Aucun client associé à ce projet.");
+            }
 
-            Projet updatedProjet = inputsProjet();
+            Projet updatedProjet = inputsToUpdate(projet);
             updatedProjet.setId(projectId);
-
             projetService.update(updatedProjet);
 
             System.out.println("Voulez-vous modifier les composants de ce projet ? (oui/non)");
@@ -522,5 +535,61 @@ public class ProjetMenu {
                             );
         }
     }
+
+    private Projet inputsToUpdate(Projet projet) {
+        Client client = projet.getClient();
+        System.out.print("Voulez-vous modifier le client associé ? (o/n): ");
+        String choix = scanner.nextLine().trim().toLowerCase();
+        if (choix.equalsIgnoreCase("o")) {
+            clientMenu.updateClient();
+        }
+        projet.setClient(client);
+        System.out.print("Nom du projet (actuel: " + projet.getNomProjet() + ") : ");
+        String nomProjet = scanner.nextLine();
+        if (!nomProjet.trim().isEmpty()) {
+            projet.setNomProjet(nomProjet);
+        }
+
+        double surface = projet.getSurface();
+        System.out.print("Surface (actuelle: " + projet.getSurface() + ") : ");
+        String surfaceInput = scanner.nextLine();
+        if (!surfaceInput.trim().isEmpty()) {
+            try {
+                surface = Double.parseDouble(surfaceInput);
+                if (surface > 0) {
+                    projet.setSurface(surface);
+                } else {
+                    System.out.println("La surface doit être un nombre positif.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Entrée non valide. Veuillez entrer un nombre valide pour la surface.");
+            }
+        }
+
+        EtatProjet etat = projet.getEtat();
+        boolean etatValide = false;
+
+        while (!etatValide) {
+            System.out.print("État du projet (actuel: " + projet.getEtat() + ", par ex: ENCOURS, TERMINE, ANNULE) : ");
+            String etatInput = scanner.nextLine().toUpperCase();
+            if (!etatInput.trim().isEmpty()) {
+                try {
+                    etat = EtatProjet.valueOf(etatInput);
+                    etatValide = true;
+                    projet.setEtat(etat);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("L'état saisi n'existe pas. Veuillez entrer un état valide (ENCOURS, TERMINE, ANNULE).");
+                }
+            } else {
+                etatValide = true;
+            }
+        }
+
+        return projet;
+    }
+
+
+
+
 
 }
