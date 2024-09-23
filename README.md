@@ -44,7 +44,6 @@ Suivi de l'acceptation des devis
 - Git et JIRA.
 
 ## Structure de projet
-<img src="https://cdn.worldvectorlogo.com/logos/django.svg" alt="django" width="40" height="40"/>
-<img src="https://github.com/user-attachments/assets/d38e1428-ef8a-425c-9818-a2d569f19c59" alt="structure">
+<img width="222" alt="structure" src="https://github.com/user-attachments/assets/3b5b25ad-a565-4bf3-be8a-104bb9e6f6f2">
 
 ## Les outils utilisés : 
