@@ -63,4 +63,22 @@ Le projet Bati-Cuisine est structuré selon une architecture en couches, facilit
 - **Main.java:** Point d'entrée, classe principale contenant la méthode main() pour démarrer l'application.
 
 Cette architecture suit les principes de conception modernes, favorisant la modularité, la réutilisabilité et la facilité de maintenance du code. La séparation claire entre les différentes couches (UI, Service, DAO) permet une meilleure gestion des responsabilités.
-## Les outils utilisés : 
+## Installation : 
+Cloner le dépôt Git :
+```bash
+  git clone https://github.com/latifaChakir/BatiCuisine.git
+```
+Installer PostgreSQL et créer une base de données pour le projet.
+Exécuter les scripts SQL fournis pour initialiser la base de données.
+Configurer les paramètres de connexion à la base de données dans le fichier de configuration de l'application.
+Compiler le projet et générer le fichier JAR :
+
+```bash
+  mvn clean package
+```
+## Utilisation : 
+Lancer l'application :
+```bash
+  java  -jar bati-cuisine.jar
+```
+Suivre les instructions à l'écran pour naviguer dans le menu principal et utiliser les différentes fonctionnalités.
