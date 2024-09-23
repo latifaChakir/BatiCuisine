@@ -44,8 +44,26 @@ Suivi de l'acceptation des devis
 - Git et JIRA.
   
 ## Structure de projet
-<img width="222" alt="structure" src="https://github.com/user-attachments/assets/121493d3-295b-4bec-92fd-1908704291f8">
-
+```bash
+  └── BATICUISINE.git/
+    ├── BatiCuisine.iml
+    ├── README.md
+    ├── diagrammes
+    │   └── batiCcuisine.mdj
+    └── src
+        └──db/migration
+              └──v1__initial_tables.sql
+        └──java  
+          ├── bean
+          ├── config
+          ├── dao
+          ├── exceptions
+          ├── service
+          ├── ui
+          ├── Utils
+          └── Main.java
+        
+```
 Le projet Bati-Cuisine est structuré selon une architecture en couches, facilitant la séparation des responsabilités et améliorant la maintenabilité du code. Voici une description de chaque composant :
 
 - **src:** Source principale du projet contient tout le code source et les ressources.
