@@ -101,6 +101,6 @@ Compiler le projet et générer le fichier JAR :
 ## Utilisation : 
 Lancer l'application :
 ```bash
-  java  -jar bati-cuisine.jar
+  java  -jar  mon_application.jar
 ```
 Suivre les instructions à l'écran pour naviguer dans le menu principal et utiliser les différentes fonctionnalités.
