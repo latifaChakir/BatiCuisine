@@ -303,7 +303,6 @@ import java.util.Scanner;
                      System.out.printf("\uD83D\uDCB0 Coût total des matériaux avant TVA : %.2f DH\n", totalCoutMateriaux);
                      System.out.printf("\uD83D\uDCB0 Coût total des matériaux avec TVA  : %.2f DH\n", totalCoutMateriauxAvecTVA);
                  }
-
                  // Traitement de la main-d'œuvre
                  for (Composant composant : projet.getComposants()) {
                      if (composant.getMainOeuvres() != null && !composant.getMainOeuvres().isEmpty()) {
