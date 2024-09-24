@@ -342,8 +342,19 @@ public class DevisMenu {
     public void accepteDevis() {
         int DevisId = getDevisIdInput();
         Devis devisFound = devisService.findById(DevisId);
-
         if (devisFound != null) {
+            LocalDate today = LocalDate.now();
+            LocalDate dateLimite = devisFound.getValidatedDate();
+            if (today.isAfter(dateLimite)) {
+                devisFound.setAccepted(false);
+                devisFound.setValidatedDate(today);
+                Projet projet = devisFound.getProjet();
+                projet.setEtat(EtatProjet.ANNULE);
+                System.out.println("La date limite du devis est dépassée. Le devis est automatiquement rejeté.");
+                devisService.update(devisFound);
+                projetService.updateEtatProjet(projet, projet.getEtat().name());
+                return;
+            }
             System.out.println("Voulez-vous accepter le devis ? (Oui/Non)");
             String reponse = scanner.nextLine();
             Optional<Projet> projetOpt = projetService.findById(devisFound.getProjet().getId());
