@@ -202,7 +202,7 @@ public class DevisMenu {
 
                         System.out.println("║ ✦ Acceptation du Devis");
                         System.out.println("║ " + (devis.isAccepted() ? "☑ Accepté   □ Refusé" : "□ Accepté   ☑ Refusé"));
-                        System.out.println("║ Date d'acceptation: " + devis.getValidatedDate().format(formatter));
+                        System.out.println("║ Date de validation: " + devis.getValidatedDate().format(formatter));
                         System.out.println("║");
                         System.out.println("║" + "═".repeat(boxWidth - 2) + "╣");
                         System.out.println("║ ✦ Informations complémentaires:**");
@@ -279,7 +279,7 @@ public class DevisMenu {
 
             System.out.println("║ ✦ Acceptation du Devis");
             System.out.println("║ " + (DevisFound.isAccepted() ? "☑ Accepté   □ Refusé" : "□ Accepté   ☑ Refusé"));
-            System.out.println("║ Date d'acceptation: " + DevisFound.getValidatedDate().format(formatter));
+            System.out.println("║ Date de validation: " + DevisFound.getValidatedDate().format(formatter));
             System.out.println("║");
             System.out.println("║" + "═".repeat(boxWidth - 2) + "╣");
             System.out.println("║ ✦ Informations complémentaires: ");
