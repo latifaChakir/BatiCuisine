@@ -1,9 +1,6 @@
-import bean.Composant;
-import config.ConnectionConfig;
 import service.*;
 import ui.*;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
 
