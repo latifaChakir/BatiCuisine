@@ -107,5 +107,5 @@ Suivre les instructions à l'écran pour naviguer dans le menu principal et util
 
 ## Autre
 
-[Lien de la présentation ](https://www.canva.com/design/DAF88Hdf-BI/NYt3koNWDN7moTxye7e0Wg/edit?utm_content=DAF88Hdf-BI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
-[Lien de la planification ](https://latifachakir.atlassian.net/jira/software/c/projects/BAT/boards/7/backlog?epics=visible&atlOrigin=eyJpIjoiYzRkOTJhNmQ3MDYwNDg5N2E2OGY1YWNkOTk5OTY4NjIiLCJwIjoiaiJ9)
+- [Lien de la présentation ](https://www.canva.com/design/DAF88Hdf-BI/NYt3koNWDN7moTxye7e0Wg/edit?utm_content=DAF88Hdf-BI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+- [Lien de la planification ](https://latifachakir.atlassian.net/jira/software/c/projects/BAT/boards/7/backlog?epics=visible&atlOrigin=eyJpIjoiYzRkOTJhNmQ3MDYwNDg5N2E2OGY1YWNkOTk5OTY4NjIiLCJwIjoiaiJ9)

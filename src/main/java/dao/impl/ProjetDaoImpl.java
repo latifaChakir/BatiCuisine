@@ -47,7 +47,7 @@ public class ProjetDaoImpl implements ProjetDao {
     @Override
     public Optional<Projet> findById(int id) {
         String sql = "SELECT p.id AS projet_id,p.surface as projet_surface, p.nomProjet AS projet_nom, p.etat AS projet_etat, p.coutTotal AS projet_coutTotal, p.margeBeneficiaire AS projet_margeBeneficiaire, " +
-                "cl.id AS client_id, cl.nom AS client_nom, cl.adresse AS client_adresse, cl.telephone AS client_telephone, " +
+                "cl.id AS client_id, cl.nom AS client_nom, cl.adresse AS client_adresse,cl.estprofessionnel as client_estprofessionnel, cl.telephone AS client_telephone, " +
                 "c.id AS composant_id, c.nom AS composant_nom, c.typecomposant AS composant_type, c.tauxtva AS composant_tauxtva, " +
                 "m.id AS materiau_id, m.coutunitaire AS materiau_coutunitaire, m.quantite AS materiau_quantite, m.couttransport AS materiau_couttransport, m.coefficientqualite AS materiau_coefficientqualite, " +
                 "mo.id AS main_oeuvre_id, mo.heuresTravail AS main_oeuvre_heuresTravail, mo.tauxHoraire AS main_oeuvre_tauxHoraire, mo.productiviteouvrier AS main_oeuvre_productivite " +
@@ -74,6 +74,7 @@ public class ProjetDaoImpl implements ProjetDao {
                         client.setNom(rs.getString("client_nom"));
                         client.setAdresse(rs.getString("client_adresse"));
                         client.setTelephone(rs.getString("client_telephone"));
+                        client.setEstProfessionnel(rs.getBoolean("client_estprofessionnel"));
 
                         projet = new Projet();
                         projet.setId(projetId);
@@ -130,7 +131,7 @@ public class ProjetDaoImpl implements ProjetDao {
     public List<Projet> findAll() {
         Map<Integer, Projet> projetMap = new HashMap<>();
         String sql = "SELECT p.id AS projet_id, p.nomProjet AS projet_nom, p.etat AS projet_etat, p.coutTotal AS projet_coutTotal, p.margeBeneficiaire AS projet_margeBeneficiaire, " +
-                "cl.id AS client_id, cl.nom AS client_nom, cl.adresse AS client_adresse, cl.telephone AS client_telephone, " +
+                "cl.id AS client_id, cl.nom AS client_nom, cl.adresse AS client_adresse,cl.estprofessionnel as client_estprofessionnel, cl.telephone AS client_telephone, " +
                 "c.id AS composant_id, c.nom AS composant_nom, c.typecomposant AS composant_type, c.tauxtva AS composant_tauxtva, " +
                 "m.id AS materiau_id, m.coutunitaire AS materiau_coutunitaire, m.quantite AS materiau_quantite, m.couttransport AS materiau_couttransport, m.coefficientqualite AS materiau_coefficientqualite ,  " +
                 "mo.id AS main_oeuvre_id, mo.heuresTravail AS main_oeuvre_heuresTravail, mo.tauxHoraire AS main_oeuvre_tauxHoraire , mo.productiviteouvrier AS main_oeuvre_productivite " +
@@ -153,6 +154,8 @@ public class ProjetDaoImpl implements ProjetDao {
                         client.setNom(rs.getString("client_nom"));
                         client.setAdresse(rs.getString("client_adresse"));
                         client.setTelephone(rs.getString("client_telephone"));
+                        client.setEstProfessionnel(rs.getBoolean("client_estprofessionnel"));
+
 
                         projet = new Projet();
                         projet.setId(projetId);

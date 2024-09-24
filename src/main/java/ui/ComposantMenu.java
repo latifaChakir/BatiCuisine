@@ -260,6 +260,7 @@ import java.util.Scanner;
                  System.out.println("✦ Nom: " + client.getNom());
                  System.out.println("✦ Adresse: " + client.getAdresse());
                  System.out.println("✦ Téléphone: " + client.getTelephone());
+                 System.out.println("✦ est professionnel: " + client.isEstProfessionnel());
                  System.out.println("---- Détails des Composants du Projet ----");
 
                  double totalCoutMateriaux = 0.0;
@@ -345,6 +346,19 @@ import java.util.Scanner;
                  System.out.println("- total de projet final : " + coutTotalAvecMarge);
                  projet.setCoutTotal(coutTotalAvecMarge);
                  projet.setMargeBeneficiaire(projet.getMargeBeneficiaire());
+
+                 if (projet.getClient().isEstProfessionnel()) {
+                     System.out.println("\n--- Réduction pour client professionnel appliquée ---");
+                     System.out.print("Entrez la réduction pour le client (en %): ");
+                     double discountPercentage = scanner.nextDouble();
+                     scanner.nextLine();
+                     double discount = discountPercentage / 100;
+                     double coutTotalAvecReduction = coutTotalAvecMarge * (1 - discount);
+
+                     System.out.printf("Coût total avec réduction : %.2f DH\n", coutTotalAvecReduction);
+
+                     projet.setCoutTotal(coutTotalAvecReduction);
+                 }
                  projetService.miseAJourProjet(projet);
 
              }
